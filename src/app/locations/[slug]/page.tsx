@@ -15,8 +15,9 @@ import { LOCATIONS_COPY } from '@/data/copy';
 import { LOCATIONS, LOCATION_HUBS, getLocationBySlug } from '@/data/locations';
 import { getProvidersForLocation } from '@/data/providers';
 import { getServiceBySlug } from '@/data/services';
-import { breadcrumbJsonLd, clinicJsonLd } from '@/lib/structured-data';
+import { breadcrumbJsonLd, clinicJsonLd, faqJsonLd } from '@/lib/structured-data';
 import { buildMetadata } from '@/lib/seo';
+import { locationFaqs } from '@/lib/location-content';
 import { formatAddress, mapsDirectionsUrl, mapsEmbedUrl, telHref } from '@/lib/utils';
 import { T } from '@/i18n';
 
@@ -59,6 +60,7 @@ export default function LocationPage({ params }: LocationPageProps) {
   if (!location) notFound();
 
   const providers = getProvidersForLocation(location.slug);
+  const faqs = locationFaqs(location, providers);
   const services = location.serviceSlugs
     .map((slug) => getServiceBySlug(slug))
     .filter((service): service is NonNullable<typeof service> => Boolean(service));
@@ -85,6 +87,7 @@ export default function LocationPage({ params }: LocationPageProps) {
     <>
       <JsonLd data={clinicJsonLd(location)} />
       <JsonLd data={breadcrumbJsonLd(breadcrumbs)} />
+      <JsonLd data={faqJsonLd(faqs)} />
 
       <PageHero title={location.name} eyebrow={`Healthcare Services in ${location.city}`}>
         {firstPhone ? (
@@ -278,6 +281,18 @@ export default function LocationPage({ params }: LocationPageProps) {
         ) : (
           <p className="card text-navy-800"><T>{LOCATIONS_COPY.addressEmpty}</T></p>
         )}
+      </Section>
+
+      {/* Location FAQs, built from this clinic's record */}
+      <Section headingId="location-faq-heading" title={`Frequently asked questions about ${location.name}`} tone="muted">
+        <dl className="space-y-6">
+          {faqs.map((faq) => (
+            <div key={faq.question} className="card">
+              <dt className="text-lg font-bold text-navy-900">{faq.question}</dt>
+              <dd className="mt-2 text-navy-800">{faq.answer}</dd>
+            </div>
+          ))}
+        </dl>
       </Section>
 
       {/* Appointment request */}

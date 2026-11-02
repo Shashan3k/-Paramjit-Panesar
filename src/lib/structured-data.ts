@@ -106,6 +106,37 @@ export function blogPostingJsonLd(post: BlogPost): JsonLd {
   };
 }
 
+/** WebSite node with a sitelinks search box. The search page reads the q parameter. */
+export function websiteJsonLd(): JsonLd {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    '@id': `${SITE_URL}/#website`,
+    url: SITE_URL,
+    name: BRAND.name,
+    alternateName: BRAND.seoName,
+    publisher: { '@id': `${SITE_URL}/#organization` },
+    potentialAction: {
+      '@type': 'SearchAction',
+      target: { '@type': 'EntryPoint', urlTemplate: absolute('/search?q={search_term_string}') },
+      'query-input': 'required name=search_term_string',
+    },
+  };
+}
+
+/** FAQPage node. Pass only the questions and answers that are also visible on the page. */
+export function faqJsonLd(items: readonly { question: string; answer: string }[]): JsonLd {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: items.map((item) => ({
+      '@type': 'Question',
+      name: item.question,
+      acceptedAnswer: { '@type': 'Answer', text: item.answer },
+    })),
+  };
+}
+
 export function breadcrumbJsonLd(items: readonly { name: string; path: string }[]): JsonLd {
   return {
     '@context': 'https://schema.org',

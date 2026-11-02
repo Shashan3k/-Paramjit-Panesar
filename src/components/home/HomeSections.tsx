@@ -156,7 +156,7 @@ export function ImpactStats() {
   );
 }
 
-/** Services grid. Title-only services show the fallback copy from the service detail page. */
+/** Services grid. Services without a source summary show text built from the clinics that list them. */
 export function ServicesGrid() {
   return (
     <Section headingId="services-grid-heading" eyebrow={HOME_COPY.services.eyebrow} title={HOME_COPY.services.title} description={HOME_COPY.services.description} tone="muted">

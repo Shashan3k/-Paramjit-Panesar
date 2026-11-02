@@ -5,8 +5,10 @@ import type { ServiceRecord } from '@/types';
  *
  * Descriptions are reproduced from chcahealth.org (service pages and the
  * provider welcome flyers). Where neither source has a description, `summary`
- * is null and the service page shows the list of clinics that offer it, with a
- * "details coming soon" message. Nothing is written from scratch.
+ * is null. The card and service page then build neutral text from the clinics
+ * that list the service (see src/lib/service-content.ts). That text names only
+ * clinics, providers, and services in the source data. Clinical descriptions
+ * still need approval from CHCA clinicians before they are published.
  *
  * Spanish copy for these services is not yet approved. See src/i18n and README.md.
  */

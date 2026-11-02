@@ -10,11 +10,20 @@ import { PageHero } from '@/components/ui/PageHero';
 import { Container, Section } from '@/components/ui/Section';
 import { SERVICES_COPY } from '@/data/copy';
 import { SNF_CONTENT } from '@/data/content-pages';
-import { LOCATIONS } from '@/data/locations';
-import { PROVIDERS } from '@/data/providers';
 import { SERVICES, getServiceBySlug } from '@/data/services';
-import { breadcrumbJsonLd } from '@/lib/structured-data';
+import { breadcrumbJsonLd, faqJsonLd } from '@/lib/structured-data';
 import { buildMetadata } from '@/lib/seo';
+import {
+  BEFORE_VISIT_TIPS,
+  locationsForService,
+  providersForLocations,
+  relatedServices,
+  serviceCardText,
+  serviceFaqs,
+  serviceMetaDescription,
+  serviceOverviewText,
+  serviceSafetyNote,
+} from '@/lib/service-content';
 import { T } from '@/i18n';
 
 interface ServicePageProps {
@@ -32,9 +41,7 @@ export function generateMetadata({ params }: ServicePageProps): Metadata {
 
   return buildMetadata({
     title: `${service.name} | CHCA Health`,
-    description:
-      service.summary ??
-      `${service.name} at CHCA Health. See the clinics that offer this service and call to ask about availability.`,
+    description: serviceMetaDescription(service),
     path: `/services/${service.slug}`,
   });
 }
@@ -43,10 +50,12 @@ export default function ServicePage({ params }: ServicePageProps) {
   const service = getServiceBySlug(params.slug);
   if (!service) notFound();
 
-  const locations = LOCATIONS.filter((location) => location.serviceSlugs.includes(service.slug));
-  const locationSlugs = new Set(locations.map((location) => location.slug));
+  const locations = locationsForService(service);
   // Providers are matched through their clinic listings, since providers are not tagged by service on the old site.
-  const providers = PROVIDERS.filter((provider) => provider.locationSlugs.some((slug) => locationSlugs.has(slug)));
+  const providers = providersForLocations(locations);
+  const faqs = serviceFaqs(service);
+  const related = relatedServices(service);
+  const safetyNote = serviceSafetyNote(service);
   const isSnf = service.slug === 'snf-services';
 
   return (
@@ -58,8 +67,9 @@ export default function ServicePage({ params }: ServicePageProps) {
           { name: service.name, path: `/services/${service.slug}` },
         ])}
       />
+      <JsonLd data={faqJsonLd(faqs)} />
 
-      <PageHero title={service.name} subtitle={service.summary ?? undefined} eyebrow="Patient Services">
+      <PageHero title={service.name} subtitle={serviceCardText(service)} eyebrow="Patient Services">
         <ButtonLink href="/contact" variant="light">
           Request an appointment
         </ButtonLink>
@@ -82,7 +92,7 @@ export default function ServicePage({ params }: ServicePageProps) {
           </div>
         ) : (
           <div className="card max-w-3xl">
-            <p className="text-lg text-navy-800"><T>{SERVICES_COPY.detailComingSoon}</T></p>
+            <p className="text-lg leading-relaxed text-navy-800">{serviceOverviewText(service)}</p>
           </div>
         )}
         {service.sourceNote ? (
@@ -133,6 +143,44 @@ export default function ServicePage({ params }: ServicePageProps) {
             {providers.map((provider) => (
               <li key={provider.slug}>
                 <ProviderCard provider={provider} />
+              </li>
+            ))}
+          </ul>
+        </Section>
+      ) : null}
+
+      <Section headingId="service-visit-heading" title="Before your visit" tone="muted">
+        <ul className="list-disc space-y-2 pl-6 text-lg text-navy-800">
+          {BEFORE_VISIT_TIPS.map((tip) => (
+            <li key={tip}>{tip}</li>
+          ))}
+        </ul>
+        {safetyNote ? (
+          <p className="mt-6 rounded-xl border-l-4 border-amber-600 bg-white p-5 text-lg text-navy-900 shadow-card" role="note">
+            {safetyNote}
+          </p>
+        ) : null}
+      </Section>
+
+      <Section headingId="service-faq-heading" title={`Frequently asked questions about ${service.name}`}>
+        <dl className="space-y-6">
+          {faqs.map((faq) => (
+            <div key={faq.question} className="card">
+              <dt className="text-lg font-bold text-navy-900">{faq.question}</dt>
+              <dd className="mt-2 text-navy-800">{faq.answer}</dd>
+            </div>
+          ))}
+        </dl>
+      </Section>
+
+      {related.length > 0 ? (
+        <Section headingId="service-related-heading" title="Related services" tone="muted">
+          <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+            {related.map((item) => (
+              <li key={item.slug}>
+                <Link href={`/services/${item.slug}`} className="card flex min-h-[44px] items-center font-semibold text-teal-800 hover:underline">
+                  {item.name}
+                </Link>
               </li>
             ))}
           </ul>

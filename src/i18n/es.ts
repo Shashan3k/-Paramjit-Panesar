@@ -12,6 +12,8 @@ export const ES_TEXT: Readonly<Record<string, string>> = {
   'Call': 'Llamar',
   'Patient Login': 'Acceso para pacientes',
   'Find a Location': 'Encuentre una ubicación',
+  'Find a Clinic': 'Encuentre una clínica',
+  'Request an Appointment': 'Solicite una cita',
   'Check Sliding Fee': 'Consulte la escala de tarifas ajustables',
   'Accepting all insurance types': 'Aceptamos todos los tipos de seguro',
   // REVIEW: medical or legal content, Spanish translation pending approval

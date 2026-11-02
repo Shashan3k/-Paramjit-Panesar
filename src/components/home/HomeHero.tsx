@@ -1,5 +1,6 @@
 import Image from 'next/image';
-import { CheckCircle2, MapPin, Phone, Wallet } from 'lucide-react';
+import Link from 'next/link';
+import { Calendar, CheckCircle2, MapPin, Phone, Wallet } from 'lucide-react';
 import { ButtonLink } from '@/components/ui/Button';
 import { HOME_COPY } from '@/data/copy';
 import { ABOUT_CONTENT, BRAND, PATIENT_LOGIN_URL, PHONES } from '@/data/site';
@@ -7,8 +8,10 @@ import { telHref } from '@/lib/utils';
 import { T } from '@/i18n';
 
 /**
- * Home hero. Presents the H1 and H2 from RE.md Section 5.1, with the four
- * primary calls to action: Call, Patient Login, Find a Location, Check Sliding Fee.
+ * Home hero. Presents the H1 and H2 from RE.md Section 5.1. The primary action
+ * finds a clinic, the secondary action requests an appointment, and the main
+ * phone number is a tappable link. Patient Login and the sliding fee scale stay
+ * as text links.
  */
 export function HomeHero() {
   return (
@@ -23,19 +26,31 @@ export function HomeHero() {
           <p className="mt-5 max-w-xl text-lg leading-relaxed text-navy-100"><T>{BRAND.heroSubtitle}</T></p>
 
           <div className="mt-8 flex flex-wrap gap-3">
-            <ButtonLink href={telHref(PHONES.main.tel)} variant="primary" className="bg-teal-600 hover:bg-teal-500">
-              <Phone className="h-5 w-5" aria-hidden="true" />
-              <T>{HOME_COPY.hero.ctaCall}</T> {PHONES.main.display}
-            </ButtonLink>
-            <ButtonLink href={PATIENT_LOGIN_URL} variant="light" external>
-              <T>{HOME_COPY.hero.ctaPatientLogin}</T></ButtonLink>
-            <ButtonLink href="/locations" variant="outline" className="border-white bg-transparent text-white hover:bg-white/10">
+            <ButtonLink href="/locations" variant="primary" className="bg-teal-600 hover:bg-teal-500">
               <MapPin className="h-5 w-5" aria-hidden="true" />
-              <T>{HOME_COPY.hero.ctaFindLocation}</T></ButtonLink>
-            <ButtonLink href="/sliding-fee-scale" variant="outline" className="border-white bg-transparent text-white hover:bg-white/10">
-              <Wallet className="h-5 w-5" aria-hidden="true" />
-              <T>{HOME_COPY.hero.ctaSlidingFee}</T></ButtonLink>
+              <T>{HOME_COPY.hero.ctaFindClinic}</T></ButtonLink>
+            <ButtonLink href="/contact" variant="outline" className="border-white bg-transparent text-white hover:bg-white/10">
+              <Calendar className="h-5 w-5" aria-hidden="true" />
+              <T>{HOME_COPY.hero.ctaRequestAppointment}</T></ButtonLink>
           </div>
+
+          <p className="mt-5 flex flex-wrap items-center gap-2 text-lg text-navy-100">
+            <Phone className="h-5 w-5 text-teal-300" aria-hidden="true" />
+            <span><T>{HOME_COPY.hero.ctaCall}</T></span>
+            <a href={telHref(PHONES.main.tel)} className="rounded font-bold text-white underline underline-offset-4 hover:text-teal-200">
+              {PHONES.main.display}
+            </a>
+          </p>
+
+          <p className="mt-4 flex flex-wrap gap-x-6 gap-y-2 text-sm font-semibold">
+            <a href={PATIENT_LOGIN_URL} target="_blank" rel="noopener noreferrer" className="rounded text-teal-100 underline underline-offset-4 hover:text-white">
+              <T>{HOME_COPY.hero.ctaPatientLogin}</T><span className="sr-only"> (opens in a new tab)</span>
+            </a>
+            <Link href="/sliding-fee-scale" className="inline-flex items-center gap-1 rounded text-teal-100 underline underline-offset-4 hover:text-white">
+              <Wallet className="h-4 w-4" aria-hidden="true" />
+              <T>{HOME_COPY.hero.ctaSlidingFee}</T>
+            </Link>
+          </p>
 
           <ul className="mt-8 grid gap-2 text-sm text-navy-100 sm:grid-cols-2">
             {HOME_COPY.hero.badges.map((badge) => (
