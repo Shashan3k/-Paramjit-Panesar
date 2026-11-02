@@ -169,7 +169,7 @@ Information that could not be recovered from the old site or the supplied materi
 
 **Clinics**
 - Hours for Turlock Primary Care, Turlock Specialty Care, Turlock Advanced Imaging, and Carmichael (Dental)
-- Phone number for Carmichael (Dental)
+- Phone number for Carmichael (Dental): the old Carmichael page lists (916) 485-1555 and fax (916) 481-7111, but the old Eastern (Dental) page uses (916) 485-1555 too. Confirm which clinic this number belongs to before publishing it.
 - Coordinates for Fresno Pediatrics (two sites) and Carmichael (Dental)
 - Gallery photos and descriptions for the 18 clinics other than Livingston and Chowchilla
 - Turlock Specialty Care: the endocrinology flyer lists that address, but the clinic page lists placeholder services
