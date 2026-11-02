@@ -17,6 +17,7 @@ const STATIC_ROUTES: readonly { path: string; priority: number; changeFrequency:
   { path: '/services/snf-services', priority: 0.7, changeFrequency: 'monthly' },
   { path: '/locations', priority: 0.9, changeFrequency: 'weekly' },
   { path: '/find-nearest', priority: 0.8, changeFrequency: 'monthly' },
+  { path: '/family-physician-sacramento', priority: 0.9, changeFrequency: 'monthly' },
   { path: '/fresno-clinics', priority: 0.7, changeFrequency: 'monthly' },
   { path: '/merced-clinics', priority: 0.7, changeFrequency: 'monthly' },
   { path: '/providers', priority: 0.8, changeFrequency: 'weekly' },

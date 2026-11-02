@@ -43,8 +43,11 @@ export function generateMetadata({ params }: LocationPageProps): Metadata {
     .map((slug) => getServiceBySlug(slug)?.name)
     .filter((name): name is string => Boolean(name));
 
+  // Adds the city to the title when the clinic name does not already include it.
+  const titleName = location.name.includes(location.city) ? location.name : `${location.name} in ${location.city}`;
+
   return buildMetadata({
-    title: `${location.name} | CHCA Health`,
+    title: `${titleName}, CA | CHCA Health`,
     description: describe(location.name, location.city, [...serviceNames, ...location.additionalServices]),
     path: `/locations/${location.slug}`,
     image: location.gallery[0]?.src,
@@ -108,6 +111,16 @@ export default function LocationPage({ params }: LocationPageProps) {
               &larr; Back to {hub.label} clinics
             </Link>
           </nav>
+        </div>
+      ) : null}
+
+      {location.city === 'Sacramento' && location.serviceSlugs.includes('family-primary-practice') ? (
+        <div className="border-b border-warm-200 bg-white">
+          <p className="mx-auto max-w-6xl px-4 py-3 text-sm sm:px-6 lg:px-8">
+            <Link href="/family-physician-sacramento" className="font-semibold text-teal-800 hover:underline">
+              See all family physicians in Sacramento &rarr;
+            </Link>
+          </p>
         </div>
       ) : null}
 
