@@ -62,6 +62,10 @@ export default function ServicePage({ params }: ServicePageProps) {
   const articles = BLOG_POSTS.filter((post) => post.serviceSlugs?.includes(service.slug));
   const safetyNote = serviceSafetyNote(service);
   const isSnf = service.slug === 'snf-services';
+  const clinicianNames = [...specialists, ...providers]
+    .filter((provider, index, all) => all.findIndex((other) => other.slug === provider.slug) === index)
+    .map((provider) => (provider.credentials ? `${provider.name}, ${provider.credentials}` : provider.name));
+  const firstPhone = locations.flatMap((location) => location.sites.flatMap((site) => site.phones))[0];
 
   return (
     <>
@@ -127,6 +131,47 @@ export default function ServicePage({ params }: ServicePageProps) {
           </ul>
         </Section>
       ) : null}
+
+      <Section headingId="service-answers-heading" title={`Quick answers about ${service.name}`}>
+        <div className="grid gap-6 md:grid-cols-2">
+          <div className="card space-y-2">
+            <h3 className="text-lg font-bold text-navy-900">Which CHCA clinics offer {service.name}?</h3>
+            <p className="text-navy-800">
+              {locations.length > 0
+                ? locations.map((location) => location.name).join(', ')
+                : 'Call CHCA Health to confirm where this service is offered.'}
+            </p>
+          </div>
+          <div className="card space-y-2">
+            <h3 className="text-lg font-bold text-navy-900">Who provides {service.name} at CHCA Health?</h3>
+            <p className="text-navy-800">
+              {clinicianNames.length > 0
+                ? `Clinicians listed on this site include ${clinicianNames.slice(0, 6).join(', ')}.`
+                : 'Provider details are listed on each clinic page.'}
+            </p>
+          </div>
+          <div className="card space-y-2">
+            <h3 className="text-lg font-bold text-navy-900">What does {service.name} include?</h3>
+            <p className="text-navy-800">
+              {service.bullets.length > 0
+                ? service.bullets.join(' ')
+                : service.summary ?? 'Call the clinic to ask what this service includes.'}
+            </p>
+          </div>
+          <div className="card space-y-2">
+            <h3 className="text-lg font-bold text-navy-900">How do I book {service.name}?</h3>
+            <p className="text-navy-800">
+              {firstPhone
+                ? `Call ${firstPhone.display} to book, or use the contact form on this site.`
+                : 'Use the contact form on this site to request an appointment.'}
+            </p>
+          </div>
+          <div className="card space-y-2 md:col-span-2">
+            <h3 className="text-lg font-bold text-navy-900">What should I bring to my first visit?</h3>
+            <p className="text-navy-800">{BEFORE_VISIT_TIPS.join(' ')}</p>
+          </div>
+        </div>
+      </Section>
 
       <Section headingId="service-locations-heading" title={SERVICES_COPY.detailLocationsTitle} tone={isSnf ? 'default' : 'muted'}>
         {locations.length > 0 ? (
