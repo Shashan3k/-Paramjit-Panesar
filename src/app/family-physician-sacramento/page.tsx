@@ -147,7 +147,13 @@ export default function FamilyPhysicianSacramentoPage() {
       <Section headingId="elk-grove-heading" title="Patients visiting from Elk Grove" tone="muted">
         <p className="text-navy-800">
           CHCA Health does not have an Elk Grove office. Patients from Elk Grove can travel to the Sacramento clinics listed on this page.
+          Our Sacramento New Family Practice clinic is at 8191 Timberlake Way, Suite 200, Sacramento, CA 95823.
           To ask whether a clinic can see you, call 916-236-5800.
+        </p>
+        <p className="mt-4 text-navy-800">
+          <Link href="/locations/sacramento-new-family-practice" className="font-semibold text-teal-800 hover:underline">
+            View the Sacramento New Family Practice clinic page &rarr;
+          </Link>
         </p>
       </Section>
 
