@@ -8,9 +8,9 @@ import { buildMetadata } from '@/lib/seo';
 import { telHref } from '@/lib/utils';
 
 export const metadata: Metadata = buildMetadata({
-  title: 'Compliance and Notices | CHCA Health',
+  title: 'Compliance, Notices and Patient Rights | CHCA Health',
   description:
-    'Non-discrimination notice, FQHC compliance documentation, patient rights, and annual reports from Community Health Centers of America.',
+    'Non-discrimination notice, FQHC compliance documentation, patient rights, and annual reports from Community Health Centers of America. Read our notices.',
   path: '/compliance',
 });
 

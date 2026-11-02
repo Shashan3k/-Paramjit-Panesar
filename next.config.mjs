@@ -46,6 +46,9 @@ const legacyRedirects = [
   { source: '/locations/fresno-family-practice-suite-220', destination: '/locations/fresno-family-practice', permanent: true },
   { source: '/locations/fresno-family-practice-suite-301', destination: '/locations/fresno-family-practice', permanent: true },
 
+  // ---- Old duplicate of the sliding fee scale page (kept in the sitemap on the old site)
+  { source: '/sliding-fee-scale-old', destination: '/sliding-fee-scale', permanent: true },
+
   // ---- Legacy WordPress documents (served from the live site until self-hosted; see docs/ASSET_SOURCES.md)
   {
     source: '/wp-content/uploads/2024/02/Patient-Rights-2.pdf',

@@ -13,7 +13,7 @@ import { T } from '@/i18n';
 export const metadata: Metadata = buildMetadata({
   title: 'About CHCA Health: Our Mission, Services, and Commitment',
   description:
-    "Discover CHCA Health's mission, comprehensive services, and commitment to excellence. Learn about our board, our executive team, and the communities we serve.",
+    "Learn about CHCA Health's mission, services, board, and executive team. We are a non-profit health center serving Central Valley communities. Call or visit us.",
   path: '/about',
 });
 
@@ -24,6 +24,19 @@ export default function AboutPage() {
 
       <Section headingId="about-story-heading" title={HOME_COPY.about.title}>
         <p className="max-w-4xl text-lg leading-relaxed text-navy-800">{ABOUT_CONTENT.intro}</p>
+        <p className="mt-4 max-w-4xl text-base leading-relaxed text-navy-800">
+          Federally Qualified Health Center look-alike status is recognised by the U.S. Department of Health and Human Services. For
+          the official directory of health centers and program information, see the{' '}
+          <a
+            href="https://findahealthcenter.hrsa.gov/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="font-semibold text-teal-800 hover:underline"
+          >
+            HRSA Health Center Directory<span className="sr-only"> (opens in a new tab)</span>
+          </a>
+          .
+        </p>
       </Section>
 
       <Section headingId="values-heading" title={ABOUT_COPY.valuesTitle} tone="muted">

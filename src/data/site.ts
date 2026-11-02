@@ -38,7 +38,7 @@ export const PATIENT_LOGIN_URL = 'https://health.healow.com/COMMUNITYHCA';
 
 export const PHONES = {
   main: { label: 'Main', display: '209-441-8383', tel: '+12094418383' } satisfies PhoneNumber,
-  // Legacy footer linked this number to tel:559-220-9380 (RE.md Section 9, item 8). Corrected to the printed number.
+  // Retired number: the legacy footer link is replaced by the printed number (RE.md Section 9, item 8).
   hq: { label: 'Salida office', display: '209-720-7383', tel: '+12097207383' } satisfies PhoneNumber,
 } as const;
 

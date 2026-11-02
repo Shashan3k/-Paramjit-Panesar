@@ -70,6 +70,16 @@ export interface LocationRecord {
   coordinates: LocationCoordinates | null;
   /** Page on chcahealth.org the record was recovered from. */
   sourceUrl: string;
+  /**
+   * Listing status. Only 'active' pages are indexed, linked and included in the sitemap.
+   * 'unconfirmed' pages stay reachable by URL but are noindexed until the practice confirms them.
+   * Undefined means 'active'.
+   */
+  status?: 'active' | 'unconfirmed' | 'archived';
+  /** Search title override, 50-60 characters. Used when the generated title does not describe the clinic well. */
+  seoTitle?: string;
+  /** Clinician named as medical reviewer. Left unset until the practice names one; the badge is not shown otherwise. */
+  medicalReviewer?: { name: string; credentials: string } | null;
 }
 
 export interface BlogBlock {
@@ -83,6 +93,12 @@ export interface BlogPost {
   /** ISO date (YYYY-MM-DD) from the WordPress post. */
   publishedOn: string;
   excerpt: string;
+  /** Service slugs the article relates to. Used for the related-articles list on service pages. */
+  serviceSlugs?: string[];
+  /** Search title, 50-60 characters, used in place of the article title when it is too long. */
+  seoTitle?: string;
+  /** Search description, 140-160 characters, used in place of the excerpt. */
+  seoDescription?: string;
   sourceUrl: string;
   body: BlogBlock[];
 }
@@ -123,6 +139,12 @@ export interface ProviderRecord {
   /** Null means the status has not been confirmed with the client. */
   acceptingNewPatients: boolean | null;
   languages: string[];
+  /** Name shown in the page heading and title when it differs from `name`, e.g. "Dr. Paramjit Panesar, MD". */
+  displayName?: string | null;
+  /** Search title override, 50-60 characters. Used on the brand page. */
+  seoTitle?: string;
+  /** Search description override, 140-160 characters. */
+  seoDescription?: string;
 }
 
 export type FeeScaleKind = 'medical' | 'dental';

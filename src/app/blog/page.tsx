@@ -10,9 +10,9 @@ import { formatDate } from '@/lib/format';
 import { T } from '@/i18n';
 
 export const metadata: Metadata = buildMetadata({
-  title: 'Blog | CHCA Health',
+  title: 'Health Articles, Tips and Clinic News | CHCA Health',
   description:
-    'Health articles and clinic news from Community Health Centers of America: family healthcare, neurological health, and chronic disease management.',
+    'Read health articles and clinic news from CHCA Health on family healthcare, neurological health, and chronic disease management. New posts are added regularly.',
   path: '/blog',
 });
 

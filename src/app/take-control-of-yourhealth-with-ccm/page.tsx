@@ -8,9 +8,9 @@ import { buildMetadata } from '@/lib/seo';
 import { telHref } from '@/lib/utils';
 
 export const metadata: Metadata = buildMetadata({
-  title: 'Chronic Care Management | CHCA Health',
+  title: 'Chronic Care Management and Ongoing Support | CHCA Health',
   description:
-    'Chronic Care Management from CHCA Health: 24/7 health support, a personalized care plan, monthly check-ins, and care coordination.',
+    'Chronic Care Management from CHCA Health: 24/7 health support, a personalized care plan, monthly check-ins, and care coordination. Call to learn more.',
   path: '/take-control-of-yourhealth-with-ccm',
 });
 

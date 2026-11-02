@@ -7,9 +7,9 @@ import { PROVIDERS } from '@/data/providers';
 import { buildMetadata } from '@/lib/seo';
 
 export const metadata: Metadata = buildMetadata({
-  title: 'Find a Provider | CHCA Health',
+  title: 'Find a Provider: Doctors and Clinicians | CHCA Health',
   description:
-    'Search CHCA Health providers by name, specialty, or location. Find family medicine, pediatrics, psychiatry, pain management, and more.',
+    'Search CHCA Health providers by name, specialty, or location. Find family medicine, pediatrics, psychiatry, pain management, and more. Call to book a visit.',
   path: '/providers',
 });
 

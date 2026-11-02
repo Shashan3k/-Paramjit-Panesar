@@ -10,7 +10,7 @@ import type { FeeScaleKind } from '@/types';
 export const metadata: Metadata = buildMetadata({
   title: 'Sliding Fee Scale and Financial Assistance | CHCA Health',
   description:
-    'Check your estimated sliding fee tier for medical or dental care at CHCA Health. Enter your family size and household income to see your tier.',
+    'Check your estimated sliding fee tier for medical or dental care at CHCA Health. Enter your family size and household income to see your estimated tier.',
   path: '/sliding-fee-scale',
 });
 
