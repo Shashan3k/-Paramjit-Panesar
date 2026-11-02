@@ -6,7 +6,7 @@ import { MobileCallBar } from '@/components/layout/MobileCallBar';
 import { JsonLd } from '@/components/ui/JsonLd';
 import { LangProvider } from '@/i18n';
 import { TranslationNotice } from '@/i18n/Controls';
-import { organizationJsonLd } from '@/lib/structured-data';
+import { organizationJsonLd, websiteJsonLd } from '@/lib/structured-data';
 import { BRAND, SITE_URL } from '@/data/site';
 import './globals.css';
 
@@ -60,6 +60,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           <MobileCallBar />
         </LangProvider>
         <JsonLd data={organizationJsonLd()} />
+        <JsonLd data={websiteJsonLd()} />
       </body>
     </html>
   );

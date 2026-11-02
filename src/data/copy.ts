@@ -12,6 +12,8 @@ export const HOME_COPY = {
     ctaCall: 'Call',
     ctaPatientLogin: 'Patient Login',
     ctaFindLocation: 'Find a Location',
+    ctaFindClinic: 'Find a Clinic',
+    ctaRequestAppointment: 'Request an Appointment',
     ctaSlidingFee: 'Check Sliding Fee',
     badges: [
       'Accepting all insurance types',
@@ -59,7 +61,6 @@ export const HOME_COPY = {
     description: 'From family care to specialty and dental services, find the care your household needs.',
     viewAll: 'View all services',
     learnMore: 'Learn more',
-    cardFallback: 'Details coming soon.',
   },
   locations: {
     eyebrow: 'Because Every Life Matters',
@@ -127,8 +128,6 @@ export const SERVICES_COPY = {
   detailProvidersTitle: 'Providers',
   detailBookTitle: 'Ready to book?',
   detailBookDescription: 'Call us, or send a request and our team will contact you.',
-  detailComingSoon:
-    'Details for this service are being updated. Please call us to ask about availability and locations.',
 } as const;
 
 export const LOCATIONS_COPY = {
