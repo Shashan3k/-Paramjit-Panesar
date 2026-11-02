@@ -8,9 +8,10 @@ import { JsonLd } from '@/components/ui/JsonLd';
 import { Container, Section } from '@/components/ui/Section';
 import { PROVIDERS_COPY } from '@/data/copy';
 import { LOCATIONS } from '@/data/locations';
-import { PROVIDERS, getProviderBySlug } from '@/data/providers';
+import { PROVIDERS, getProviderBySlug, getProvidersForLocation } from '@/data/providers';
 import { breadcrumbJsonLd, physicianJsonLd } from '@/lib/structured-data';
 import { buildMetadata } from '@/lib/seo';
+import { providerSeo } from '@/lib/seo-copy';
 import { telHref } from '@/lib/utils';
 import { T } from '@/i18n';
 
@@ -27,11 +28,10 @@ export function generateMetadata({ params }: ProviderPageProps): Metadata {
   const provider = getProviderBySlug(params.slug);
   if (!provider) return { title: 'Provider not found' };
 
-  const fullName = provider.credentials ? `${provider.name}, ${provider.credentials}` : provider.name;
-  const specialty = provider.specialty ? ` ${provider.specialty}.` : '';
+  const { title, description } = providerSeo(provider);
   return buildMetadata({
-    title: `${fullName} | CHCA Health`,
-    description: `${fullName}.${specialty} Clinic locations, contact details, and welcome information from Community Health Centers of America.`,
+    title,
+    description,
     path: `/providers/${provider.slug}`,
     image: provider.photo ?? undefined,
   });
@@ -45,6 +45,11 @@ export default function ProviderProfilePage({ params }: ProviderPageProps) {
   const clinics = provider.locationSlugs
     .map((slug) => LOCATIONS.find((location) => location.slug === slug))
     .filter((location): location is NonNullable<typeof location> => Boolean(location));
+
+  // Other clinicians at the same clinics, so each profile links to its colleagues.
+  const colleagues = clinics
+    .flatMap((clinic) => getProvidersForLocation(clinic.slug))
+    .filter((colleague, index, all) => colleague.slug !== provider.slug && all.findIndex((other) => other.slug === colleague.slug) === index);
 
   const breadcrumbs = [
     { name: 'Home', path: '/' },
@@ -70,7 +75,7 @@ export default function ProviderProfilePage({ params }: ProviderPageProps) {
           <Avatar name={provider.name} src={provider.photo} size={160} className="ring-4 ring-white/30" />
           <div className="space-y-3">
             <h1 id="provider-heading" className="text-4xl font-bold tracking-tight md:text-5xl">
-              {fullName}
+              {provider.displayName ?? fullName}
             </h1>
             {provider.specialty ? <p className="text-xl text-teal-100">{provider.specialty}</p> : null}
             <div className="flex flex-wrap gap-3 pt-2">
@@ -115,6 +120,25 @@ export default function ProviderProfilePage({ params }: ProviderPageProps) {
           </div>
         </dl>
       </Section>
+
+      {colleagues.length > 0 ? (
+        <Section headingId="provider-colleagues-heading" title="Other providers at these clinics">
+          <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+            {colleagues.map((colleague) => (
+              <li key={colleague.slug}>
+                <Link href={`/providers/${colleague.slug}`} className="font-semibold text-teal-800 hover:underline">
+                  {colleague.credentials ? `${colleague.name}, ${colleague.credentials}` : colleague.name}
+                </Link>
+              </li>
+            ))}
+          </ul>
+          <p className="mt-6">
+            <Link href="/providers" className="font-semibold text-teal-800 hover:underline">
+              See all providers &rarr;
+            </Link>
+          </p>
+        </Section>
+      ) : null}
 
       <Section headingId="provider-bio-heading" title={PROVIDERS_COPY.profileBioTitle} tone="muted">
         {provider.bio ? (

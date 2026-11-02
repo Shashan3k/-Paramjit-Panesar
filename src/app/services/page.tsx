@@ -9,9 +9,9 @@ import { buildMetadata } from '@/lib/seo';
 import { T } from '@/i18n';
 
 export const metadata: Metadata = buildMetadata({
-  title: 'Comprehensive Healthcare Services | CHCA Health',
+  title: 'Comprehensive Healthcare Services in CA | CHCA Health',
   description:
-    'Explore CHCA Health services: family and primary care, psychiatry, pain management, dental, podiatry, neurology, and more. Find where each service is offered.',
+    'Explore CHCA Health services: family and primary care, psychiatry, pain management, dental, podiatry, neurology, and more. Find where each is offered and call.',
   path: '/services',
 });
 

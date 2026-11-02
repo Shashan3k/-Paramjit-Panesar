@@ -21,9 +21,9 @@ const SACRAMENTO_CLINIC_SLUGS = ['eastern-primary', 'sacramento-new-family-pract
 const PATH = '/family-physician-sacramento';
 
 export const metadata: Metadata = buildMetadata({
-  title: 'Family Physicians in Sacramento | CHCA Health',
+  title: 'Family Physicians Serving Sacramento, CA | CHCA Health',
   description:
-    'Family medicine in Sacramento at CHCA Health clinics on Eastern Avenue and Timberlake Way. Addresses, phone numbers, hours, maps, and providers.',
+    'Family medicine in Sacramento at CHCA Health clinics on Eastern Avenue and Timberlake Way. Addresses, phone numbers, hours, maps, and providers. Call to book.',
   path: PATH,
 });
 
@@ -130,6 +130,26 @@ export default function FamilyPhysicianSacramentoPage() {
           ) : null;
         })}
       </PageHero>
+
+      <Section headingId="sacramento-answer-heading" title="Family doctors in Sacramento: quick answers" tone="muted">
+        <p className="text-lg leading-relaxed text-navy-900">
+          Looking for a family doctor in Sacramento, CA? CHCA Health offers family medicine at two Sacramento clinics:
+          Eastern Avenue at 2928 Eastern Ave. and Sacramento New Family Practice at 8191 Timberlake Way, Suite 200.
+          Dr. Paramjit Panesar, MD, practices family medicine at Sacramento New Family Practice. Call 916-236-5800 to book an appointment.
+        </p>
+        <p className="mt-4 text-navy-800">
+          <Link href="/providers/paramjit-panesar" className="font-semibold text-teal-800 hover:underline">
+            Meet Dr. Paramjit Panesar, MD, Family Physician &rarr;
+          </Link>
+        </p>
+      </Section>
+
+      <Section headingId="elk-grove-heading" title="Patients visiting from Elk Grove" tone="muted">
+        <p className="text-navy-800">
+          CHCA Health does not have an Elk Grove office. Patients from Elk Grove can travel to the Sacramento clinics listed on this page.
+          To ask whether a clinic can see you, call 916-236-5800.
+        </p>
+      </Section>
 
       <Section headingId="sacramento-clinics-heading" title="Our Sacramento family medicine clinics">
         <div className="grid min-w-0 gap-8 lg:grid-cols-2">

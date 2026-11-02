@@ -4,8 +4,9 @@ import { STUB_PAGES } from '@/data/copy';
 import { buildMetadata } from '@/lib/seo';
 
 export const metadata: Metadata = buildMetadata({
-  title: 'Provider Referral Form | CHCA Health',
-  description: 'Refer a patient to Community Health Centers of America. Referral form for outside providers.',
+  title: 'Refer a Patient: Provider Referral Form | CHCA Health',
+  description:
+    'Refer a patient to Community Health Centers of America using the referral form for outside providers. Find the form and submission details on this page.',
   path: '/referral',
 });
 

@@ -18,6 +18,8 @@ import { getServiceBySlug } from '@/data/services';
 import { breadcrumbJsonLd, clinicJsonLd, faqJsonLd } from '@/lib/structured-data';
 import { buildMetadata } from '@/lib/seo';
 import { locationFaqs } from '@/lib/location-content';
+import { locationSeo } from '@/lib/seo-copy';
+import type { LocationRecord } from '@/types';
 import { formatAddress, mapsDirectionsUrl, mapsEmbedUrl, telHref } from '@/lib/utils';
 import { T } from '@/i18n';
 
@@ -30,29 +32,32 @@ export function generateStaticParams() {
   return LOCATIONS.map((location) => ({ slug: location.slug }));
 }
 
-/** Meta description built from recovered clinic facts only. */
-function describe(name: string, city: string, services: string[]): string {
-  const offered = services.length > 0 ? `${services.slice(0, 3).join(', ')}` : 'primary and specialty care';
-  return `${name} in ${city}, California: ${offered}. Office address, phone numbers, hours, and providers. Call to book an appointment.`;
-}
-
 export function generateMetadata({ params }: LocationPageProps): Metadata {
   const location = getLocationBySlug(params.slug);
   if (!location) return { title: 'Location not found' };
 
-  const serviceNames = location.serviceSlugs
-    .map((slug) => getServiceBySlug(slug)?.name)
-    .filter((name): name is string => Boolean(name));
-
-  // Adds the city to the title when the clinic name does not already include it.
-  const titleName = location.name.includes(location.city) ? location.name : `${location.name} in ${location.city}`;
-
+  const { title, description } = locationSeo(location);
   return buildMetadata({
-    title: `${titleName}, CA | CHCA Health`,
-    description: describe(location.name, location.city, [...serviceNames, ...location.additionalServices]),
+    title,
+    description,
     path: `/locations/${location.slug}`,
     image: location.gallery[0]?.src,
+    // Unconfirmed clinics stay reachable by URL but are kept out of search until the practice confirms them.
+    noIndex: location.status !== undefined && location.status !== 'active',
   });
+}
+
+/**
+ * Direct answer for the clinic, built only from record fields. Search engines and AI answers
+ * quote the opening sentences, so this states the place, services, insurance, and booking route.
+ */
+function directAnswer(location: LocationRecord, services: string[], address: string | null, phone: string | null): string {
+  const where = address ? ` is at ${address}` : '';
+  const offered = services.length > 0 ? ` Services include ${services.slice(0, 4).join(', ')}.` : '';
+  const booking = phone
+    ? ` Call ${phone} to book an appointment or ask about hours.`
+    : ' Use the contact form on this site to request an appointment.';
+  return `Looking for care in ${location.city}, California? ${location.name}${where}.${offered} CHCA Health accepts all forms of insurance and offers sliding-scale discounts for the uninsured.${booking}`;
 }
 
 export default function LocationPage({ params }: LocationPageProps) {
@@ -85,7 +90,7 @@ export default function LocationPage({ params }: LocationPageProps) {
 
   return (
     <>
-      <JsonLd data={clinicJsonLd(location)} />
+      <JsonLd data={clinicJsonLd(location, providers)} />
       <JsonLd data={breadcrumbJsonLd(breadcrumbs)} />
       <JsonLd data={faqJsonLd(faqs)} />
 
@@ -126,6 +131,54 @@ export default function LocationPage({ params }: LocationPageProps) {
           </p>
         </div>
       ) : null}
+
+      <Section headingId="quick-answers-heading" title="Quick answers" tone="muted">
+        <p className="text-lg leading-relaxed text-navy-900">
+          {directAnswer(
+            location,
+            [...services.map((service) => service.name), ...location.additionalServices],
+            firstSite ? formatAddress(firstSite.address) : null,
+            firstPhone?.display ?? null,
+          )}
+        </p>
+        <div className="mt-8 grid gap-6 md:grid-cols-2">
+          <div className="card space-y-2">
+            <h3 className="text-lg font-bold text-navy-900">Where is {location.name} located?</h3>
+            <p className="text-navy-800">
+              {firstSite ? formatAddress(firstSite.address) : 'The street address is not published yet. Call the clinic for directions.'}
+            </p>
+          </div>
+          <div className="card space-y-2">
+            <h3 className="text-lg font-bold text-navy-900">What services are offered at {location.name}?</h3>
+            <p className="text-navy-800">
+              {services.length + location.additionalServices.length > 0
+                ? [...services.map((service) => service.name), ...location.additionalServices].join(', ')
+                : 'Call the clinic to confirm which services it offers.'}
+            </p>
+          </div>
+          <div className="card space-y-2">
+            <h3 className="text-lg font-bold text-navy-900">What are the clinic hours?</h3>
+            <p className="text-navy-800">
+              {location.hours
+                ? location.hours.map((row) => `${row.days}: ${row.officeHours}`).join('. ')
+                : 'Hours are not published yet. Call the clinic for current hours.'}
+            </p>
+          </div>
+          <div className="card space-y-2">
+            <h3 className="text-lg font-bold text-navy-900">How do I book an appointment?</h3>
+            <p className="text-navy-800">
+              {firstPhone
+                ? `Call ${firstPhone.display}, or use the contact form on this site.`
+                : 'Use the contact form on this site to request an appointment.'}
+            </p>
+          </div>
+        </div>
+        {location.medicalReviewer ? (
+          <p className="mt-6 text-sm text-navy-700">
+            Medically reviewed by {location.medicalReviewer.name}, {location.medicalReviewer.credentials}.
+          </p>
+        ) : null}
+      </Section>
 
       {/* Photo gallery */}
       <Section headingId="gallery-heading" title={LOCATIONS_COPY.galleryHeading}>

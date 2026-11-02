@@ -8,6 +8,7 @@ import { ButtonLink } from '@/components/ui/Button';
 import { JsonLd } from '@/components/ui/JsonLd';
 import { PageHero } from '@/components/ui/PageHero';
 import { Container, Section } from '@/components/ui/Section';
+import { BLOG_POSTS } from '@/data/blog';
 import { SERVICES_COPY } from '@/data/copy';
 import { SNF_CONTENT } from '@/data/content-pages';
 import { SERVICES, getServiceBySlug } from '@/data/services';
@@ -17,13 +18,14 @@ import {
   BEFORE_VISIT_TIPS,
   locationsForService,
   providersForLocations,
+  providersForSpecialtyOf,
   relatedServices,
   serviceCardText,
   serviceFaqs,
-  serviceMetaDescription,
   serviceOverviewText,
   serviceSafetyNote,
 } from '@/lib/service-content';
+import { serviceSeo } from '@/lib/seo-copy';
 import { T } from '@/i18n';
 
 interface ServicePageProps {
@@ -39,9 +41,10 @@ export function generateMetadata({ params }: ServicePageProps): Metadata {
   const service = getServiceBySlug(params.slug);
   if (!service) return { title: 'Service not found' };
 
+  const { title, description } = serviceSeo(service);
   return buildMetadata({
-    title: `${service.name} | CHCA Health`,
-    description: serviceMetaDescription(service),
+    title,
+    description,
     path: `/services/${service.slug}`,
   });
 }
@@ -55,6 +58,8 @@ export default function ServicePage({ params }: ServicePageProps) {
   const providers = providersForLocations(locations);
   const faqs = serviceFaqs(service);
   const related = relatedServices(service);
+  const specialists = providersForSpecialtyOf(service);
+  const articles = BLOG_POSTS.filter((post) => post.serviceSlugs?.includes(service.slug));
   const safetyNote = serviceSafetyNote(service);
   const isSnf = service.slug === 'snf-services';
 
@@ -186,6 +191,46 @@ export default function ServicePage({ params }: ServicePageProps) {
           </ul>
         </Section>
       ) : null}
+
+      {specialists.length > 0 ? (
+        <Section headingId="service-specialists-heading" title="Clinicians in this specialty" tone="muted">
+          <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+            {specialists.map((provider) => (
+              <li key={provider.slug}>
+                <Link href={`/providers/${provider.slug}`} className="font-semibold text-teal-800 hover:underline">
+                  {provider.credentials ? `${provider.name}, ${provider.credentials}` : provider.name}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </Section>
+      ) : null}
+
+      {articles.length > 0 ? (
+        <Section headingId="service-articles-heading" title="Related articles" tone="muted">
+          <ul className="grid gap-3 md:grid-cols-2">
+            {articles.map((post) => (
+              <li key={post.slug}>
+                <Link href={`/${post.slug}`} className="font-semibold text-teal-800 hover:underline">
+                  {post.title}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </Section>
+      ) : null}
+
+      <Section headingId="service-all-heading" title="Explore other CHCA services">
+        <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          {SERVICES.filter((other) => other.slug !== service.slug).map((other) => (
+            <li key={other.slug}>
+              <Link href={`/services/${other.slug}`} className="font-semibold text-teal-800 hover:underline">
+                {other.name}
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </Section>
 
       <Section headingId="service-book-heading" title={SERVICES_COPY.detailBookTitle} description={SERVICES_COPY.detailBookDescription}>
         <div className="flex flex-wrap gap-3">

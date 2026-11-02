@@ -12,6 +12,9 @@ export const BLOG_POSTS: readonly BlogPost[] = [
     title: "Understanding Neurological Disorders: Early Warning Signs and When to See a Neurologist",
     publishedOn: "2026-08-01",
     excerpt: "Neurological health plays a vital role in how we think, move, speak, and function every day. Yet, many people overlook early neurological symptoms, assuming they are temporary or stress-related. Mild headaches, occasional dizziness, memory lapses, or tingling sensations may not seem serious at first, but in some cases, they can be early signs of an …",
+    serviceSlugs: ["neurology"],
+    seoTitle: "Warning Signs of Neurological Disorders | CHCA Health",
+    seoDescription: "Headaches, dizziness, memory lapses, or tingling can be early neurological warning signs. Learn when to see a neurologist, and call CHCA Health to book.",
     sourceUrl: "https://www.chcahealth.org/understanding-neurological-disorders-early-warning-signs-and-when-to-see-a-neurologist/",
     body: [
       { type: "paragraph", text: "Neurological health plays a vital role in how we think, move, speak, and function every day. Yet, many people overlook early neurological symptoms, assuming they are temporary or stress-related. Mild headaches, occasional dizziness, memory lapses, or tingling sensations may not seem serious at first, but in some cases, they can be early signs of an underlying neurological condition." },
@@ -71,6 +74,9 @@ export const BLOG_POSTS: readonly BlogPost[] = [
     title: "Comprehensive Family Healthcare in Rural California: A Look at CHCA’s Services",
     publishedOn: "2025-01-21",
     excerpt: "Welcome to Community Health Centers of America (CHCA), where a team of dedicated professionals supports your health journey. Our mission is to provide exceptional healthcare, regardless of financial capability. As a leading family healthcare provider in rural California, CHCA is committed to delivering comprehensive primary care services to underserved communities. In this article, we will …",
+    serviceSlugs: ["family-primary-practice"],
+    seoTitle: "Family Healthcare in Rural California | CHCA Health",
+    seoDescription: "CHCA Health provides family healthcare across rural California, from primary and specialty care to dental services. Learn what we offer, then call to book.",
     sourceUrl: "https://www.chcahealth.org/comprehensive-family-healthcare-in-rural-california-a-look-at-chcas-services/",
     body: [
       { type: "paragraph", text: "Welcome to Community Health Centers of America (CHCA), where a team of dedicated professionals supports your health journey. Our mission is to provide exceptional healthcare, regardless of financial capability. As a leading family healthcare provider in rural California, CHCA is committed to delivering comprehensive primary care services to underserved communities. In this article, we will explore the various locations and services offered by CHCA, highlighting our dedication to accessible and compassionate healthcare." },
@@ -87,6 +93,9 @@ export const BLOG_POSTS: readonly BlogPost[] = [
     title: "Chronic Disease Management: Resources and Support",
     publishedOn: "2023-12-01",
     excerpt: "Long-term diseases require ongoing management, support, and resources from patients in order to effectively live well with them. Diabetes, high blood pressure, asthma, and arthritis affect millions worldwide, and their management has an enormous effect on quality of life. While most chronic diseases cannot be cured completely, individuals can live well while managing them by …",
+    serviceSlugs: ["family-primary-practice"],
+    seoTitle: "Chronic Disease Management Resources | CHCA Health",
+    seoDescription: "Ongoing care helps people manage chronic conditions such as diabetes and high blood pressure. Learn more from CHCA Health, then call to book.",
     sourceUrl: "https://www.chcahealth.org/chronic-disease-management-resources-and-support/",
     body: [
       { type: "heading", text: "What Are Chronic Diseases?" },

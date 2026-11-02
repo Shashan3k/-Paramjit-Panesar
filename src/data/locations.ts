@@ -13,7 +13,7 @@ import type { LocationRecord } from '@/types';
  *
  * Open questions are listed in README.md (Client Decisions Required).
  */
-export const LOCATIONS: readonly LocationRecord[] = [
+const ALL_LOCATIONS: readonly LocationRecord[] = [
   {
     slug: "chowchilla",
     name: "Chowchilla",
@@ -165,6 +165,7 @@ export const LOCATIONS: readonly LocationRecord[] = [
     slug: "mariposa",
     name: "Mariposa",
     shortName: "Mariposa",
+    seoTitle: "Mariposa Primary Care & Family Clinic | CHCA Health",
     city: "Mariposa",
     sites: [
       {
@@ -467,6 +468,8 @@ export const LOCATIONS: readonly LocationRecord[] = [
     name: "Turlock Primary Care",
     shortName: "Turlock – Primary Care",
     city: "Turlock",
+    // Open status is not confirmed with the practice. Stays noindexed and off the sitemap until it is.
+    status: "unconfirmed",
     sites: [
       {
         label: null,
@@ -490,6 +493,8 @@ export const LOCATIONS: readonly LocationRecord[] = [
     name: "Turlock Specialty Care",
     shortName: "Turlock – Specialty Care",
     city: "Turlock",
+    // Open status is not confirmed with the practice. Stays noindexed and off the sitemap until it is.
+    status: "unconfirmed",
     sites: [
       {
         label: null,
@@ -513,6 +518,8 @@ export const LOCATIONS: readonly LocationRecord[] = [
     name: "Turlock Advanced Imaging Clinic",
     shortName: "Turlock – Advanced Imaging",
     city: "Turlock",
+    // Open status is not confirmed with the practice. Stays noindexed and off the sitemap until it is.
+    status: "unconfirmed",
     sites: [
       {
         label: null,
@@ -549,12 +556,25 @@ export const LOCATIONS: readonly LocationRecord[] = [
     gallery: [],
     hub: null,
     coordinates: null,
-    sourceUrl: "/carmichael-dental/",
+    sourceUrl: "/locations/carmichael-dental",
   },
 ];
 
+/**
+ * Clinics that are listed: indexed, linked, in the sitemap, and offered in forms and search.
+ * Every consumer imports this list, so a status change here reaches the whole site.
+ */
+export const LOCATIONS: readonly LocationRecord[] = ALL_LOCATIONS.filter(
+  (location) => (location.status ?? 'active') === 'active',
+);
+
+/** Records kept out of listings until the practice confirms their status. Reachable by URL, noindexed. */
+export const UNLISTED_LOCATIONS: readonly LocationRecord[] = ALL_LOCATIONS.filter(
+  (location) => (location.status ?? 'active') !== 'active',
+);
+
 export function getLocationBySlug(slug: string): LocationRecord | undefined {
-  return LOCATIONS.find((location) => location.slug === slug);
+  return ALL_LOCATIONS.find((location) => location.slug === slug);
 }
 
 /** Location slugs shown as quick-link chips on the home page. */

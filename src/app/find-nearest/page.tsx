@@ -7,9 +7,9 @@ import { LOCATIONS } from '@/data/locations';
 import { buildMetadata } from '@/lib/seo';
 
 export const metadata: Metadata = buildMetadata({
-  title: 'Find the Nearest CHCA Clinic | CHCA Health',
+  title: 'Find the Nearest CHCA Clinic Near You | CHCA Health',
   description:
-    'Sort CHCA Health clinics by distance from your location. Location is requested only when you choose, and is used only in your browser.',
+    'Sort CHCA Health clinics by distance from your location. Location is requested only when you choose, and is used only in your browser. Call the clinic you pick.',
   path: '/find-nearest',
 });
 

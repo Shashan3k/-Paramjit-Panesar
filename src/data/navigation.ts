@@ -62,15 +62,6 @@ export const LOCATION_MENU: readonly NavGroup[] = [
     ],
   },
   {
-    label: 'Turlock',
-    href: '/locations',
-    items: [
-      { label: 'Turlock Primary Care', href: '/locations/turlock-primary-care' },
-      { label: 'Turlock Specialty Care', href: '/locations/turlock-specialty-care' },
-      { label: 'Turlock Advanced Imaging', href: '/locations/turlock-advanced-imaging-clinic' },
-    ],
-  },
-  {
     label: 'More locations',
     href: '/locations',
     items: [
@@ -103,6 +94,7 @@ export const FOOTER_COLUMNS: readonly { title: string; links: readonly NavLink[]
       { label: 'Privacy Policy', href: '/privacy-policy' },
       { label: 'Non Discrimination Notice', href: '/compliance#non-discrimination' },
       { label: 'FQHC Compliance Documentation', href: '/compliance#fqhc-compliance' },
+      { label: 'HRSA Health Center Directory', href: 'https://findahealthcenter.hrsa.gov/', external: true, description: 'opens the HRSA directory in a new tab' },
     ],
   },
   {
@@ -124,6 +116,9 @@ export const FOOTER_COLUMNS: readonly { title: string; links: readonly NavLink[]
       { label: 'Find a Location', href: '/locations' },
       { label: 'Find the Nearest Clinic', href: '/find-nearest' },
       { label: 'Providers', href: '/providers' },
+      { label: 'Dr. Paramjit Panesar, Family Physician', href: '/providers/paramjit-panesar' },
+      { label: 'Family Physicians in Sacramento', href: '/family-physician-sacramento' },
+      { label: 'CMEC (Post-Acute Care)', href: '/cmec' },
       { label: 'Search the site', href: '/search' },
       { label: 'Blog', href: '/blog' },
       { label: 'Careers', href: '/careers' },

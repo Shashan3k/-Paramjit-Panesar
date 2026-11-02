@@ -39,13 +39,65 @@ export function organizationJsonLd(): JsonLd {
   };
 }
 
-/** One MedicalClinic node per physical site. */
-export function clinicJsonLd(location: LocationRecord): JsonLd[] {
+const SCHEMA_DAYS: Readonly<Record<string, string>> = {
+  Monday: 'Monday',
+  Tuesday: 'Tuesday',
+  Wednesday: 'Wednesday',
+  Thursday: 'Thursday',
+  Friday: 'Friday',
+  Saturday: 'Saturday',
+  Sunday: 'Sunday',
+};
+
+/** Converts "8:00 AM – 5:00 PM" to 24-hour opens and closes times. Returns null when the text does not parse. */
+function parseOfficeHours(text: string): { opens: string; closes: string } | null {
+  const match = text.match(/(\d{1,2}):(\d{2})\s*(AM|PM)\s*[–-]\s*(\d{1,2}):(\d{2})\s*(AM|PM)/i);
+  if (!match) return null;
+  const [, startHour = '', startMinute = '', startMeridiem = '', endHour = '', endMinute = '', endMeridiem = ''] = match;
+  const to24 = (hour: string, minute: string, meridiem: string) => {
+    let h = Number(hour) % 12;
+    if (meridiem.toUpperCase() === 'PM') h += 12;
+    return `${String(h).padStart(2, '0')}:${minute}`;
+  };
+  return {
+    opens: to24(startHour, startMinute, startMeridiem),
+    closes: to24(endHour, endMinute, endMeridiem),
+  };
+}
+
+/**
+ * OpeningHoursSpecification entries from the published hours rows. Rows that do not
+ * parse are skipped, so the markup only states hours the clinic has published.
+ */
+function openingHoursJsonLd(hours: LocationRecord['hours']): JsonLd[] {
+  if (!hours) return [];
+  return hours.flatMap((row) => {
+    const times = parseOfficeHours(row.officeHours);
+    if (!times) return [];
+    return row.days
+      .split(',')
+      .map((day) => SCHEMA_DAYS[day.trim()])
+      .filter((day): day is string => Boolean(day))
+      .map((day) => ({
+        '@type': 'OpeningHoursSpecification',
+        dayOfWeek: `https://schema.org/${day}`,
+        opens: times.opens,
+        closes: times.closes,
+      }));
+  });
+}
+
+/**
+ * One clinic node per physical site. Dental clinics are typed as Dentist; other sites as
+ * MedicalClinic. `providers` lists the clinicians who see patients there.
+ */
+export function clinicJsonLd(location: LocationRecord, providers: readonly ProviderRecord[] = []): JsonLd[] {
+  const isDental = location.serviceSlugs.includes('dental-clinic');
   return location.sites.map((site, index) => {
     const phone = site.phones[0];
     const node: JsonLd = {
       '@context': 'https://schema.org',
-      '@type': 'MedicalClinic',
+      '@type': isDental ? 'Dentist' : 'MedicalClinic',
       '@id': `${absolute(`/locations/${location.slug}`)}#site-${index + 1}`,
       name: site.label ? `${location.name} (${site.label})` : location.name,
       url: absolute(`/locations/${location.slug}`),
@@ -71,6 +123,15 @@ export function clinicJsonLd(location: LocationRecord): JsonLd[] {
       node.medicalSpecialty = location.additionalServices.length > 0
         ? [...location.additionalServices]
         : undefined;
+    }
+    const openingHours = openingHoursJsonLd(location.hours);
+    if (openingHours.length > 0) node.openingHoursSpecification = openingHours;
+    if (providers.length > 0) {
+      node.employee = providers.map((provider) => ({
+        '@type': 'Person',
+        name: provider.credentials ? `${provider.name}, ${provider.credentials}` : provider.name,
+        url: absolute(`/providers/${provider.slug}`),
+      }));
     }
     return node;
   });

@@ -606,6 +606,9 @@ export const PROVIDERS: readonly ProviderRecord[] = [
   {
     slug: "paramjit-panesar",
     name: "Paramjit Panesar",
+    displayName: "Dr. Paramjit Panesar, MD",
+    seoTitle: "Dr. Paramjit Panesar, Family Physician | CHCA Health",
+    seoDescription: "Dr. Paramjit Panesar, MD, is a family physician at CHCA Health's Sacramento New Family Practice clinic at 8191 Timberlake Way. Call 916-236-5800 to book.",
     credentials: "MD",
     specialty: "Family Medicine",
     photo: null,

@@ -8,6 +8,7 @@ import { BLOG_POSTS, getBlogPostBySlug } from '@/data/blog';
 import { BLOG_COPY } from '@/data/copy';
 import { blogPostingJsonLd, breadcrumbJsonLd } from '@/lib/structured-data';
 import { buildMetadata } from '@/lib/seo';
+import { blogSeo } from '@/lib/seo-copy';
 import { formatDate } from '@/lib/format';
 import type { BlogBlock } from '@/types';
 import { T } from '@/i18n';
@@ -28,9 +29,10 @@ export function generateMetadata({ params }: ArticlePageProps): Metadata {
   const post = getBlogPostBySlug(params.slug);
   if (!post) return { title: 'Page not found' };
 
+  const { title, description } = blogSeo(post);
   return buildMetadata({
-    title: `${post.title} | CHCA Health`,
-    description: post.excerpt,
+    title,
+    description,
     path: `/${post.slug}`,
   });
 }
@@ -58,6 +60,7 @@ export default function ArticlePage({ params }: ArticlePageProps) {
   if (!post) notFound();
 
   const blocks = groupBlocks(post.body);
+  const moreArticles = BLOG_POSTS.filter((other) => other.slug !== post.slug);
 
   return (
     <>
@@ -119,6 +122,21 @@ export default function ArticlePage({ params }: ArticlePageProps) {
           </div>
 
           <p className="mt-12 rounded-xl bg-warm-100 p-5 text-base text-navy-800"><T>{BLOG_COPY.originalSource}</T></p>
+
+          {moreArticles.length > 0 ? (
+            <section aria-labelledby="more-articles-heading" className="mt-12">
+              <h2 id="more-articles-heading" className="text-xl font-bold text-navy-900">More articles</h2>
+              <ul className="mt-4 grid gap-3 md:grid-cols-2">
+                {moreArticles.map((other) => (
+                  <li key={other.slug}>
+                    <Link href={`/${other.slug}`} className="font-semibold text-teal-800 hover:underline">
+                      {other.title}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          ) : null}
         </Container>
       </article>
     </>

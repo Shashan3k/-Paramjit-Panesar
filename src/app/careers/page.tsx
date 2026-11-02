@@ -6,7 +6,7 @@ import { CAREERS_CONTENT } from '@/data/content-pages';
 import { buildMetadata } from '@/lib/seo';
 
 export const metadata: Metadata = buildMetadata({
-  title: 'Careers | CHCA Health',
+  title: 'Careers at Community Health Centers of America | CHCA Health',
   description:
     'Join Community Health Centers of America. Mission-driven work in California’s Central Valley, with medical, vision, life, retirement, and counseling benefits.',
   path: '/careers',

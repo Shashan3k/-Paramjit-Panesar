@@ -19,7 +19,7 @@ import { buildMetadata } from '@/lib/seo';
 export const metadata: Metadata = buildMetadata({
   title: 'Welcome to Community Health Centers of America | CHCA Health',
   description:
-    'Community Health Centers of America provides compassionate primary, specialty, mental health, and dental care. Accepting all insurance types, with sliding-scale discounts. Schedule an appointment today.',
+    'Community Health Centers of America provides primary, specialty, and dental care. Accepting all insurance, with sliding-scale discounts. Call to book today.',
   path: '/',
 });
 

@@ -129,6 +129,35 @@ export function serviceFaqs(service: ServiceRecord): FaqItem[] {
   return faqs;
 }
 
+/**
+ * Specialty text on a provider record, matched to the service it corresponds to. Internal medicine is
+ * primary care, so it maps to family and primary practice.
+ */
+const SPECIALTY_SERVICE_PATTERNS: readonly (readonly [RegExp, string])[] = [
+  [/podiatr/i, 'podiatry'],
+  [/psychiatr/i, 'psychiatry'],
+  [/endocrin/i, 'endocrinology'],
+  [/cardiolog/i, 'cardiology'],
+  [/neurolog/i, 'neurology'],
+  [/gastro/i, 'gastroenterology'],
+  [/pulmon/i, 'pulmonology'],
+  [/dermat/i, 'dermatology'],
+  [/pediatr/i, 'pediatrics'],
+  [/chiropract/i, 'chiropractic'],
+  [/pain/i, 'pain-management'],
+  [/women/i, 'womens-health'],
+  [/family|internal medicine/i, 'family-primary-practice'],
+];
+
+/** Providers whose listed specialty corresponds to the service. */
+export function providersForSpecialtyOf(service: ServiceRecord): ProviderRecord[] {
+  return PROVIDERS.filter((provider) => {
+    if (!provider.specialty) return false;
+    const match = SPECIALTY_SERVICE_PATTERNS.find(([pattern]) => pattern.test(provider.specialty ?? ''));
+    return match?.[1] === service.slug;
+  });
+}
+
 /** Up to four other services offered at the same clinics, most shared first. */
 export function relatedServices(service: ServiceRecord): ServiceRecord[] {
   const counts = new Map<string, number>();

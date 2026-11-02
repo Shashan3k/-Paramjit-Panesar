@@ -4,8 +4,9 @@ import { STUB_PAGES } from '@/data/copy';
 import { buildMetadata } from '@/lib/seo';
 
 export const metadata: Metadata = buildMetadata({
-  title: 'Marketing Outreach | CHCA Health',
-  description: 'Community outreach events and programs from Community Health Centers of America.',
+  title: 'Community Outreach Events and Programs | CHCA Health',
+  description:
+    "Community outreach events and programs from Community Health Centers of America in California's Central Valley. Find upcoming events and how to get involved.",
   path: '/marketing-outreach',
 });
 

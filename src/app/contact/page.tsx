@@ -12,7 +12,7 @@ import { T } from '@/i18n';
 export const metadata: Metadata = buildMetadata({
   title: 'Contact CHCA Health - Reach Out for Healthcare Solutions',
   description:
-    'Contact CHCA Health by phone or online. Send us a message about appointments, services, or sliding fee scale questions, and we will get back to you.',
+    'Contact CHCA Health by phone or online about appointments, services, or sliding fee scale questions. Send a message, and our team will get back to you.',
   path: '/contact',
 });
 

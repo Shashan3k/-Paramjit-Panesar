@@ -9,7 +9,7 @@ import { buildMetadata } from '@/lib/seo';
 export const metadata: Metadata = buildMetadata({
   title: 'CMEC Joins Community Health Centers of America | CHCA Health',
   description:
-    'CMEC is now part of Community Health Centers of America. Post-acute and skilled nursing care with the same providers and care team.',
+    'CMEC is now part of Community Health Centers of America. Post-acute and skilled nursing care with the same providers and care team. Read the announcement.',
   path: '/cmec',
 });
 
