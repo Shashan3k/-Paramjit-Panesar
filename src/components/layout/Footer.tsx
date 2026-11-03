@@ -98,10 +98,10 @@ export function Footer() {
           </nav>
         ))}
 
-        {/* Locations */}
-        <nav aria-label="Locations">
+        {/* Locations: full-width row so the groups spread across the footer */}
+        <nav aria-label="Locations" className="md:col-span-2 lg:col-span-4">
           <h3 className="text-sm font-bold uppercase tracking-wider text-white">Locations</h3>
-          <div className="mt-4 space-y-5 text-sm">
+          <div className="mt-4 grid gap-6 text-sm sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5">
             {LOCATION_MENU.map((group) => (
               <div key={group.label}>
                 <Link href={group.href} className="font-semibold text-teal-200 hover:underline">

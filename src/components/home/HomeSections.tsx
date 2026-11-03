@@ -6,6 +6,7 @@ import { ButtonLink } from '@/components/ui/Button';
 import { Carousel } from '@/components/ui/Carousel';
 import { Section, Container } from '@/components/ui/Section';
 import { StatCounter } from '@/components/ui/StatCounter';
+import { TestimonialCard } from '@/components/home/TestimonialCard';
 import { ProviderCard } from '@/components/providers/ProviderCard';
 import { ServiceCard } from '@/components/services/ServiceCard';
 import { LocationCard } from '@/components/locations/LocationCard';
@@ -255,17 +256,7 @@ export function TestimonialsSection() {
         label={HOME_COPY.testimonials.title}
         slideLabel="Testimonial {index} of {total}"
         items={testimonials.map((testimonial) => (
-          <figure key={testimonial.id} className="card flex h-full flex-col">
-            {testimonial.rating !== null ? (
-              <p className="text-amber-700" aria-label={`${testimonial.rating} out of 5 stars`}>
-                {'★'.repeat(testimonial.rating)}
-              </p>
-            ) : null}
-            <blockquote className="mt-3 flex-1 text-lg leading-relaxed text-navy-900">
-              <p>&ldquo;{testimonial.quote}&rdquo;</p>
-            </blockquote>
-            <figcaption className="mt-4 font-bold text-navy-800">{testimonial.name}</figcaption>
-          </figure>
+          <TestimonialCard key={testimonial.id} testimonial={testimonial} />
         ))}
       />
     </Section>
