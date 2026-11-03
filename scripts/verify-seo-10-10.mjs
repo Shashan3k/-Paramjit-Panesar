@@ -10,7 +10,7 @@
  */
 
 const BASE = (process.argv[2] ?? 'http://127.0.0.1:3100').replace(/\/$/, '');
-const PROD = 'https://www.chcahealth.org';
+const PROD = 'https://www.drparamjitpanesar.com';
 const CONCURRENCY = 4;
 const TITLE = [50, 60];
 const DESCRIPTION = [140, 160];

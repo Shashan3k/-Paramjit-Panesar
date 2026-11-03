@@ -1,6 +1,9 @@
 /**
  * Next.js configuration.
  *
+ * The host redirect sends the bare domain to the canonical www origin before
+ * any path redirect runs.
+ *
  * Redirects map every legacy URL found on the live chcahealth.org sitemap
  * (page, post, and store sitemaps, plus the old site's own 301s) to its
  * current path. Trailing-slash variants (/about/) are handled by
@@ -12,6 +15,16 @@
  *
  * @type {import('next').NextConfig}
  */
+
+const hostRedirects = [
+  // Enforce the www canonical host for every path.
+  {
+    source: '/:path*',
+    has: [{ type: 'host', value: 'drparamjitpanesar.com' }],
+    destination: 'https://www.drparamjitpanesar.com/:path*',
+    permanent: true,
+  },
+];
 
 const legacyRedirects = [
   // ---- Core pages (old site paths kept where they are still in use)
@@ -73,7 +86,7 @@ const nextConfig = {
     remotePatterns: [],
   },
   async redirects() {
-    return legacyRedirects;
+    return [...hostRedirects, ...legacyRedirects];
   },
   async headers() {
     return [

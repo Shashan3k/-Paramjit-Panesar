@@ -30,7 +30,7 @@ npm run dev         # http://localhost:3000
 Environment:
 
 ```bash
-NEXT_PUBLIC_SITE_URL=https://www.chcahealth.org   # default; used for canonical URLs, sitemap, and JSON-LD
+NEXT_PUBLIC_SITE_URL=https://www.drparamjitpanesar.com   # default; used for canonical URLs, sitemap, and JSON-LD
 ```
 
 Accessibility audits use axe-core. To re-run them, copy `node_modules/axe-core/axe.min.js` into `public/_axe/` on a dev server, load each page in an iframe, and call `axe.run()`. Delete the copy afterwards. It is not shipped.

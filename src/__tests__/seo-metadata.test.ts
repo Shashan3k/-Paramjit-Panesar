@@ -6,9 +6,27 @@ import { SERVICES } from '@/data/services';
 import { clinicJsonLd } from '@/lib/structured-data';
 import { blogSeo, locationSeo, providerSeo, serviceSeo } from '@/lib/seo-copy';
 import { DESCRIPTION_MAX, DESCRIPTION_MIN, TITLE_MAX, TITLE_MIN } from '@/lib/seo-fit';
+import { SITE_URL } from '@/data/site';
+import { buildMetadata } from '@/lib/seo';
 
 const inTitleRange = (title: string) => title.length >= TITLE_MIN && title.length <= TITLE_MAX;
 const inDescriptionRange = (text: string) => text.length >= DESCRIPTION_MIN && text.length <= DESCRIPTION_MAX;
+
+describe('canonical domain', () => {
+  it('defaults to the production www origin', () => {
+    expect(SITE_URL).toBe('https://www.drparamjitpanesar.com');
+  });
+
+  it('emits a self-referencing absolute canonical and og:url for an inner page', () => {
+    const metadata = buildMetadata({
+      title: 'Gustine (Primary), CA: Hours and Services | CHCA Health',
+      description: 'Test description',
+      path: '/locations/gustine-primary',
+    });
+    expect(metadata.alternates?.canonical).toBe('https://www.drparamjitpanesar.com/locations/gustine-primary');
+    expect(metadata.openGraph?.url).toBe('https://www.drparamjitpanesar.com/locations/gustine-primary');
+  });
+});
 
 describe('search title and description lengths', () => {
   it.each([...LOCATIONS, ...UNLISTED_LOCATIONS].map((l) => [l.slug, l] as const))('location %s', (_slug, location) => {
