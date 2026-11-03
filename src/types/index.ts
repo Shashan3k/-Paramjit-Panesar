@@ -80,6 +80,10 @@ export interface LocationRecord {
   seoTitle?: string;
   /** Clinician named as medical reviewer. Left unset until the practice names one; the badge is not shown otherwise. */
   medicalReviewer?: { name: string; credentials: string } | null;
+  /** True when the practice has confirmed the clinic is accepting new patients. Unset means not confirmed. */
+  acceptingNewPatients?: boolean | null;
+  /** Confirmed practice facts shown on the clinic page, e.g. the provider mix. */
+  practiceFacts?: string[];
 }
 
 export interface BlogBlock {

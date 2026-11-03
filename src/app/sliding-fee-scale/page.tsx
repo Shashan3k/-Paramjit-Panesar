@@ -1,7 +1,9 @@
 import type { Metadata } from 'next';
 import { SlidingFeeCalculator } from '@/components/sliding-fee/SlidingFeeCalculator';
+import { InsuranceOptions } from '@/components/ui/InsuranceOptions';
 import { PageHero } from '@/components/ui/PageHero';
 import { Section } from '@/components/ui/Section';
+import { INSURANCE_COPY } from '@/data/insurance';
 import { COMMITTED_TO_CARE_COPY } from '@/data/site';
 import { SLIDING_FEE_COPY_PAGE } from '@/data/copy';
 import { buildMetadata } from '@/lib/seo';
@@ -28,6 +30,9 @@ export default function SlidingFeeScalePage({ searchParams }: SlidingFeePageProp
       <PageHero title={SLIDING_FEE_COPY_PAGE.heroTitle} subtitle={SLIDING_FEE_COPY_PAGE.heroSubtitle} />
       <Section headingId="calculator-intro-heading" title="Estimate your tier" description={COMMITTED_TO_CARE_COPY}>
         <SlidingFeeCalculator initialKind={initialKind} />
+      </Section>
+      <Section headingId="insurance-heading" title={INSURANCE_COPY.heading}>
+        <InsuranceOptions />
       </Section>
     </>
   );

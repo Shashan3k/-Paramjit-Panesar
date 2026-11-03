@@ -188,7 +188,7 @@ export const PROVIDERS_COPY = {
   profileLanguagesEmpty: 'Languages not stated',
   profileCredentials: 'Credentials',
   profileSpecialty: 'Specialty',
-  profileAcceptingYes: 'Now accepting new patients (per welcome flyer)',
+  profileAcceptingYes: 'Now accepting new patients',
   profileAcceptingUnknown: 'New-patient status not stated. Call to confirm.',
   profileBack: 'All providers',
   profileCredentialsEmpty: 'Not stated',

@@ -617,7 +617,7 @@ export const PROVIDERS: readonly ProviderRecord[] = [
     locationNote: null,
     bio: null,
     isNewProvider: false,
-    acceptingNewPatients: null,
+    acceptingNewPatients: true,
     languages: [],
   },
   {

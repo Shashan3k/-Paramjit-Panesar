@@ -2,9 +2,10 @@ import type { Metadata } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { Clock, ExternalLink, MapPin, Phone, Stethoscope } from 'lucide-react';
+import { Check, Clock, ExternalLink, MapPin, Phone, Stethoscope } from 'lucide-react';
 import { ContactForm } from '@/components/contact/ContactForm';
 import { ProviderCard } from '@/components/providers/ProviderCard';
+import { InsuranceOptions } from '@/components/ui/InsuranceOptions';
 import { JsonLd } from '@/components/ui/JsonLd';
 import { ButtonLink } from '@/components/ui/Button';
 import { PageHero } from '@/components/ui/PageHero';
@@ -12,6 +13,7 @@ import { Section } from '@/components/ui/Section';
 import { PHONES } from '@/data/site';
 import { EXECUTIVE_TEAM } from '@/data/leadership';
 import { LOCATIONS_COPY } from '@/data/copy';
+import { INSURANCE_COPY } from '@/data/insurance';
 import { LOCATIONS, LOCATION_HUBS, getLocationBySlug } from '@/data/locations';
 import { getProvidersForLocation } from '@/data/providers';
 import { getServiceBySlug } from '@/data/services';
@@ -57,7 +59,8 @@ function directAnswer(location: LocationRecord, services: string[], address: str
   const booking = phone
     ? ` Call ${phone} to book an appointment or ask about hours.`
     : ' Use the contact form on this site to request an appointment.';
-  return `Looking for care in ${location.city}, California? ${location.name}${where}.${offered} CHCA Health accepts all forms of insurance and offers sliding-scale discounts for the uninsured.${booking}`;
+  const newPatients = location.acceptingNewPatients === true ? ' This clinic is accepting new patients.' : '';
+  return `Looking for care in ${location.city}, California? ${location.name}${where}.${offered}${newPatients} CHCA Health accepts all forms of insurance and offers sliding-scale discounts for the uninsured.${booking}`;
 }
 
 export default function LocationPage({ params }: LocationPageProps) {
@@ -179,6 +182,33 @@ export default function LocationPage({ params }: LocationPageProps) {
           </p>
         ) : null}
       </Section>
+
+      {/* Confirmed new-patient facts and accepted insurance */}
+      {location.acceptingNewPatients === true || (location.practiceFacts?.length ?? 0) > 0 ? (
+        <Section headingId="location-new-patients-heading" title="New patients and insurance">
+          <div className="grid min-w-0 gap-6 lg:grid-cols-[1fr_1.2fr]">
+            <div className="space-y-4">
+              {location.acceptingNewPatients === true ? (
+                <p className="inline-flex items-center gap-2 rounded-full bg-teal-50 px-4 py-2 font-semibold text-teal-900">
+                  <Check className="h-5 w-5" aria-hidden="true" />
+                  {INSURANCE_COPY.acceptingNewPatients}
+                </p>
+              ) : null}
+              {location.practiceFacts && location.practiceFacts.length > 0 ? (
+                <ul className="space-y-2 text-navy-800">
+                  {location.practiceFacts.map((fact) => (
+                    <li key={fact} className="flex gap-2">
+                      <Check className="mt-1 h-5 w-5 shrink-0 text-teal-700" aria-hidden="true" />
+                      <span>{fact}</span>
+                    </li>
+                  ))}
+                </ul>
+              ) : null}
+            </div>
+            <InsuranceOptions />
+          </div>
+        </Section>
+      ) : null}
 
       {/* Photo gallery */}
       <Section headingId="gallery-heading" title={LOCATIONS_COPY.galleryHeading}>
