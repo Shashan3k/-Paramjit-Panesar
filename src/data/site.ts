@@ -13,8 +13,10 @@ import type {
  * Copy in this file comes from RE.md unless a TODO says otherwise.
  */
 
-/** Public origin for canonical URLs, sitemap, and OpenGraph. */
-export const SITE_URL: string = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://www.chcahealth.org';
+const DEFAULT_SITE_URL = 'https://www.drparamjitpanesar.com';
+
+/** Public origin for canonical URLs, sitemap, and OpenGraph. Trailing slashes are stripped. */
+export const SITE_URL: string = (process.env.NEXT_PUBLIC_SITE_URL ?? DEFAULT_SITE_URL).replace(/\/+$/, '');
 
 export const BRAND = {
   name: 'Community Health Centers of America',
