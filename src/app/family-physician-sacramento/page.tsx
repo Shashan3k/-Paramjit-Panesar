@@ -1,11 +1,13 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { Clock, MapPin, Phone, Stethoscope } from 'lucide-react';
+import { Check, Clock, MapPin, Phone, Stethoscope } from 'lucide-react';
 import { ButtonLink } from '@/components/ui/Button';
+import { InsuranceOptions } from '@/components/ui/InsuranceOptions';
 import { JsonLd } from '@/components/ui/JsonLd';
 import { PageHero } from '@/components/ui/PageHero';
 import { Section } from '@/components/ui/Section';
 import { getLocationBySlug } from '@/data/locations';
+import { ACCEPTED_INSURANCE_PLANS, INSURANCE_COPY } from '@/data/insurance';
 import { PATIENT_LOGIN_URL, PHONES } from '@/data/site';
 import { getProvidersForLocation } from '@/data/providers';
 import { getServiceBySlug } from '@/data/services';
@@ -61,8 +63,7 @@ function buildFaqs(clinics: LocationRecord[]): { question: string; answer: strin
     },
     {
       question: 'Do you accept insurance?',
-      answer:
-        'CHCA Health accepts all forms of insurance and provides sliding-scale discounts for uninsured patients, as stated on our About page.',
+      answer: `CHCA Health accepts ${ACCEPTED_INSURANCE_PLANS.join(', ')}. Uninsured and self-pay patients are welcome, and sliding-scale discounts are available.`,
     },
     {
       question: 'How do I book an appointment?',
@@ -78,6 +79,7 @@ function buildFaqs(clinics: LocationRecord[]): { question: string; answer: strin
 export default function FamilyPhysicianSacramentoPage() {
   const clinics = getSacramentoClinics();
   const faqs = buildFaqs(clinics);
+  const newPatientsClinic = clinics.find((clinic) => clinic.slug === 'sacramento-new-family-practice');
 
   // Family medicine providers are read from the provider records for each clinic.
   const clinicProviders = clinics.map((clinic) => ({
@@ -142,6 +144,33 @@ export default function FamilyPhysicianSacramentoPage() {
             Meet Dr. Paramjit Panesar, MD, Family Physician &rarr;
           </Link>
         </p>
+      </Section>
+
+      <Section headingId="sacramento-new-patients-heading" title="New patients and insurance">
+        <div className="grid min-w-0 gap-6 lg:grid-cols-[1fr_1.2fr]">
+          <div className="space-y-4">
+            {newPatientsClinic?.acceptingNewPatients === true ? (
+              <p className="inline-flex items-center gap-2 rounded-full bg-teal-50 px-4 py-2 font-semibold text-teal-900">
+                <Check className="h-5 w-5" aria-hidden="true" />
+                {INSURANCE_COPY.acceptingNewPatients}
+              </p>
+            ) : null}
+            {newPatientsClinic?.practiceFacts && newPatientsClinic.practiceFacts.length > 0 ? (
+              <ul className="space-y-2 text-navy-800">
+                {newPatientsClinic.practiceFacts.map((fact) => (
+                  <li key={fact} className="flex gap-2">
+                    <Check className="mt-1 h-5 w-5 shrink-0 text-teal-700" aria-hidden="true" />
+                    <span>{fact}</span>
+                  </li>
+                ))}
+              </ul>
+            ) : null}
+            <p className="text-navy-800">
+              Sacramento New Family Practice is at 8191 Timberlake Way, Suite 200, Sacramento, CA 95823. Call 916-236-5800 to book.
+            </p>
+          </div>
+          <InsuranceOptions />
+        </div>
       </Section>
 
       <Section headingId="elk-grove-heading" title="Patients visiting from Elk Grove" tone="muted">

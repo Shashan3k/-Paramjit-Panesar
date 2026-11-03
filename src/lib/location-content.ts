@@ -1,4 +1,5 @@
 import { LOCATIONS_COPY } from '@/data/copy';
+import { ACCEPTED_INSURANCE_PLANS } from '@/data/insurance';
 import { getServiceBySlug } from '@/data/services';
 import type { LocationRecord, ProviderRecord } from '@/types';
 import { formatAddress } from '@/lib/utils';
@@ -40,6 +41,11 @@ export function locationFaqs(location: LocationRecord, providers: ProviderRecord
       answer: services.length > 0 ? `${joinNames(services)}.` : LOCATIONS_COPY.servicesEmpty,
     },
   ];
+
+  faqs.push({
+    question: `Does ${location.name} accept new patients and insurance?`,
+    answer: `${location.acceptingNewPatients === true ? `${location.name} is accepting new patients. ` : ''}CHCA Health accepts ${ACCEPTED_INSURANCE_PLANS.join(', ')}. Uninsured and self-pay patients are welcome, and sliding-scale discounts are available.`,
+  });
 
   if (providers.length > 0) {
     faqs.push({

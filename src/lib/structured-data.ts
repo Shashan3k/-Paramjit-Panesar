@@ -1,3 +1,4 @@
+import { PAYMENT_ACCEPTED } from '@/data/insurance';
 import { BRAND, HEADQUARTERS, PHONES, SITE_URL, SOCIAL_LINKS } from '@/data/site';
 import type { BlogPost, LocationRecord, ProviderRecord } from '@/types';
 
@@ -36,6 +37,7 @@ export function organizationJsonLd(): JsonLd {
     },
     sameAs: SOCIAL_LINKS.map((link) => link.href),
     medicalSpecialty: 'FederallyQualifiedHealthCenter',
+    paymentAccepted: PAYMENT_ACCEPTED,
   };
 }
 
@@ -102,6 +104,7 @@ export function clinicJsonLd(location: LocationRecord, providers: readonly Provi
       name: site.label ? `${location.name} (${site.label})` : location.name,
       url: absolute(`/locations/${location.slug}`),
       parentOrganization: { '@id': `${SITE_URL}/#organization` },
+      paymentAccepted: PAYMENT_ACCEPTED,
       address: {
         '@type': 'PostalAddress',
         streetAddress: site.address.street,
@@ -112,6 +115,7 @@ export function clinicJsonLd(location: LocationRecord, providers: readonly Provi
       },
     };
     if (phone) node.telephone = phone.tel;
+    if (location.acceptingNewPatients === true) node.isAcceptingNewPatients = true;
     if (location.coordinates && index === 0) {
       node.geo = {
         '@type': 'GeoCoordinates',
@@ -149,6 +153,7 @@ export function physicianJsonLd(provider: ProviderRecord): JsonLd {
   if (provider.specialty) node.medicalSpecialty = provider.specialty;
   if (provider.photo) node.image = absolute(provider.photo);
   if (provider.languages.length > 0) node.knowsLanguage = provider.languages;
+  if (provider.acceptingNewPatients === true) node.isAcceptingNewPatients = true;
   return node;
 }
 

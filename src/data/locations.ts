@@ -291,6 +291,11 @@ const ALL_LOCATIONS: readonly LocationRecord[] = [
     gallery: [],
     hub: null,
     coordinates: { lat: 38.460406, lng: -121.413133, source: "store-locator" },
+    acceptingNewPatients: true,
+    practiceFacts: [
+      "Board-certified physicians in Family Medicine and Internal Medicine.",
+      "Female providers are available.",
+    ],
     sourceUrl: "/locations/sacramento-new-family-practice/",
   },
   {

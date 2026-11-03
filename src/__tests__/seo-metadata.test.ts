@@ -3,7 +3,7 @@ import { BLOG_POSTS } from '@/data/blog';
 import { LOCATIONS, UNLISTED_LOCATIONS, getLocationBySlug } from '@/data/locations';
 import { PROVIDERS, getProviderBySlug } from '@/data/providers';
 import { SERVICES } from '@/data/services';
-import { clinicJsonLd } from '@/lib/structured-data';
+import { clinicJsonLd, physicianJsonLd } from '@/lib/structured-data';
 import { blogSeo, locationSeo, providerSeo, serviceSeo } from '@/lib/seo-copy';
 import { DESCRIPTION_MAX, DESCRIPTION_MIN, TITLE_MAX, TITLE_MIN } from '@/lib/seo-fit';
 import { SITE_URL } from '@/data/site';
@@ -25,6 +25,30 @@ describe('canonical domain', () => {
     });
     expect(metadata.alternates?.canonical).toBe('https://www.drparamjitpanesar.com/locations/gustine-primary');
     expect(metadata.openGraph?.url).toBe('https://www.drparamjitpanesar.com/locations/gustine-primary');
+  });
+});
+
+describe('confirmed Sacramento practice facts', () => {
+  it('publishes the confirmed address, phone, new-patient status, and provider facts', () => {
+    const clinic = getLocationBySlug('sacramento-new-family-practice');
+    expect(clinic?.sites[0]?.address.street).toBe('8191 Timberlake Way, Suite 200');
+    expect(clinic?.sites[0]?.phones[0]?.display).toBe('(916) 236-5800');
+    expect(clinic?.acceptingNewPatients).toBe(true);
+    expect(clinic?.practiceFacts).toContain('Female providers are available.');
+  });
+
+  it('marks Dr. Panesar as accepting new patients', () => {
+    expect(getProviderBySlug('paramjit-panesar')?.acceptingNewPatients).toBe(true);
+  });
+
+  it('emits new-patient and insurance fields in JSON-LD', () => {
+    const clinic = getLocationBySlug('sacramento-new-family-practice');
+    const clinicNode = clinicJsonLd(clinic!)[0]!;
+    expect(clinicNode.isAcceptingNewPatients).toBe(true);
+    expect(clinicNode.paymentAccepted).toContain('Medi-Cal');
+
+    const providerNode = physicianJsonLd(getProviderBySlug('paramjit-panesar')!);
+    expect(providerNode.isAcceptingNewPatients).toBe(true);
   });
 });
 
