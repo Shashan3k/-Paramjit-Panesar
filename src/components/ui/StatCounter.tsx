@@ -50,7 +50,7 @@ export function StatCounter({ stat }: { stat: StatItem }) {
 
   return (
     <div ref={ref} className="card h-full">
-      <dt className="text-sm font-semibold uppercase tracking-wide text-teal-800">{stat.label}</dt>
+      <dt className="text-sm font-semibold uppercase tracking-wide text-teal-800 sm:min-h-[2.5rem]">{stat.label}</dt>
       {display !== null ? (
         <dd className="mt-2 text-4xl font-bold text-navy-900">
           {display.toLocaleString('en-US')}
