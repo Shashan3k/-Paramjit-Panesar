@@ -26,7 +26,20 @@
   h2,
   h3,
   h4 {
-    @apply text-balance;
+    @apply text-balance font-display;
+    letter-spacing: -0.01em;
+  }
+
+  /* One soft entrance for the hero, the only page-load motion on the site. */
+  @keyframes rise {
+    from {
+      opacity: 0;
+      transform: translateY(12px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -47,7 +60,11 @@
 
 @layer components {
   .btn {
-    @apply inline-flex min-h-[44px] items-center justify-center gap-2 rounded-lg px-5 py-2.5 text-base font-semibold transition-colors focus-visible:ring-2 focus-visible:ring-teal-600 focus-visible:ring-offset-2;
+    @apply inline-flex min-h-[44px] items-center justify-center gap-2 rounded-lg px-5 py-2.5 text-base font-semibold shadow-sm transition duration-200 ease-out hover:shadow-md active:translate-y-px focus-visible:ring-2 focus-visible:ring-teal-600 focus-visible:ring-offset-2;
+  }
+
+  .hero-rise {
+    animation: rise 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) both;
   }
 
   .btn-primary {
@@ -67,7 +84,7 @@
   }
 
   .eyebrow {
-    @apply text-sm font-semibold uppercase tracking-wider text-teal-700;
+    @apply text-sm font-semibold text-teal-700;
   }
 
   .card {

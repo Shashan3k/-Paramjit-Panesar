@@ -22,7 +22,7 @@ export function Footer() {
           <p className="text-xl font-bold text-white">{BRAND.name}</p>
           <p className="mt-4 text-sm leading-relaxed">Family medicine in Sacramento, California.</p>
 
-          <h3 className="mt-6 text-sm font-bold uppercase tracking-wider text-white">Contact details</h3>
+          <h3 className="mt-6 text-sm font-bold text-white">Contact details</h3>
           <address className="mt-3 space-y-3 not-italic">
             <p className="flex items-start gap-2">
               <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-teal-300" aria-hidden="true" />
@@ -41,7 +41,7 @@ export function Footer() {
 
         {FOOTER_COLUMNS.map((column) => (
           <nav key={column.title} aria-label={column.title}>
-            <h3 className="text-sm font-bold uppercase tracking-wider text-white">{column.title}</h3>
+            <h3 className="text-sm font-bold text-white">{column.title}</h3>
             <ul className="mt-4 space-y-2.5 text-sm">
               {column.links.map((link) => (
                 <li key={link.href + link.label}>
@@ -61,7 +61,7 @@ export function Footer() {
         ))}
 
         <nav aria-label="Locations" className="md:col-span-2 lg:col-span-4">
-          <h3 className="text-sm font-bold uppercase tracking-wider text-white">Locations</h3>
+          <h3 className="text-sm font-bold text-white">Locations</h3>
           <div className="mt-4 grid gap-6 text-sm sm:grid-cols-2">
             {LOCATION_MENU.map((group) => (
               <div key={group.label}>
