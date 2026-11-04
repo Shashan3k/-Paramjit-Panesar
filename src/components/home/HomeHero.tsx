@@ -24,7 +24,7 @@ export function HomeHero() {
           </p>
 
           <div className="mt-8 flex flex-wrap gap-3">
-            <ButtonLink href={telHref(PHONES.main.tel)} variant="primary" className="bg-teal-600 hover:bg-teal-500">
+            <ButtonLink href={telHref(PHONES.main.tel)} variant="primary" className="!bg-teal-400 !text-navy-900 hover:!bg-teal-300">
               <Phone className="h-5 w-5" aria-hidden="true" />
               Call {PHONES.main.display}
             </ButtonLink>
