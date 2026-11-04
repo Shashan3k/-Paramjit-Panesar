@@ -1,8 +1,8 @@
 {
-  "name": "chca-health-website",
+  "name": "apollo-physicians-website",
   "version": "1.0.0",
   "private": true,
-  "description": "Community Health Centers of America (chcahealth.org) website rebuild",
+  "description": "Apollo Physicians (Sacramento family medicine) website",
   "scripts": {
     "dev": "next dev",
     "build": "next build",

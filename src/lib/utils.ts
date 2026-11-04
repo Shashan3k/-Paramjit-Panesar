@@ -5,7 +5,7 @@ export function cn(...parts: Array<string | false | null | undefined>): string {
   return parts.filter(Boolean).join(' ');
 }
 
-/** Formats a postal address on one line, e.g. "517 Main St. Suite A, Livingston, CA 95334". */
+/** Formats a postal address on one line, e.g. "8191 Timberlake Way, Suite 200, Sacramento, CA 95823". */
 export function formatAddress(address: PostalAddress): string {
   return `${address.street}, ${address.city}, ${address.state} ${address.postalCode}`;
 }

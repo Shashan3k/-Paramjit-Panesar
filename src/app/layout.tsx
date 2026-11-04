@@ -3,35 +3,23 @@ import type { ReactNode } from 'react';
 import { Footer } from '@/components/layout/Footer';
 import { Header } from '@/components/layout/Header';
 import { MobileCallBar } from '@/components/layout/MobileCallBar';
-import { JsonLd } from '@/components/ui/JsonLd';
-import { LangProvider } from '@/i18n';
-import { TranslationNotice } from '@/i18n/Controls';
-import { organizationJsonLd, websiteJsonLd } from '@/lib/structured-data';
 import { BRAND, SITE_URL } from '@/data/site';
 import './globals.css';
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: `Welcome to ${BRAND.name} | CHCA Health`,
-    template: '%s | CHCA Health',
+    default: `${BRAND.name} | Sacramento`,
+    template: '%s',
   },
-  description:
-    'Community Health Centers of America (CHCA) provides affordable, compassionate primary, specialty, and dental care across California’s Central Valley. Accepting all insurance types, with sliding-scale discounts for the uninsured.',
+  description: 'Apollo Physicians, family medicine at 8191 Timberlake Way, Suite 200, Sacramento, CA 95823.',
   applicationName: BRAND.name,
-  icons: {
-    icon: BRAND.favicon,
-    shortcut: BRAND.favicon,
-    apple: BRAND.favicon,
-  },
   formatDetection: { telephone: true },
   openGraph: {
     siteName: BRAND.name,
     type: 'website',
     locale: 'en_US',
-    images: [{ url: BRAND.ogImage, width: 700, height: 400 }],
   },
-  twitter: { card: 'summary_large_image' },
 };
 
 export const viewport: Viewport = {
@@ -50,17 +38,12 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         >
           Skip to main content
         </a>
-        <LangProvider>
-          <Header />
-          <TranslationNotice />
-          <main id="main-content" tabIndex={-1} className="flex-1 focus:outline-none">
-            {children}
-          </main>
-          <Footer />
-          <MobileCallBar />
-        </LangProvider>
-        <JsonLd data={organizationJsonLd()} />
-        <JsonLd data={websiteJsonLd()} />
+        <Header />
+        <main id="main-content" tabIndex={-1} className="flex-1 focus:outline-none">
+          {children}
+        </main>
+        <Footer />
+        <MobileCallBar />
       </body>
     </html>
   );

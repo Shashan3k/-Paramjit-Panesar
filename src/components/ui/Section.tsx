@@ -1,6 +1,5 @@
 import type { ReactNode } from 'react';
 import { cn } from '@/lib/utils';
-import { T } from '@/i18n';
 
 interface ContainerProps {
   children: ReactNode;
@@ -39,12 +38,12 @@ export function Section({ headingId, id, eyebrow, title, description, children, 
     <section id={id} aria-labelledby={headingId} className={cn('scroll-mt-32 py-12 md:py-16', TONE[tone], className)}>
       <Container>
         <header className="mb-8 max-w-3xl">
-          {eyebrow ? <p className={cn('eyebrow', isDark && 'text-teal-200')}><T>{eyebrow}</T></p> : null}
+          {eyebrow ? <p className={cn('eyebrow', isDark && 'text-teal-200')}>{eyebrow}</p> : null}
           <h2 id={headingId} className={cn('mt-2 text-3xl font-bold tracking-tight md:text-4xl', isDark ? 'text-white' : 'text-navy-900')}>
-            <T>{title}</T>
+            {title}
           </h2>
           {description ? (
-            <p className={cn('mt-3 text-lg leading-relaxed', isDark ? 'text-navy-100' : 'text-navy-700')}><T>{description}</T></p>
+            <p className={cn('mt-3 text-lg leading-relaxed', isDark ? 'text-navy-100' : 'text-navy-700')}>{description}</p>
           ) : null}
         </header>
         {children}

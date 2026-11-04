@@ -1,217 +1,80 @@
-import { PAYMENT_ACCEPTED } from '@/data/insurance';
-import { BRAND, HEADQUARTERS, PHONES, SITE_URL, SOCIAL_LINKS } from '@/data/site';
-import type { BlogPost, LocationRecord, ProviderRecord } from '@/types';
+import { BRAND, NPI, OFFICE, PHONES, SITE_URL } from '@/data/site';
+import { INSURANCE_ACCEPTED, PROVIDER, SPECIALTY } from '@/data/practice';
+import type { FaqItem } from '@/types';
 
 /**
- * schema.org JSON-LD builders. Each function returns a plain object; pages
- * serialise it into a <script type="application/ld+json"> tag.
- *
- * Only facts that appear on chcahealth.org are used. Coordinates come from
- * the store locator. The Tax ID is never included.
+ * schema.org JSON-LD for the Apollo Physicians pages. Each page renders one @graph.
+ * The clinic and physician nodes use stable @ids, so references resolve inside every document.
+ * Only facts in src/data/practice.ts and site.ts are emitted.
  */
 
-type JsonLd = Record<string, unknown>;
+type Node = Record<string, unknown>;
 
-function absolute(path: string): string {
-  return new URL(path, SITE_URL).toString();
-}
+export const CLINIC_ID = `${SITE_URL}/#clinic`;
+export const PHYSICIAN_ID = `${SITE_URL}/#dr-paramjit-panesar`;
 
-/** Organization-level data for the site footer and the home page. */
-export function organizationJsonLd(): JsonLd {
+export function clinicNode(): Node {
   return {
-    '@context': 'https://schema.org',
-    '@type': 'MedicalOrganization',
-    '@id': `${SITE_URL}/#organization`,
+    '@type': ['MedicalClinic', 'LocalBusiness'],
+    '@id': CLINIC_ID,
     name: BRAND.name,
-    alternateName: [BRAND.shortName, BRAND.seoName],
+    legalName: BRAND.legalName,
     url: SITE_URL,
-    logo: absolute(BRAND.logo),
     telephone: PHONES.main.tel,
+    medicalSpecialty: ['FamilyPractice'],
     address: {
       '@type': 'PostalAddress',
-      streetAddress: HEADQUARTERS.street,
-      addressLocality: HEADQUARTERS.city,
-      addressRegion: HEADQUARTERS.state,
-      postalCode: HEADQUARTERS.postalCode,
+      streetAddress: OFFICE.street,
+      addressLocality: OFFICE.city,
+      addressRegion: OFFICE.state,
+      postalCode: OFFICE.postalCode,
       addressCountry: 'US',
     },
-    sameAs: SOCIAL_LINKS.map((link) => link.href),
-    medicalSpecialty: 'FederallyQualifiedHealthCenter',
-    paymentAccepted: PAYMENT_ACCEPTED,
+    identifier: { '@type': 'PropertyValue', propertyID: 'NPI', value: NPI.organization },
+    paymentAccepted: INSURANCE_ACCEPTED.join(', '),
+    employee: { '@id': PHYSICIAN_ID },
   };
 }
 
-const SCHEMA_DAYS: Readonly<Record<string, string>> = {
-  Monday: 'Monday',
-  Tuesday: 'Tuesday',
-  Wednesday: 'Wednesday',
-  Thursday: 'Thursday',
-  Friday: 'Friday',
-  Saturday: 'Saturday',
-  Sunday: 'Sunday',
-};
-
-/** Converts "8:00 AM – 5:00 PM" to 24-hour opens and closes times. Returns null when the text does not parse. */
-function parseOfficeHours(text: string): { opens: string; closes: string } | null {
-  const match = text.match(/(\d{1,2}):(\d{2})\s*(AM|PM)\s*[–-]\s*(\d{1,2}):(\d{2})\s*(AM|PM)/i);
-  if (!match) return null;
-  const [, startHour = '', startMinute = '', startMeridiem = '', endHour = '', endMinute = '', endMeridiem = ''] = match;
-  const to24 = (hour: string, minute: string, meridiem: string) => {
-    let h = Number(hour) % 12;
-    if (meridiem.toUpperCase() === 'PM') h += 12;
-    return `${String(h).padStart(2, '0')}:${minute}`;
-  };
+export function physicianNode(): Node {
   return {
-    opens: to24(startHour, startMinute, startMeridiem),
-    closes: to24(endHour, endMinute, endMeridiem),
-  };
-}
-
-/**
- * OpeningHoursSpecification entries from the published hours rows. Rows that do not
- * parse are skipped, so the markup only states hours the clinic has published.
- */
-function openingHoursJsonLd(hours: LocationRecord['hours']): JsonLd[] {
-  if (!hours) return [];
-  return hours.flatMap((row) => {
-    const times = parseOfficeHours(row.officeHours);
-    if (!times) return [];
-    return row.days
-      .split(',')
-      .map((day) => SCHEMA_DAYS[day.trim()])
-      .filter((day): day is string => Boolean(day))
-      .map((day) => ({
-        '@type': 'OpeningHoursSpecification',
-        dayOfWeek: `https://schema.org/${day}`,
-        opens: times.opens,
-        closes: times.closes,
-      }));
-  });
-}
-
-/**
- * One clinic node per physical site. Dental clinics are typed as Dentist; other sites as
- * MedicalClinic. `providers` lists the clinicians who see patients there.
- */
-export function clinicJsonLd(location: LocationRecord, providers: readonly ProviderRecord[] = []): JsonLd[] {
-  const isDental = location.serviceSlugs.includes('dental-clinic');
-  return location.sites.map((site, index) => {
-    const phone = site.phones[0];
-    const node: JsonLd = {
-      '@context': 'https://schema.org',
-      '@type': isDental ? 'Dentist' : 'MedicalClinic',
-      '@id': `${absolute(`/locations/${location.slug}`)}#site-${index + 1}`,
-      name: site.label ? `${location.name} (${site.label})` : location.name,
-      url: absolute(`/locations/${location.slug}`),
-      parentOrganization: { '@id': `${SITE_URL}/#organization` },
-      paymentAccepted: PAYMENT_ACCEPTED,
-      address: {
-        '@type': 'PostalAddress',
-        streetAddress: site.address.street,
-        addressLocality: site.address.city,
-        addressRegion: site.address.state,
-        postalCode: site.address.postalCode,
-        addressCountry: 'US',
-      },
-    };
-    if (phone) node.telephone = phone.tel;
-    if (location.acceptingNewPatients === true) node.isAcceptingNewPatients = true;
-    if (location.coordinates && index === 0) {
-      node.geo = {
-        '@type': 'GeoCoordinates',
-        latitude: location.coordinates.lat,
-        longitude: location.coordinates.lng,
-      };
-    }
-    if (location.serviceSlugs.length > 0 || location.additionalServices.length > 0) {
-      node.medicalSpecialty = location.additionalServices.length > 0
-        ? [...location.additionalServices]
-        : undefined;
-    }
-    const openingHours = openingHoursJsonLd(location.hours);
-    if (openingHours.length > 0) node.openingHoursSpecification = openingHours;
-    if (providers.length > 0) {
-      node.employee = providers.map((provider) => ({
-        '@type': 'Person',
-        name: provider.credentials ? `${provider.name}, ${provider.credentials}` : provider.name,
-        url: absolute(`/providers/${provider.slug}`),
-      }));
-    }
-    return node;
-  });
-}
-
-export function physicianJsonLd(provider: ProviderRecord): JsonLd {
-  const node: JsonLd = {
-    '@context': 'https://schema.org',
     '@type': 'Physician',
-    '@id': `${absolute(`/providers/${provider.slug}`)}#provider`,
-    name: provider.credentials ? `${provider.name}, ${provider.credentials}` : provider.name,
-    url: absolute(`/providers/${provider.slug}`),
-    worksFor: { '@id': `${SITE_URL}/#organization` },
-  };
-  if (provider.specialty) node.medicalSpecialty = provider.specialty;
-  if (provider.photo) node.image = absolute(provider.photo);
-  if (provider.languages.length > 0) node.knowsLanguage = provider.languages;
-  if (provider.acceptingNewPatients === true) node.isAcceptingNewPatients = true;
-  return node;
-}
-
-export function blogPostingJsonLd(post: BlogPost): JsonLd {
-  return {
-    '@context': 'https://schema.org',
-    '@type': 'BlogPosting',
-    headline: post.title,
-    description: post.excerpt,
-    datePublished: post.publishedOn,
-    url: absolute(`/${post.slug}`),
-    mainEntityOfPage: absolute(`/${post.slug}`),
-    author: { '@type': 'Organization', name: BRAND.name },
-    publisher: { '@id': `${SITE_URL}/#organization` },
-    image: absolute(BRAND.ogImage),
+    '@id': PHYSICIAN_ID,
+    name: PROVIDER.name,
+    url: `${SITE_URL}/dr-paramjit-panesar`,
+    medicalSpecialty: SPECIALTY,
+    worksFor: { '@id': CLINIC_ID },
+    identifier: { '@type': 'PropertyValue', propertyID: 'NPI', value: NPI.panesar },
   };
 }
 
-/** WebSite node with a sitelinks search box. The search page reads the q parameter. */
-export function websiteJsonLd(): JsonLd {
+/** FAQPage built from the same arrays the page renders. Pass only items that are also visible. */
+export function faqNode(id: string, faqs: readonly FaqItem[]): Node {
   return {
-    '@context': 'https://schema.org',
-    '@type': 'WebSite',
-    '@id': `${SITE_URL}/#website`,
-    url: SITE_URL,
-    name: BRAND.name,
-    alternateName: BRAND.seoName,
-    publisher: { '@id': `${SITE_URL}/#organization` },
-    potentialAction: {
-      '@type': 'SearchAction',
-      target: { '@type': 'EntryPoint', urlTemplate: absolute('/search?q={search_term_string}') },
-      'query-input': 'required name=search_term_string',
-    },
-  };
-}
-
-/** FAQPage node. Pass only the questions and answers that are also visible on the page. */
-export function faqJsonLd(items: readonly { question: string; answer: string }[]): JsonLd {
-  return {
-    '@context': 'https://schema.org',
     '@type': 'FAQPage',
-    mainEntity: items.map((item) => ({
+    '@id': id,
+    mainEntity: faqs.map((faq) => ({
       '@type': 'Question',
-      name: item.question,
-      acceptedAnswer: { '@type': 'Answer', text: item.answer },
+      name: faq.question,
+      acceptedAnswer: { '@type': 'Answer', text: faq.answer },
     })),
   };
 }
 
-export function breadcrumbJsonLd(items: readonly { name: string; path: string }[]): JsonLd {
+export function breadcrumbNode(id: string, items: readonly { name: string; path: string }[]): Node {
   return {
-    '@context': 'https://schema.org',
     '@type': 'BreadcrumbList',
+    '@id': id,
     itemListElement: items.map((item, index) => ({
       '@type': 'ListItem',
       position: index + 1,
       name: item.name,
-      item: absolute(item.path),
+      item: new URL(item.path, SITE_URL).toString(),
     })),
   };
+}
+
+/** Wraps nodes in a single @graph document for one page. */
+export function graph(...nodes: Node[]): Node {
+  return { '@context': 'https://schema.org', '@graph': nodes };
 }

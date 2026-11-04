@@ -2,30 +2,29 @@ import type { Metadata } from 'next';
 import { BRAND, SITE_URL } from '@/data/site';
 
 interface PageMetaInput {
-  /** Full page title including the brand suffix, e.g. "Patient Services | CHCA Health". */
+  /** Full page title including the brand suffix, e.g. "Family Physician in Sacramento, CA | Apollo Physicians". */
   title: string;
   description: string;
   /** Path beginning with "/". Used for the canonical URL and OpenGraph URL. */
   path: string;
-  /** Absolute or site-relative image URL. Defaults to the brand OG image (700x400). */
+  /** Absolute or site-relative image URL. Omitted when the site has no share image. */
   image?: string;
-  /** Set to true for pages that must not be indexed (for example, the contact-form thank-you state). */
+  /** Set to true for pages that must not be indexed. */
   noIndex?: boolean;
 }
 
 /**
- * Builds the Metadata object for a route. The root layout sets metadataBase,
- * so the relative canonical and OpenGraph URLs resolve against SITE_URL.
+ * Builds the Metadata object for a route. The root layout sets metadataBase, so the
+ * relative canonical and OpenGraph URLs resolve against SITE_URL.
  */
 export function buildMetadata({ title, description, path, image, noIndex = false }: PageMetaInput): Metadata {
-  const ogImage = image ?? BRAND.ogImage;
   const canonicalUrl = new URL(path, SITE_URL).toString();
 
   return {
     title: { absolute: title },
     description,
     alternates: { canonical: canonicalUrl },
-    robots: noIndex ? { index: false, follow: true } : { index: true, follow: true },
+    robots: noIndex ? { index: false, follow: false } : { index: true, follow: true },
     openGraph: {
       type: 'website',
       locale: 'en_US',
@@ -33,13 +32,13 @@ export function buildMetadata({ title, description, path, image, noIndex = false
       title,
       description,
       url: canonicalUrl,
-      images: [{ url: ogImage, width: 700, height: 400, alt: `${BRAND.name} logo` }],
+      ...(image ? { images: [{ url: image }] } : {}),
     },
     twitter: {
-      card: 'summary_large_image',
+      card: image ? 'summary_large_image' : 'summary',
       title,
       description,
-      images: [ogImage],
+      ...(image ? { images: [image] } : {}),
     },
   };
 }
