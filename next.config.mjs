@@ -32,6 +32,21 @@ const nextConfig = {
         permanent: true,
         statusCode: 301,
       },
+      // The previous domain. Works once both hosts are attached to this Vercel project.
+      {
+        source: '/:path*',
+        has: [{ type: 'host', value: 'drparamjitpanesar.com' }],
+        destination: `https://${SITE_HOST}/:path*`,
+        permanent: true,
+        statusCode: 301,
+      },
+      {
+        source: '/:path*',
+        has: [{ type: 'host', value: 'www.drparamjitpanesar.com' }],
+        destination: `https://${SITE_HOST}/:path*`,
+        permanent: true,
+        statusCode: 301,
+      },
       { source: '/family-physician-sacramento', destination: '/', permanent: true, statusCode: 301 },
       { source: '/locations', destination: '/', permanent: true, statusCode: 301 },
       { source: '/locations/:slug*', destination: '/', permanent: true, statusCode: 301 },

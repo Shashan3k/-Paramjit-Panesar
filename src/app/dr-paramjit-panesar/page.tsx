@@ -8,7 +8,7 @@ import { PROVIDER, SPECIALTY } from '@/data/practice';
 import { PAGE_META } from '@/data/pages';
 import { NPI, OFFICE, PHONES } from '@/data/site';
 import { buildMetadata } from '@/lib/seo';
-import { breadcrumbNode, clinicNode, graph, physicianNode } from '@/lib/structured-data';
+import { breadcrumbNode, clinicNode, graph, physicianNode, websiteNode } from '@/lib/structured-data';
 import { telHref } from '@/lib/utils';
 
 export const metadata = buildMetadata({
@@ -22,6 +22,7 @@ export default function PanesarPage() {
     <>
       <JsonLd
         data={graph(
+          websiteNode(),
           clinicNode(),
           physicianNode(),
           breadcrumbNode('/dr-paramjit-panesar#breadcrumb', [

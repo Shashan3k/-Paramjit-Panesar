@@ -1,4 +1,4 @@
-import { BRAND, NPI, OFFICE, PHONES, SITE_URL } from '@/data/site';
+import { ASSETS, BRAND, NPI, OFFICE, PHONES, SAME_AS_PROFILES, SITE_URL, absoluteUrl } from '@/data/site';
 import { INSURANCE_ACCEPTED, PROVIDER, SPECIALTY } from '@/data/practice';
 import type { FaqItem } from '@/types';
 
@@ -12,6 +12,19 @@ type Node = Record<string, unknown>;
 
 export const CLINIC_ID = `${SITE_URL}/#clinic`;
 export const PHYSICIAN_ID = `${SITE_URL}/#dr-paramjit-panesar`;
+export const WEBSITE_ID = `${SITE_URL}/#website`;
+
+/** WebSite node. Published by the clinic, so it links to the clinic entity by @id. */
+export function websiteNode(): Node {
+  return {
+    '@type': 'WebSite',
+    '@id': WEBSITE_ID,
+    url: SITE_URL,
+    name: BRAND.name,
+    inLanguage: 'en-US',
+    publisher: { '@id': CLINIC_ID },
+  };
+}
 
 export function clinicNode(): Node {
   return {
@@ -20,6 +33,9 @@ export function clinicNode(): Node {
     name: BRAND.name,
     legalName: BRAND.legalName,
     url: SITE_URL,
+    logo: { '@type': 'ImageObject', url: ASSETS.logo },
+    image: ASSETS.shareCard,
+    sameAs: SAME_AS_PROFILES,
     telephone: PHONES.main.tel,
     medicalSpecialty: ['FamilyPractice'],
     address: {
@@ -45,6 +61,7 @@ export function physicianNode(): Node {
     honorificPrefix: PROVIDER.honorificPrefix,
     honorificSuffix: PROVIDER.honorificSuffix,
     url: `${SITE_URL}/dr-paramjit-panesar`,
+    sameAs: SAME_AS_PROFILES,
     telephone: PHONES.main.tel,
     medicalSpecialty: 'FamilyPractice',
     address: {
@@ -81,7 +98,7 @@ export function breadcrumbNode(id: string, items: readonly { name: string; path:
       '@type': 'ListItem',
       position: index + 1,
       name: item.name,
-      item: new URL(item.path, SITE_URL).toString(),
+      item: absoluteUrl(item.path),
     })),
   };
 }
