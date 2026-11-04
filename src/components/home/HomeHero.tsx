@@ -13,7 +13,7 @@ export function HomeHero() {
   return (
     <section aria-labelledby="hero-heading" className="relative overflow-hidden bg-gradient-to-br from-navy-900 via-navy-800 to-teal-800 text-white">
       <div className="mx-auto grid max-w-6xl items-center gap-10 px-4 py-14 sm:px-6 md:py-20 lg:grid-cols-2 lg:gap-16 lg:px-8">
-        <div>
+        <div className="hero-rise">
           <p className="eyebrow text-teal-200">Apollo Physicians</p>
           <h1 id="hero-heading" className="mt-3 text-4xl font-bold leading-tight tracking-tight md:text-5xl">
             Family Physician in Sacramento, CA
@@ -46,7 +46,7 @@ export function HomeHero() {
           </ul>
         </div>
 
-        <aside aria-label="Office details" className="rounded-2xl bg-white/5 p-8 shadow-2xl ring-1 ring-white/10">
+        <aside aria-label="Office details" className="hero-rise rounded-2xl bg-white/5 p-8 shadow-2xl ring-1 ring-white/10 [animation-delay:150ms]">
           <div className="flex items-center gap-3">
             <Stethoscope className="h-6 w-6 text-teal-300" aria-hidden="true" />
             <p className="text-lg font-semibold">{PROVIDER.name}</p>
@@ -54,11 +54,11 @@ export function HomeHero() {
           <p className="mt-2 text-navy-100">Family Medicine</p>
           <dl className="mt-6 space-y-4 text-navy-100">
             <div>
-              <dt className="text-sm font-semibold uppercase tracking-wide text-teal-300">Office</dt>
+              <dt className="text-sm font-semibold text-teal-300">Office</dt>
               <dd className="mt-1">{OFFICE.line}</dd>
             </div>
             <div>
-              <dt className="text-sm font-semibold uppercase tracking-wide text-teal-300">Phone</dt>
+              <dt className="text-sm font-semibold text-teal-300">Phone</dt>
               <dd className="mt-1">{PHONES.main.display}</dd>
             </div>
           </dl>
