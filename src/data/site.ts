@@ -7,11 +7,34 @@ import type { PhoneNumber } from '@/types';
  */
 
 /**
- * Public origin for canonical URLs, sitemap, and OpenGraph. The deployment domain is
- * confirmed separately, so the default is the official reference domain and can be
- * overridden with NEXT_PUBLIC_SITE_URL.
+ * Public origin for canonical URLs, sitemap, robots, OpenGraph, and schema IDs. Pinned in code so
+ * no environment variable, preview deployment, or localhost value can change it.
  */
-export const SITE_URL: string = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://www.apollophysicians.com';
+export const SITE_URL = 'https://www.apollophysicians.com' as const;
+
+/**
+ * Absolute URL for a route path. The home page has no trailing slash, so canonicals, the sitemap,
+ * and schema all use the same string.
+ */
+export function absoluteUrl(path: string): string {
+  return path === '/' ? SITE_URL : `${SITE_URL}${path}`;
+}
+
+/** Stable absolute URLs for brand assets used in metadata and schema. */
+export const ASSETS = {
+  logo: `${SITE_URL}/brand/logo.png`,
+  shareCard: `${SITE_URL}/brand/share-card.png`,
+} as const;
+
+/**
+ * Verified profiles for the physician, used as schema.org sameAs. Append Facebook, LinkedIn,
+ * or Google Business Profile URLs here; every schema node reads from this array.
+ */
+export const SAME_AS_PROFILES: readonly string[] = [
+  'https://www.doximity.com/pub/paramjit-panesar-md',
+  'https://doctor.webmd.com/doctor/paramjit-panesar-c3eb9c8a-cf8b-4162-99f1-8af864e0efac-overview',
+  'https://www.sharecare.com/doctor/dr-paramjit-s-panesar',
+];
 
 export const BRAND = {
   /** Public-facing brand. */

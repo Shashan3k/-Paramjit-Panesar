@@ -8,7 +8,7 @@ import { ELK_GROVE_FAQS, ELK_GROVE_NOTE, INSURANCE_ACCEPTED, INITIAL_VISIT_PRICE
 import { PAGE_META } from '@/data/pages';
 import { OFFICE, PHONES } from '@/data/site';
 import { buildMetadata } from '@/lib/seo';
-import { breadcrumbNode, clinicNode, faqNode, graph, physicianNode } from '@/lib/structured-data';
+import { breadcrumbNode, clinicNode, faqNode, graph, physicianNode, websiteNode } from '@/lib/structured-data';
 import { mapsDirectionsUrl, telHref } from '@/lib/utils';
 
 export const metadata = buildMetadata({
@@ -22,6 +22,7 @@ export default function ElkGrovePage() {
     <>
       <JsonLd
         data={graph(
+          websiteNode(),
           clinicNode(),
           physicianNode(),
           faqNode('/family-physician-elk-grove#faq', ELK_GROVE_FAQS),

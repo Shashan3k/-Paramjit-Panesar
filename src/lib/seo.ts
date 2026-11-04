@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { BRAND, SITE_URL } from '@/data/site';
+import { ASSETS, BRAND, absoluteUrl } from '@/data/site';
 
 interface PageMetaInput {
   /** Full page title including the brand suffix, e.g. "Family Physician in Sacramento, CA | Apollo Physicians". */
@@ -17,8 +17,8 @@ interface PageMetaInput {
  * Builds the Metadata object for a route. The root layout sets metadataBase, so the
  * relative canonical and OpenGraph URLs resolve against SITE_URL.
  */
-export function buildMetadata({ title, description, path, image, noIndex = false }: PageMetaInput): Metadata {
-  const canonicalUrl = new URL(path, SITE_URL).toString();
+export function buildMetadata({ title, description, path, image = ASSETS.shareCard, noIndex = false }: PageMetaInput): Metadata {
+  const canonicalUrl = absoluteUrl(path);
 
   return {
     title: { absolute: title },
@@ -32,13 +32,13 @@ export function buildMetadata({ title, description, path, image, noIndex = false
       title,
       description,
       url: canonicalUrl,
-      ...(image ? { images: [{ url: image }] } : {}),
+      images: [{ url: image, width: 1200, height: 630 }],
     },
     twitter: {
-      card: image ? 'summary_large_image' : 'summary',
+      card: 'summary_large_image',
       title,
       description,
-      ...(image ? { images: [image] } : {}),
+      images: [image],
     },
   };
 }
