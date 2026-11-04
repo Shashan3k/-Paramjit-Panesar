@@ -40,9 +40,21 @@ export function physicianNode(): Node {
   return {
     '@type': 'Physician',
     '@id': PHYSICIAN_ID,
-    name: PROVIDER.name,
+    // Name parts follow schema.org: the honorifics are separate from the name itself.
+    name: PROVIDER.fullName,
+    honorificPrefix: PROVIDER.honorificPrefix,
+    honorificSuffix: PROVIDER.honorificSuffix,
     url: `${SITE_URL}/dr-paramjit-panesar`,
-    medicalSpecialty: SPECIALTY,
+    telephone: PHONES.main.tel,
+    medicalSpecialty: 'FamilyPractice',
+    address: {
+      '@type': 'PostalAddress',
+      streetAddress: OFFICE.street,
+      addressLocality: OFFICE.city,
+      addressRegion: OFFICE.state,
+      postalCode: OFFICE.postalCode,
+      addressCountry: 'US',
+    },
     worksFor: { '@id': CLINIC_ID },
     identifier: { '@type': 'PropertyValue', propertyID: 'NPI', value: NPI.panesar },
   };

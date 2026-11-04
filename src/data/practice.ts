@@ -39,6 +39,9 @@ export const SPECIALTY = 'Family Medicine';
 export const PROVIDER = {
   name: 'Dr. Paramjit Panesar, MD',
   shortName: 'Dr. Paramjit Panesar',
+  fullName: 'Paramjit Panesar',
+  honorificPrefix: 'Dr.',
+  honorificSuffix: 'MD',
 } as const;
 
 /** Elk Grove has no office. CLIENT: the practice's keyword list says patients travel to Sacramento. */
