@@ -33,7 +33,7 @@ export default function ElkGrovePage() {
       />
 
       <PageHero
-        title="Family Physician Serving Elk Grove, CA"
+        title="Family Physician for Elk Grove Patients"
         eyebrow="Elk Grove patients"
         subtitle="Apollo Physicians is in Sacramento. Here is how Elk Grove patients book and what to expect."
       >

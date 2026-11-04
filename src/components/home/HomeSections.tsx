@@ -12,9 +12,15 @@ export function HomeSections() {
     <>
       <Section headingId="home-about-heading" title="About Apollo Physicians" eyebrow="Family medicine in Sacramento">
         <div className="grid gap-8 lg:grid-cols-2">
-          <p className="text-lg leading-relaxed text-navy-800">
-            Apollo Physicians is a family medicine practice at {OFFICE.line}. {APPOINTMENT_AVAILABILITY} {INITIAL_VISIT_PRICE}
-          </p>
+          <div className="space-y-4">
+            <p className="text-lg leading-relaxed text-navy-800">
+              Apollo Physicians is a family medicine practice at {OFFICE.line}. {APPOINTMENT_AVAILABILITY} {INITIAL_VISIT_PRICE}
+            </p>
+            <p className="text-lg leading-relaxed text-navy-800">
+              Looking for a family doctor or a primary care doctor in Sacramento? Family medicine is a primary care specialty, and
+              Dr. Paramjit Panesar, MD, practices it here.
+            </p>
+          </div>
           <div className="card space-y-4">
             <p className="flex items-center gap-2 font-semibold text-navy-900">
               <Calendar className="h-5 w-5 text-teal-700" aria-hidden="true" />
