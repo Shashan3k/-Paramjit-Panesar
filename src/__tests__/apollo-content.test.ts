@@ -143,7 +143,7 @@ describe('source tree is free of the previous organisation', () => {
   it('makes no unverified claims in the copy', () => {
     const UNVERIFIED = ['Medi-Cal', 'Nivano', 'Rivercity', 'River City', 'female', 'Wikidata', 'minutes', 'Board-certified', 'accepting new patients'];
     const hits: string[] = [];
-    for (const file of files('src/data').concat(files('src/app'))) {
+    for (const file of files('src/data').concat(files('src/app'), files('src/components'))) {
       const text = readFileSync(file, 'utf8');
       for (const word of UNVERIFIED) if (text.toLowerCase().includes(word.toLowerCase())) hits.push(`${file}: ${word}`);
     }
