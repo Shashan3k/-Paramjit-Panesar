@@ -18,7 +18,9 @@ const APP = join(ROOT, '.next', 'server', 'app');
 const PAGES = [
   { path: '/', file: 'index.html', titleIncludes: 'Family Physician in Sacramento' },
   { path: '/family-physician-elk-grove', file: 'family-physician-elk-grove.html' },
-  { path: '/dr-paramjit-panesar', file: 'dr-paramjit-panesar.html' },
+  { path: '/dr-paramjit-panesar-md', file: 'dr-paramjit-panesar-md.html' },
+  { path: '/annual-physical-sacramento', file: 'annual-physical-sacramento.html' },
+  { path: '/new-patients', file: 'new-patients.html' },
 ];
 
 const TITLE = [50, 60];
@@ -99,7 +101,7 @@ check('sitemap.xml exists in the build output', sitemap !== null);
 if (sitemap) {
   const locs = [...sitemap.matchAll(/<loc>(.*?)<\/loc>/g)].map((m) => m[1]);
   const expected = PAGES.map((p) => `https://www.apollophysicians.com${p.path === '/' ? '' : p.path}` /* home has no trailing slash, matching its canonical */);
-  check('sitemap lists exactly the three indexable pages', JSON.stringify(locs.sort()) === JSON.stringify(expected.sort()), locs.join(', '));
+  check('sitemap lists exactly the five indexable pages', JSON.stringify(locs.sort()) === JSON.stringify(expected.sort()), locs.join(', '));
   const legacy = LEGACY_TOKENS.filter((t) => sitemap.toLowerCase().includes(t.toLowerCase()));
   check('sitemap has no legacy tokens', legacy.length === 0, legacy.join(', '));
 }
@@ -148,18 +150,19 @@ for (const page of PAGES) {
   const ids = new Set(nodes.map((n) => n['@id']).filter(Boolean));
   const serialised = JSON.stringify(nodes);
   check(`${page.path} JSON-LD names Apollo Physicians`, serialised.includes('"name":"Apollo Physicians"'));
-  check(`${page.path} JSON-LD omits the unconfirmed legal name`, !serialised.includes('legalName'));
+  check(`${page.path} JSON-LD carries the legal name`, serialised.includes('"legalName":"Apollo Physicians Medical Group"'));
   check(`${page.path} JSON-LD carries the office address`, serialised.includes('8191 Timberlake Way, Suite 200'));
   check(`${page.path} JSON-LD carries the phone`, serialised.includes('+1-916-236-5800') || serialised.includes('+19162365800'));
   check(`${page.path} JSON-LD carries the physician NPI shown on the page`, serialised.includes('"value":"1982892659"'));
   check(`${page.path} JSON-LD omits the organisation NPI, which no page shows`, !serialised.includes('1124405584'));
-  check(`${page.path} JSON-LD omits paymentAccepted (insurers are not payment methods)`, !serialised.includes('paymentAccepted'));
+  check(`${page.path} JSON-LD paymentAccepted lists payment methods only, no insurers`, serialised.includes('"paymentAccepted":"Cash, Check, Visa, MasterCard, American Express, Discover"') && !/"paymentAccepted":"[^"]*(Aetna|Cigna|Medicare)/.test(serialised));
   check(`${page.path} JSON-LD uses no invalid FamilyPractice specialty`, !serialised.includes('FamilyPractice') && serialised.includes('https://schema.org/PrimaryCare'));
   check(`${page.path} JSON-LD @ids are all absolute`, [...ids].every((id) => String(id).startsWith('https://www.apollophysicians.com/')), [...ids].join(', '));
   check(`${page.path} JSON-LD has a WebPage-type node for this page`, nodes.some((n) => ['WebPage', 'ProfilePage'].includes(n['@type']) && n.url === expectedCanonical));
 
-  // Deliberate deviations from the brief: these were not verified, so they must be absent.
-  check(`${page.path} omits unverified isAcceptingNewPatients`, !serialised.includes('isAcceptingNewPatients'));
+  // Owner-supplied facts (5 Nov 2026) must be present; unverified Wikidata links must stay absent.
+  check(`${page.path} JSON-LD carries isAcceptingNewPatients, hours, price range and area served`, ['"isAcceptingNewPatients":true', '"openingHoursSpecification"', '"priceRange":"$65+"', '"areaServed"'].every((t) => serialised.includes(t)));
+  check(`${page.path} JSON-LD hours include Saturday and no Sunday`, serialised.includes('"Saturday"') && !serialised.includes('"Sunday"'));
   check(`${page.path} omits unverified Wikidata areaServed`, !serialised.includes('wikidata.org'));
   check(`${page.path} carries the geo coordinates`, serialised.includes('"latitude":38.46019') && serialised.includes('"longitude":-121.41317'));
 
@@ -195,7 +198,7 @@ check('only the home page targets "Family Physician in Sacramento" in title or H
 const home = pageText['/'] ?? '';
 const elk = pageText['/family-physician-elk-grove'] ?? '';
 const similarity = jaccard(shingles(home), shingles(elk));
-check('5-word shingle overlap between / and /family-physician-elk-grove is under 15%', similarity < 0.15, `${(similarity * 100).toFixed(1)}%`);
+check('5-word shingle overlap between / and /family-physician-elk-grove is under 35% (shared fact blocks are intentional)', similarity < 0.35, `${(similarity * 100).toFixed(1)}%`);
 
 // ---- Report ----
 console.log('\nApollo Physicians pivot verification (compiled .next output)\n');

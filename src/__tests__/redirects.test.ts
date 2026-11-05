@@ -55,9 +55,16 @@ describe('legacy redirects', () => {
 
   it('send the old physician profile to the physician page, and old insurance and pricing URLs to the home page', () => {
     const map = new Map(pathRedirects.map((r) => [r.source, r.destination]));
-    expect(map.get('/provider/paramjit-panesar-md')).toBe('/dr-paramjit-panesar');
+    expect(map.get('/provider/paramjit-panesar-md')).toBe('/dr-paramjit-panesar-md');
     expect(map.get('/content/insurance')).toBe('/');
     expect(map.get('/content/cash-prices')).toBe('/');
+  });
+
+  it('moves the old physician URL and the old new-patient page to their new homes', () => {
+    const map = new Map(pathRedirects.map((r) => [r.source, r.destination]));
+    expect(map.get('/dr-paramjit-panesar')).toBe('/dr-paramjit-panesar-md');
+    expect(map.get('/providers/paramjit-panesar')).toBe('/dr-paramjit-panesar-md');
+    expect(map.get('/content/new-patients')).toBe('/new-patients');
   });
 
   it('leave unconfirmed providers, the portal and unconfirmed services alone', () => {

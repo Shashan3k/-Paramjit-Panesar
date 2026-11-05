@@ -12,6 +12,8 @@ import { PHONES } from './site';
 /** Primary navigation, shared by the header (desktop and mobile). */
 export const MAIN_NAV: readonly NavLink[] = [
   { label: 'Home', href: PAGE_META.home.path },
+  { label: 'New patients', href: PAGE_META.newPatients.path },
+  { label: 'Annual physical', href: PAGE_META.annualPhysical.path },
   { label: 'Elk Grove patients', href: PAGE_META.elkGrove.path },
   { label: PROVIDER.shortName, href: PAGE_META.panesar.path },
 ];
@@ -22,6 +24,8 @@ export const FOOTER_COLUMNS: readonly { title: string; links: readonly NavLink[]
     title: 'Pages',
     links: [
       { label: 'Family Physician in Sacramento', href: PAGE_META.home.path },
+      { label: 'Doctor Accepting New Patients', href: PAGE_META.newPatients.path },
+      { label: 'Annual Physical Sacramento', href: PAGE_META.annualPhysical.path },
       { label: 'Family Physician in Elk Grove', href: PAGE_META.elkGrove.path },
       { label: PROVIDER.name, href: PAGE_META.panesar.path },
     ],
@@ -49,5 +53,13 @@ export const BREADCRUMBS = {
   panesar: [
     { name: 'Home', path: PAGE_META.home.path },
     { name: PROVIDER.name, path: PAGE_META.panesar.path },
+  ],
+  annualPhysical: [
+    { name: 'Home', path: PAGE_META.home.path },
+    { name: 'Annual Physical Sacramento', path: PAGE_META.annualPhysical.path },
+  ],
+  newPatients: [
+    { name: 'Home', path: PAGE_META.home.path },
+    { name: 'New Patients', path: PAGE_META.newPatients.path },
   ],
 } as const satisfies Record<string, readonly Crumb[]>;

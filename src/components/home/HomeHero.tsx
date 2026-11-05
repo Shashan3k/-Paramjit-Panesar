@@ -1,7 +1,7 @@
 import { CheckCircle2, MapPin, Phone, Stethoscope } from 'lucide-react';
 import { ButtonLink } from '@/components/ui/Button';
 import { InsurancePills } from '@/components/ui/InsurancePills';
-import { APPOINTMENT_AVAILABILITY, HOME_LEAD, INITIAL_VISIT_PRICE, PROVIDER } from '@/data/practice';
+import { ACCEPTING_NEW_PATIENTS, APPOINTMENT_AVAILABILITY, HOME_LEAD, HOURS_SENTENCE, INITIAL_VISIT_PRICE, PROVIDER } from '@/data/practice';
 import { OFFICE, PHONES } from '@/data/site';
 import { mapsDirectionsUrl, telHref } from '@/lib/utils';
 
@@ -21,7 +21,7 @@ export function HomeHero() {
           </h1>
           <h2 className="mt-3 text-2xl font-semibold text-teal-100 md:text-3xl">{APPOINTMENT_AVAILABILITY}</h2>
           <p className="mt-5 max-w-xl text-lg leading-relaxed text-navy-100">
-            {HOME_LEAD} Call {PHONES.main.display} to book your visit.
+            {HOME_LEAD} {ACCEPTING_NEW_PATIENTS} Call {PHONES.main.display} to book your visit.
           </p>
 
           <div className="mt-8 flex flex-wrap gap-3">
@@ -46,6 +46,14 @@ export function HomeHero() {
               <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-teal-300" aria-hidden="true" />
               <span>{INITIAL_VISIT_PRICE}</span>
             </li>
+            <li className="flex items-start gap-2">
+              <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-teal-300" aria-hidden="true" />
+              <span>{ACCEPTING_NEW_PATIENTS}</span>
+            </li>
+            <li className="flex items-start gap-2">
+              <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-teal-300" aria-hidden="true" />
+              <span>Open Saturday, 9:00 AM to 2:00 PM.</span>
+            </li>
           </ul>
         </div>
 
@@ -63,6 +71,10 @@ export function HomeHero() {
             <div>
               <dt className="text-sm font-semibold text-teal-300">Phone</dt>
               <dd className="mt-1">{PHONES.main.display}</dd>
+            </div>
+            <div>
+              <dt className="text-sm font-semibold text-teal-300">Hours</dt>
+              <dd className="mt-1">{HOURS_SENTENCE}</dd>
             </div>
           </dl>
         </aside>
