@@ -31,12 +31,13 @@ const LEGACY_REDIRECTS = [
     destination: '/',
   })),
   // The same physician.
-  { source: '/provider/paramjit-panesar-md', destination: '/dr-paramjit-panesar' },
+  { source: '/provider/paramjit-panesar-md', destination: '/dr-paramjit-panesar-md' },
+  // The old new-patient page now has an equivalent page.
+  { source: '/content/new-patients', destination: '/new-patients' },
   // Insurance, pricing, scheduling and the confirmed service (family medicine is primary care).
   ...[
     '/content/insurance',
     '/content/cash-prices',
-    '/content/new-patients',
     '/schedule',
     '/registration',
     '/services',
@@ -103,7 +104,9 @@ const nextConfig = {
       { source: '/family-physician-sacramento', destination: '/', permanent: true, statusCode: 301 },
       { source: '/locations', destination: '/', permanent: true, statusCode: 301 },
       { source: '/locations/:slug*', destination: '/', permanent: true, statusCode: 301 },
-      { source: '/providers/paramjit-panesar', destination: '/dr-paramjit-panesar', permanent: true, statusCode: 301 },
+      { source: '/providers/paramjit-panesar', destination: '/dr-paramjit-panesar-md', permanent: true, statusCode: 301 },
+      // The physician page moved from /dr-paramjit-panesar to /dr-paramjit-panesar-md (5 Nov 2026).
+      { source: '/dr-paramjit-panesar', destination: '/dr-paramjit-panesar-md', permanent: true, statusCode: 301 },
       ...LEGACY_REDIRECTS,
     ];
   },

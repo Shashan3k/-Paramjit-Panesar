@@ -22,7 +22,9 @@ const APP = join(ROOT, '.next', 'server', 'app');
 const PAGES = [
   ['/', 'index.html'],
   ['/family-physician-elk-grove', 'family-physician-elk-grove.html'],
-  ['/dr-paramjit-panesar', 'dr-paramjit-panesar.html'],
+  ['/dr-paramjit-panesar-md', 'dr-paramjit-panesar-md.html'],
+  ['/annual-physical-sacramento', 'annual-physical-sacramento.html'],
+  ['/new-patients', 'new-patients.html'],
 ];
 
 async function loadVocabulary() {

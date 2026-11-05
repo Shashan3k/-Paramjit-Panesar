@@ -57,13 +57,8 @@ export const GEO = { latitude: 38.46019, longitude: -121.41317 } as const;
 export const BRAND: { readonly name: string; readonly legalName: string | null } = {
   /** Public-facing brand. Confirmed by the practice. */
   name: 'Apollo Physicians',
-  /**
-   * Legal business name. NOT CONFIRMED (docs/seo/client-confirmations.md, item 4): the NPI registry
-   * spells it "APOLLO PHYSICANS MEDICAL GROUP", which may be a registry typo. Leave null until the
-   * practice supplies the filed name. While null, the footer shows the brand name and the schema
-   * omits legalName, so nothing unconfirmed is published.
-   */
-  legalName: null,
+  /** Legal entity name, supplied by the owner on 5 Nov 2026. The NPI registry spells it "APOLLO PHYSICANS", a registry typo. */
+  legalName: 'Apollo Physicians Medical Group',
 };
 
 /** The only public phone number. Confirmed by the practice. Single source of truth, like OFFICE. */
@@ -77,6 +72,9 @@ export const BOOKING_URL: string | null = null;
 export const PHONES = {
   main: { label: 'Main', display: '916-236-5800', tel: '+19162365800' } satisfies PhoneNumber,
 } as const;
+
+/** Office fax, supplied by the owner on 5 Nov 2026. Used for records requests and in schema only. */
+export const FAX = { display: '916-266-7473', tel: '+19162667473' } as const;
 
 const OFFICE_PARTS = {
   street: '8191 Timberlake Way, Suite 200',

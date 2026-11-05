@@ -2,8 +2,19 @@ import { readdirSync, readFileSync, statSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { PAGE_META } from '@/data/pages';
-import { ELK_GROVE_FAQS, ELK_GROVE_NOTE, HOME_FAQS, HOME_LEAD, PANESAR_FAQS, PANESAR_LEAD } from '@/data/practice';
-import { buildLlmsTxt } from '@/lib/llms';
+import {
+  ACCESS_COMPARISON,
+  ANNUAL_PHYSICAL_FAQS,
+  ELK_GROVE_FAQS,
+  ELK_GROVE_NOTE,
+  HOME_FAQS,
+  HOME_LEAD,
+  NEW_PATIENT_FAQS,
+  PANESAR_FAQS,
+  PANESAR_LEAD,
+  SERVICE_GROUPS,
+} from '@/data/practice';
+import { buildLlmsFullTxt, buildLlmsTxt } from '@/lib/llms';
 
 /**
  * Medical (YMYL) site rule: no unsupported superlatives, comparisons, outcomes or wait-time claims, and
@@ -46,8 +57,11 @@ const dataStrings = [
   HOME_LEAD,
   PANESAR_LEAD,
   ELK_GROVE_NOTE,
-  ...[...HOME_FAQS, ...ELK_GROVE_FAQS, ...PANESAR_FAQS].flatMap((f) => [f.question, f.answer]),
+  ...[...HOME_FAQS, ...ELK_GROVE_FAQS, ...PANESAR_FAQS, ...ANNUAL_PHYSICAL_FAQS, ...NEW_PATIENT_FAQS].flatMap((f) => [f.question, f.answer]),
+  ...ACCESS_COMPARISON.rows.flatMap((r) => [r.label, ...r.cells]),
+  ...SERVICE_GROUPS.flatMap((g) => g.items),
   buildLlmsTxt(),
+  buildLlmsFullTxt(),
 ];
 
 const jsxStrings = files('src')
@@ -68,8 +82,16 @@ describe('no unsupported claims in anything the site publishes', () => {
     expect(jsxStrings.filter((s) => re.test(s))).toEqual([]);
   });
 
-  it('makes no health, outcome or advice claims', () => {
+  it('lists services without outcome, cure or personal-advice claims', () => {
+    // Services such as diabetes or hypertension management may be listed (owner-supplied, 5 Nov 2026).
+    // What stays banned is promising results or telling the reader what to do about their own health.
     const all = [...dataStrings, ...jsxStrings].join('\n');
-    expect(all).not.toMatch(/\b(treat|treats|treating|treatment|diagnos\w+|prescri\w+|symptoms?|conditions?|chronic|diabetes|hypertension|cancer)\b/i);
+    expect(all).not.toMatch(/\b(will (cure|heal|fix|reverse)|reverse[sd]?|eliminate[sd]?|prevents?|you (should|must) (take|stop|start))\b/i);
+    expect(all).not.toMatch(/\b(diagnose[sd]?|diagnosis) (you|your)\b/i);
+  });
+
+  it('names no other provider, so no comparison can be read as a claim about one', () => {
+    const all = [...dataStrings, ...jsxStrings].join('\n');
+    expect(all).not.toMatch(/Kaiser|Dignity|Mercy|UC Davis|Takhar|Urgent Care at|Sutter (Medical|Health) (Center|Hospital)/i);
   });
 });

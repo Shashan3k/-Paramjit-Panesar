@@ -28,22 +28,24 @@ describe('page titles and descriptions', () => {
 });
 
 describe('verified facts', () => {
-  it('lists exactly the insurance plans the practice supplied', () => {
+  it('lists exactly the insurance plans the owner supplied on 5 Nov 2026', () => {
     expect([...INSURANCE_ACCEPTED]).toEqual([
       'Aetna',
       'Anthem Blue Cross',
-      'Blue Shield',
+      'Blue Shield of California',
       'Cigna',
       'Health Net',
-      'United Healthcare',
-      'Sutter',
+      'UnitedHealthcare',
+      'Sutter Health',
       'Hill Physicians',
+      'Nivano Physicians',
       'Medicare',
+      'Medi-Cal (most plans)',
     ]);
   });
 
-  it('uses the confirmed phone and address, and no unconfirmed legal name', () => {
-    expect(BRAND.legalName).toBeNull();
+  it('uses the confirmed phone, address and legal name', () => {
+    expect(BRAND.legalName).toBe('Apollo Physicians Medical Group');
     expect(OFFICE.line).toBe('8191 Timberlake Way, Suite 200, Sacramento, CA 95823');
     expect(PHONES.main.display).toBe('916-236-5800');
     expect(NPI.organization).toBe('1124405584');
@@ -103,19 +105,16 @@ describe('structured data graph', () => {
     expect(clinic.telephone).toBe('+19162365800');
     expect(clinic.medicalSpecialty).toBe('https://schema.org/PrimaryCare');
     expect(clinic.geo).toEqual({ '@type': 'GeoCoordinates', latitude: GEO.latitude, longitude: GEO.longitude });
-    for (const field of [
-      'legalName',
-      'identifier',
-      'paymentAccepted',
-      'sameAs',
-      'isAcceptingNewPatients',
-      'areaServed',
-      'openingHoursSpecification',
-      'openingHours',
-      'priceRange',
-      'aggregateRating',
-      'review',
-    ]) {
+    expect(clinic.legalName).toBe('Apollo Physicians Medical Group');
+    expect(clinic.isAcceptingNewPatients).toBe(true);
+    expect(clinic.priceRange).toBe('$65+');
+    expect(clinic.paymentAccepted).toBe('Cash, Check, Visa, MasterCard, American Express, Discover');
+    expect(clinic.faxNumber).toBe('+19162667473');
+    expect(JSON.stringify(clinic.areaServed)).toContain('Elk Grove');
+    // Sunday is closed, so no entry names it. Saturday is present.
+    const days = (clinic.openingHoursSpecification as { dayOfWeek: string[]; opens: string; closes: string }[]).flatMap((h) => h.dayOfWeek);
+    expect(days).toEqual(['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']);
+    for (const field of ['identifier', 'sameAs', 'openingHours', 'aggregateRating', 'review']) {
       expect(clinic).not.toHaveProperty(field);
     }
   });
@@ -128,8 +127,14 @@ describe('structured data graph', () => {
     const physician = physicianNode();
     expect(physician.sameAs).toEqual([...PHYSICIAN_PROFILES]);
     expect(PHYSICIAN_PROFILES.length).toBeGreaterThan(0);
-    expect(physician.identifier).toEqual({ '@type': 'PropertyValue', propertyID: 'NPI', value: NPI.panesar });
+    expect(physician.identifier).toEqual([
+      { '@type': 'PropertyValue', propertyID: 'NPI', value: NPI.panesar },
+      { '@type': 'PropertyValue', propertyID: 'California medical license', value: 'A 114684' },
+    ]);
     expect(physician.worksFor).toEqual({ '@id': CLINIC_ID });
+    expect(JSON.stringify(physician.memberOf)).toContain('American Board of Family Medicine');
+    expect(JSON.stringify(physician.alumniOf)).toContain('Dayanand Medical College');
+    expect(physician.isAcceptingNewPatients).toBe(true);
   });
 
   it('puts the office inside plausible Sacramento coordinates', () => {
@@ -153,7 +158,7 @@ describe('structured data graph', () => {
     expect(page.about).toEqual({ '@id': CLINIC_ID });
     expect(page.breadcrumb).toEqual({ '@id': `${SITE_URL}/family-physician-elk-grove#breadcrumb` });
     expect(page.hasPart).toEqual({ '@id': `${SITE_URL}/family-physician-elk-grove#faq` });
-    const profile = webPageNode({ path: '/dr-paramjit-panesar', name: 'n', description: 'd', type: 'ProfilePage', about: 'physician' }) as Record<string, unknown>;
+    const profile = webPageNode({ path: '/dr-paramjit-panesar-md', name: 'n', description: 'd', type: 'ProfilePage', about: 'physician' }) as Record<string, unknown>;
     expect(profile['@type']).toBe('ProfilePage');
     expect(profile.mainEntity).toEqual({ '@id': PHYSICIAN_ID });
   });
@@ -194,7 +199,9 @@ describe('source tree is free of the previous organisation', () => {
   });
 
   it('makes no unverified claims in the copy', () => {
-    const UNVERIFIED = ['Medi-Cal', 'Nivano', 'Rivercity', 'River City', 'female', 'Wikidata', 'minutes', 'Board-certified', 'accepting new patients'];
+    // Medi-Cal, Nivano, board certification and new-patient status were supplied by the owner on 5 Nov 2026.
+    // Still unverified: other insurers, drive times, Wikidata links, and anyone else's name.
+    const UNVERIFIED = ['Rivercity', 'River City', 'female', 'Wikidata', 'minutes', 'Kaiser', 'Takhar'];
     const hits: string[] = [];
     for (const file of files('src/data').concat(files('src/app'), files('src/components'))) {
       const text = readFileSync(file, 'utf8');

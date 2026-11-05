@@ -28,7 +28,6 @@ const PHONE_PATTERN = /(?:\+?1[-. ]?)?\(?\d{3}\)?[-. ]\d{3}[-. ]\d{4}|\+1\d{10}/
 
 /** Numbers found in directories or the NPI registry that must never be published as a phone line. */
 const NON_PUBLIC_NUMBERS = [
-  '916-266-7473', // NPPES fax number for the organisation
   '916-824-3278', // legacy number named by the client, role unconfirmed
   '916-655-9883',
   '916-281-5963',
@@ -83,12 +82,12 @@ describe('page meta reads the shared data', () => {
 });
 
 describe('business name', () => {
-  it('does not publish the unconfirmed legal name in any form', () => {
-    expect(BRAND.legalName).toBeNull();
+  it('uses the owner-confirmed legal name, and never the registry typo', () => {
+    expect(BRAND.legalName).toBe('Apollo Physicians Medical Group');
     const hits: string[] = [];
     for (const file of PUBLISHED_FILES.filter((f) => f !== SITE_DATA)) {
-      const text = readFileSync(file, 'utf8');
-      if (/PHYSICANS|PHYSICIANS MEDICAL GROUP|Medical Group/i.test(text)) hits.push(relative('.', file).split(sep).join('/'));
+      const text = readFileSync(file, 'utf8').replace(/\/\*[\s\S]*?\*\//g, '').replace(/^\s*\/\/.*$/gm, '');
+      if (/PHYSICANS/i.test(text)) hits.push(relative('.', file).split(sep).join('/'));
     }
     expect(hits).toEqual([]);
   });
