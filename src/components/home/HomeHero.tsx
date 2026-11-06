@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import { CheckCircle2, MapPin, Phone, Stethoscope } from 'lucide-react';
 import { ButtonLink } from '@/components/ui/Button';
 import { InsurancePills } from '@/components/ui/InsurancePills';
@@ -8,7 +9,8 @@ import { mapsDirectionsUrl, telHref } from '@/lib/utils';
 /**
  * Home hero. The H1 is the target phrase for the home page. The primary action calls the
  * office, and the secondary action gets directions. The panel on the right lists facts the
- * practice has confirmed; no photo is shown, because none has been supplied.
+ * practice has confirmed. Above it sits a generic clinical interior photo. No photo of Apollo's own
+ * office or team has been supplied yet, so none is shown.
  */
 export function HomeHero() {
   return (
@@ -57,6 +59,18 @@ export function HomeHero() {
           </ul>
         </div>
 
+        <div className="space-y-6">
+        {/* Generic clinical interior photo, decorative, so the alt text is empty. */}
+        <div className="relative aspect-[16/9] overflow-hidden rounded-2xl shadow-2xl ring-1 ring-white/10">
+          <Image
+            src="/images/clinic-interior.jpg"
+            alt=""
+            fill
+            priority
+            sizes="(min-width: 1024px) 560px, 100vw"
+            className="object-cover"
+          />
+        </div>
         <aside aria-label="Office details" className="rounded-2xl bg-white/5 p-8 shadow-2xl ring-1 ring-white/10">
           <div className="flex items-center gap-3">
             <Stethoscope className="h-6 w-6 text-teal-300" aria-hidden="true" />
@@ -78,6 +92,7 @@ export function HomeHero() {
             </div>
           </dl>
         </aside>
+        </div>
       </div>
     </section>
   );
