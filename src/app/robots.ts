@@ -1,5 +1,5 @@
 import type { MetadataRoute } from 'next';
-import { AI_CRAWLER_POLICY, AI_SEARCH_AND_USER_AGENTS, AI_TRAINING_AGENTS, type AiCrawlerPolicy } from '@/data/crawlers';
+import { AI_CRAWLER_POLICY, AI_SEARCH_AND_USER_AGENTS, AI_TRAINING_AGENTS, OTHER_AI_AGENTS, type AiCrawlerPolicy } from '@/data/crawlers';
 import { absoluteUrl } from '@/data/site';
 
 type Rule = MetadataRoute.Robots['rules'];
@@ -16,7 +16,7 @@ export function buildRobotsRules(policy: AiCrawlerPolicy): Rule {
 
   // allow-all names every known AI crawler with an explicit Allow, so the welcome is visible in the file
   // (GPTBot, OAI-SearchBot, ClaudeBot, PerplexityBot, Google-Extended and the rest).
-  if (policy === 'allow-all') return [everyone, { userAgent: [...AI_SEARCH_AND_USER_AGENTS, ...AI_TRAINING_AGENTS], allow: '/' }];
+  if (policy === 'allow-all') return [everyone, { userAgent: [...AI_SEARCH_AND_USER_AGENTS, ...AI_TRAINING_AGENTS, ...OTHER_AI_AGENTS], allow: '/' }];
 
   const training = { userAgent: [...AI_TRAINING_AGENTS], disallow: '/' };
   if (policy === 'block-all') {

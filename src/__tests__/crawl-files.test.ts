@@ -28,7 +28,7 @@ describe('robots.txt', () => {
     const g = groups(live.rules);
     expect(g[0]).toEqual({ userAgent: '*', allow: '/' });
     const named = g.filter((x) => x.allow === '/').flatMap(agentsOf);
-    for (const agent of ['GPTBot', 'OAI-SearchBot', 'ClaudeBot', 'PerplexityBot', 'Google-Extended']) expect(named).toContain(agent);
+    for (const agent of ['GPTBot', 'OAI-SearchBot', 'ClaudeBot', 'PerplexityBot', 'Google-Extended', 'anthropic-ai', 'Applebot-Extended']) expect(named).toContain(agent);
     expect(g.filter((x) => x.disallow).length).toBe(0);
   });
 

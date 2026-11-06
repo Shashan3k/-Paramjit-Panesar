@@ -25,6 +25,12 @@ export const AI_TRAINING_AGENTS = [
 ] as const;
 
 /**
+ * Other AI agents named explicitly (6 Nov 2026, from the owner's friend's build). Their roles were not checked against
+ * vendor documentation: anthropic-ai is an older Anthropic name, and Applebot-Extended is Apple's token for AI training use.
+ */
+export const OTHER_AI_AGENTS = ['anthropic-ai', 'Applebot-Extended'] as const;
+
+/**
  * The owner's decision, applied in src/app/robots.ts. Normal search crawlers (Googlebot, Bingbot and
  * the rest) are always allowed.
  * - "allow-all":   no AI-specific rules; every crawler may fetch every page. (Current default, and the
