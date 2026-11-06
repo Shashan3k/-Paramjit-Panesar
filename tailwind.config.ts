@@ -55,9 +55,10 @@ const config: Config = {
           info: '#1f4a70',
         },
       },
+      // The old site rendered in the browser's default serif, because its font variable was never defined.
+      // The stack is spelled out here so the same look holds on every device.
       fontFamily: {
-        sans: ['var(--font-sans)', 'system-ui', 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Arial', 'sans-serif'],
-        display: ['var(--font-display)', 'Georgia', 'Cambria', 'serif'],
+        sans: ['"Times New Roman"', 'Times', 'serif'],
       },
       boxShadow: {
         card: '0 1px 2px rgba(11, 31, 51, 0.06), 0 4px 16px rgba(11, 31, 51, 0.06)',

@@ -78,7 +78,7 @@ export function Header() {
         </ul>
 
         <div className="flex items-center gap-2">
-          <a href={telHref(PHONES.main.tel)} className="btn btn-primary hidden md:inline-flex">
+          <a href={telHref(PHONES.main.tel)} className="btn btn-secondary hidden md:inline-flex">
             <Phone className="h-4 w-4" aria-hidden="true" />
             Call {PHONES.main.display}
           </a>
@@ -106,7 +106,7 @@ export function Header() {
             </MobileNavLink>
           ))}
 
-          <a href={telHref(PHONES.main.tel)} className="btn btn-primary mt-3 w-full">
+          <a href={telHref(PHONES.main.tel)} className="btn btn-secondary mt-3 w-full">
             <Phone className="h-4 w-4" aria-hidden="true" />
             Call {PHONES.main.display}
           </a>
