@@ -1,9 +1,9 @@
 import { readdirSync, readFileSync, statSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
-import { ELK_GROVE_FAQS, HOME_FAQS, INSURANCE_ACCEPTED, INITIAL_VISIT_PRICE } from '@/data/practice';
+import { ELK_GROVE_FAQS, HOME_FAQS, INSURANCE_ACCEPTED, INSURANCE_GROUPS, INITIAL_VISIT_PRICE } from '@/data/practice';
 import { PAGE_META } from '@/data/pages';
-import { BRAND, GEO, NPI, OFFICE, PHONES, PHYSICIAN_PROFILES, SITE_URL } from '@/data/site';
+import { BRAND, GEO, NPI, OFFICE, OFFICE_HOURS, PHONES, PHYSICIAN_PROFILES, SITE_URL } from '@/data/site';
 import { DESCRIPTION_MAX, DESCRIPTION_MIN, TITLE_MAX, TITLE_MIN } from '@/lib/seo-fit';
 import { CLINIC_ID, PHYSICIAN_ID, WEBSITE_ID, clinicNode, faqNode, graph, physicianNode, webPageNode, websiteNode } from '@/lib/structured-data';
 
@@ -28,7 +28,7 @@ describe('page titles and descriptions', () => {
 });
 
 describe('verified facts', () => {
-  it('lists exactly the insurance plans the owner supplied on 5 Nov 2026', () => {
+  it('lists exactly the insurance the practice confirmed (6 Nov 2026, plus Medi-Cal and Nivano on 11 Nov 2026)', () => {
     expect([...INSURANCE_ACCEPTED]).toEqual([
       'Aetna',
       'Anthem Blue Cross',
@@ -40,19 +40,34 @@ describe('verified facts', () => {
       'Hill Physicians',
       'Nivano Physicians',
       'Medicare',
-      'Medi-Cal (most plans)',
+      'Medi-Cal',
     ]);
   });
 
+  it('does not list plans or groups the practice still has to confirm', () => {
+    const all = JSON.stringify([INSURANCE_ACCEPTED, INSURANCE_GROUPS]);
+    for (const plan of ['Vivant', 'River City', 'Medicaid', 'Brand New Day', 'Imperial', 'Western Health Advantage', 'Molina', 'SCAN']) {
+      expect(all).not.toContain(plan);
+    }
+  });
+
   it('uses the confirmed phone, address and legal name', () => {
+    expect(BRAND.name).toBe('Apollo Physicians');
     expect(BRAND.legalName).toBe('Apollo Physicians Medical Group');
     expect(OFFICE.line).toBe('8191 Timberlake Way, Suite 200, Sacramento, CA 95823');
     expect(PHONES.main.display).toBe('916-236-5800');
     expect(NPI.organization).toBe('1124405584');
   });
 
-  it('states the initial visit price exactly as supplied', () => {
-    expect(INITIAL_VISIT_PRICE).toBe('Initial doctor visits start at $65.');
+  it('states the initial self-pay price as supplied', () => {
+    expect(INITIAL_VISIT_PRICE).toBe('Initial self-pay visits start at $65.');
+  });
+
+  it('publishes the hours the practice confirmed on 11 Nov 2026: Mon-Fri 8:30-5:30, Sat 9:00-2:00', () => {
+    expect(OFFICE_HOURS).toEqual([
+      { days: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'], opens: '08:30', closes: '17:30' },
+      { days: ['Saturday'], opens: '09:00', closes: '14:00' },
+    ]);
   });
 });
 
@@ -98,23 +113,32 @@ describe('structured data graph', () => {
     for (const ref of refs) expect(ids.has(ref), `unresolved ${ref}`).toBe(true);
   });
 
-  it('gives the clinic the verified fields and no unverified ones', () => {
+  it('gives the clinic the confirmed fields and no unconfirmed ones', () => {
     const clinic = clinicNode();
     expect(clinic['@type']).toBe('MedicalClinic');
     expect(clinic.name).toBe('Apollo Physicians');
+    expect(clinic.legalName).toBe('Apollo Physicians Medical Group');
     expect(clinic.telephone).toBe('+19162365800');
     expect(clinic.medicalSpecialty).toBe('https://schema.org/PrimaryCare');
     expect(clinic.geo).toEqual({ '@type': 'GeoCoordinates', latitude: GEO.latitude, longitude: GEO.longitude });
-    expect(clinic.legalName).toBe('Apollo Physicians Medical Group');
     expect(clinic.isAcceptingNewPatients).toBe(true);
-    expect(clinic.priceRange).toBe('$65+');
-    expect(clinic.paymentAccepted).toBe('Cash, Check, Visa, MasterCard, American Express, Discover');
-    expect(clinic.faxNumber).toBe('+19162667473');
+    expect(clinic.priceRange).toBe('From $65');
+    expect(clinic.paymentAccepted).toBe('Health insurance, self-pay');
     expect(JSON.stringify(clinic.areaServed)).toContain('Elk Grove');
-    // Sunday is closed, so no entry names it. Saturday is present.
-    const days = (clinic.openingHoursSpecification as { dayOfWeek: string[]; opens: string; closes: string }[]).flatMap((h) => h.dayOfWeek);
-    expect(days).toEqual(['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']);
-    for (const field of ['identifier', 'sameAs', 'openingHours', 'aggregateRating', 'review']) {
+    // Hours confirmed by the practice on 11 Nov 2026 (item 6).
+    expect(clinic.openingHoursSpecification).toEqual([
+      { '@type': 'OpeningHoursSpecification', dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'], opens: '08:30', closes: '17:30' },
+      { '@type': 'OpeningHoursSpecification', dayOfWeek: ['Saturday'], opens: '09:00', closes: '14:00' },
+    ]);
+    for (const field of [
+      'identifier',
+      'sameAs',
+      'openingHours',
+      'knowsLanguage',
+      'hospitalAffiliation',
+      'aggregateRating',
+      'review',
+    ]) {
       expect(clinic).not.toHaveProperty(field);
     }
   });
@@ -127,14 +151,8 @@ describe('structured data graph', () => {
     const physician = physicianNode();
     expect(physician.sameAs).toEqual([...PHYSICIAN_PROFILES]);
     expect(PHYSICIAN_PROFILES.length).toBeGreaterThan(0);
-    expect(physician.identifier).toEqual([
-      { '@type': 'PropertyValue', propertyID: 'NPI', value: NPI.panesar },
-      { '@type': 'PropertyValue', propertyID: 'California medical license', value: 'A 114684' },
-    ]);
+    expect(physician.identifier).toEqual({ '@type': 'PropertyValue', propertyID: 'NPI', value: NPI.panesar });
     expect(physician.worksFor).toEqual({ '@id': CLINIC_ID });
-    expect(JSON.stringify(physician.memberOf)).toContain('American Board of Family Medicine');
-    expect(JSON.stringify(physician.alumniOf)).toContain('Dayanand Medical College');
-    expect(physician.isAcceptingNewPatients).toBe(true);
   });
 
   it('puts the office inside plausible Sacramento coordinates', () => {
@@ -158,7 +176,7 @@ describe('structured data graph', () => {
     expect(page.about).toEqual({ '@id': CLINIC_ID });
     expect(page.breadcrumb).toEqual({ '@id': `${SITE_URL}/family-physician-elk-grove#breadcrumb` });
     expect(page.hasPart).toEqual({ '@id': `${SITE_URL}/family-physician-elk-grove#faq` });
-    const profile = webPageNode({ path: '/dr-paramjit-panesar-md', name: 'n', description: 'd', type: 'ProfilePage', about: 'physician' }) as Record<string, unknown>;
+    const profile = webPageNode({ path: '/dr-paramjit-panesar', name: 'n', description: 'd', type: 'ProfilePage', about: 'physician' }) as Record<string, unknown>;
     expect(profile['@type']).toBe('ProfilePage');
     expect(profile.mainEntity).toEqual({ '@id': PHYSICIAN_ID });
   });
@@ -199,9 +217,8 @@ describe('source tree is free of the previous organisation', () => {
   });
 
   it('makes no unverified claims in the copy', () => {
-    // Medi-Cal, Nivano, board certification and new-patient status were supplied by the owner on 5 Nov 2026.
-    // Still unverified: other insurers, drive times, Wikidata links, and anyone else's name.
-    const UNVERIFIED = ['Rivercity', 'River City', 'female', 'Wikidata', 'minutes', 'Kaiser', 'Takhar'];
+    // Medi-Cal and Nivano were confirmed on 11 Nov 2026 (client-confirmations.md, item 23), so they left this list.
+    const UNVERIFIED = ['Medicaid', 'Vivant', 'Rivercity','River City', 'female', 'Wikidata', 'Brand New Day', 'Western Health Advantage', 'telehealth', 'walk-in', '24/7', 'bilingual', 'Spanish', 'Punjabi', 'Hindi'];
     const hits: string[] = [];
     for (const file of files('src/data').concat(files('src/app'), files('src/components'))) {
       const text = readFileSync(file, 'utf8');

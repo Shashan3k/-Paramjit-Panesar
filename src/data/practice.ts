@@ -1,152 +1,111 @@
 import type { FaqItem } from '@/types';
-import { NPI, OFFICE, PHONES } from './site';
+import { ELK_GROVE_DRIVE, LOCATION, OFFICE, PHONES } from './site';
 
 /**
  * Every claim the pages make, with its source.
  *
  * Sources:
- * - NPPES: the federal NPI registry (NPI 1124405584 and NPI 1982892659).
- * - OWNER: supplied by the practice owner on 5 Nov 2026 as verified entity data (hours, new-patient
- *   status, insurance and IPAs, credentials, services, payment methods, geography). The build
- *   environment could not independently check these, so re-check each OWNER item against the licence
- *   board, the board-certification lookup and the practice's own records before relying on it.
- * - CLIENT: apollophysicians.com as reported to us earlier (insurance page, price, homepage wording).
- *
- * Anything not listed here is not shown: no travel times, no patient counts, no ratings, no outcomes.
+ * - OWNER: stated by the owner in the project brief of 6 Nov 2026 (docs/seo/client-confirmations.md).
+ * - CHECKED: read by us on 6 Nov 2026 in Google Maps or a public registry.
+ * - Anything not listed here is not shown. The facts the owner asked to confirm first (office hours, languages,
+ *   other clinicians, extra services and extra plans) are deliberately absent. They are listed in
+ *   docs/seo/client-confirmations.md under "open facts".
  */
 
-/** Insurance and payer groups, in the order the matrix shows them. CLIENT (earlier list) plus OWNER (5 Nov 2026). */
-export const INSURANCE_GROUPS: readonly { label: string; plans: readonly string[] }[] = [
-  {
-    label: 'Commercial and private plans',
-    plans: ['Aetna', 'Anthem Blue Cross', 'Blue Shield of California', 'Cigna', 'Health Net', 'UnitedHealthcare'],
-  },
-  { label: 'Medical groups and IPAs', plans: ['Sutter Health', 'Hill Physicians', 'Nivano Physicians'] },
-  { label: 'Government programs', plans: ['Medicare', 'Medi-Cal (most plans)'] },
+/**
+ * OWNER. The accepted insurance, in the owner's order. Sutter Health, Hill Physicians and Nivano Physicians are
+ * medical groups. Medi-Cal and Nivano Physicians were confirmed on 11 Nov 2026 (Medi-Cal: "most plans"; the plan
+ * names were not supplied, so the copy says "most Medi-Cal plans" and asks people to call).
+ */
+export const INSURANCE_ACCEPTED: readonly string[] = [
+  'Aetna',
+  'Anthem Blue Cross',
+  'Blue Shield of California',
+  'Cigna',
+  'Health Net',
+  'UnitedHealthcare',
+  'Sutter Health',
+  'Hill Physicians',
+  'Nivano Physicians',
+  'Medicare',
+  'Medi-Cal',
 ];
 
-/** Flat list in reading order, built from the groups so the two cannot disagree. */
-export const INSURANCE_ACCEPTED: readonly string[] = INSURANCE_GROUPS.flatMap((group) => group.plans);
+/** The same list split by type, for the insurance page. */
+export const INSURANCE_GROUPS = [
+  {
+    type: 'Health plan',
+    names: ['Aetna', 'Anthem Blue Cross', 'Blue Shield of California', 'Cigna', 'Health Net', 'UnitedHealthcare'],
+  },
+  { type: 'Medicare', names: ['Medicare'] },
+  { type: 'Medi-Cal', names: ['Medi-Cal (most plans)'] },
+  { type: 'Medical group or network', names: ['Sutter Health', 'Hill Physicians', 'Nivano Physicians'] },
+] as const;
 
-/** OWNER: payment methods for self-pay visits. */
-export const PAYMENT_METHODS: readonly string[] = ['Cash', 'Check', 'Visa', 'MasterCard', 'American Express', 'Discover'];
+/** Date the practice last supplied the plan list. Shown on the insurance page. */
+export const INSURANCE_LIST_DATE = '11 November 2026';
 
-/** CLIENT: apollophysicians.com/content/insurance. OWNER confirmed 5 Nov 2026. */
+/** CONFIRMED 11 Nov 2026 (item 27): telemedicine for patients in California. Visit types were not supplied. */
+export const TELEMEDICINE = 'Telemedicine visits for patients in California.';
+
+/** OWNER: initial self-pay visits start at $65. What the price includes has not been supplied. */
 export const INITIAL_VISIT_FROM = '$65';
-export const INITIAL_VISIT_PRICE = `Initial doctor visits start at ${INITIAL_VISIT_FROM}.`;
+export const INITIAL_VISIT_PRICE = `Initial self-pay visits start at ${INITIAL_VISIT_FROM}.`;
 
-/** CLIENT: apollophysicians.com homepage, wording used exactly. */
+/** OWNER: same-day and next-day appointments; new patients accepted. */
 export const APPOINTMENT_AVAILABILITY = 'Same-day and next-day appointments.';
 
-/** OWNER: the practice is accepting new patients. */
-export const ACCEPTING_NEW_PATIENTS = 'Accepting new patients.';
-
-/** OWNER: office hours, Pacific Time. Schema times are 24-hour. */
-export const HOURS: readonly { days: string; display: string; schemaDays: readonly string[]; opens: string; closes: string }[] = [
-  {
-    days: 'Monday to Friday',
-    display: '8:30 AM to 5:30 PM',
-    schemaDays: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
-    opens: '08:30',
-    closes: '17:30',
-  },
-  { days: 'Saturday', display: '9:00 AM to 2:00 PM', schemaDays: ['Saturday'], opens: '09:00', closes: '14:00' },
-];
-export const SUNDAY_CLOSED = 'Closed';
-export const HOURS_SENTENCE = 'Monday to Friday 8:30 AM to 5:30 PM and Saturday 9:00 AM to 2:00 PM Pacific Time. Closed Sunday.';
-
-/** NPPES: taxonomy 207Q00000X (Family Medicine) on NPI 1124405584 and NPI 1982892659. */
+/** OWNER and NPPES: family medicine. */
 export const SPECIALTY = 'Family Medicine';
 
 /** Names used on the pages. */
 export const PROVIDER = {
   name: 'Dr. Paramjit Panesar, MD',
   shortName: 'Dr. Paramjit Panesar',
-  fullName: 'Paramjit Singh Panesar',
+  fullName: 'Paramjit Panesar',
   honorificPrefix: 'Dr.',
   honorificSuffix: 'MD',
 } as const;
 
-/** OWNER: credentials. Verify on the Medical Board of California and ABFM lookups before launch. */
+/**
+ * OWNER: the physician's credentials. Each can be checked by the public: license on the Medical Board of
+ * California search, certification on the ABMS site, civil surgeon designation on the USCIS tool.
+ * Languages spoken are NOT confirmed (the owner asked to confirm first), so none is published.
+ */
 export const CREDENTIALS = {
+  boardBody: 'American Board of Family Medicine',
+  boardShort: 'ABFM',
   licenseNumber: 'A 114684',
+  licenseBody: 'Medical Board of California',
   licenseSince: '2010',
-  boardCertification: 'American Board of Family Medicine',
-  residency: 'University of Arkansas for Medical Sciences (UAMS) College of Medicine',
-  residencySpecialty: 'Family Medicine',
-  residencyYears: '2007 to 2010',
   medicalSchool: 'Dayanand Medical College',
   medicalSchoolYear: '2004',
-  civilSurgeon: 'USCIS-designated civil surgeon authorized to perform immigration medical exams (Form I-693), with on-site vaccinations',
-  research: 'Peer-reviewed medical research, including publications in Current Medicinal Chemistry',
+  residency: 'University of Arkansas for Medical Sciences (UAMS)',
+  residencyYears: '2007 to 2010',
+  civilSurgeon: 'USCIS-designated civil surgeon (Form I-693 immigration medical exams)',
 } as const;
 
-/** OWNER: clinical services, grouped. Listed as services offered, not as treatment claims or outcomes. */
-export const SERVICE_GROUPS: readonly { title: string; items: readonly string[] }[] = [
-  {
-    title: 'Preventive care and physicals',
-    items: [
-      'Annual physicals',
-      'Routine checkups',
-      'Well-child exams, newborns to age 21',
-      'School and sports physicals',
-      'USCIS immigration physicals (Form I-693), with on-site vaccinations',
-      'Cancer screenings',
-      'On-site vaccinations and immunizations',
-    ],
-  },
-  {
-    title: 'Same-day and next-day primary care',
-    items: ['Sick visits for adults and children', 'Infection management', 'Minor injuries', 'Prescription refills'],
-  },
-  {
-    title: 'Chronic condition management',
-    items: ['Diabetes', 'High blood pressure (hypertension)', 'High cholesterol', 'Asthma and allergies', 'Obesity and weight management', 'Thyroid conditions'],
-  },
-  {
-    title: 'Specialized primary care',
-    items: [
-      "Women's health, including contraception and menopause",
-      "Men's health",
-      'Mental health support for anxiety, depression, insomnia and stress',
-      'Smoking cessation',
-      'On-site lab blood draws',
-      'Telemedicine visits across California',
-    ],
-  },
-];
-
-/** OWNER: geography. Landmarks and ZIP codes only. No drive times, because none has been measured. */
-export const LOCAL_AREA = {
-  corridor: 'the South Sacramento medical corridor, beside Methodist Hospital of Sacramento',
-  roads: 'just off Highway 99 near Bruceville Road and Cosumnes River Boulevard',
-  neighborhoods: 'South Sacramento (95823 and 95828), Valley Hi, Laguna, and Elk Grove (95624, 95757 and 95758)',
+/** Public places to check the credentials above. */
+export const VERIFY_LINKS = {
+  license: { label: 'Medical Board of California license search', href: 'https://search.dca.ca.gov/' },
+  certification: { label: 'ABMS Verify Certification', href: 'https://www.abms.org/verify-certification/' },
+  civilSurgeon: { label: 'USCIS Find a Civil Surgeon', href: 'https://www.uscis.gov/tools/find-a-civil-surgeon' },
+  i693: { label: 'USCIS Form I-693', href: 'https://www.uscis.gov/i-693' },
+  medicare: { label: 'Medicare.gov', href: 'https://www.medicare.gov/' },
 } as const;
 
-export const LOCAL_AREA_SENTENCE = `The Sacramento office is in ${LOCAL_AREA.corridor}, ${LOCAL_AREA.roads}. It is convenient for patients in ${LOCAL_AREA.neighborhoods}.`;
-
-/**
- * One office, stated plainly and led with access. Elk Grove patients are seen at the Sacramento office.
- * No drive time is stated: it must be measured in Google Maps first (docs/seo/client-confirmations.md, item 20).
- */
+/** One office, stated plainly and led with access. Elk Grove patients are seen at the Sacramento office. */
 export const ELK_GROVE_NOTE = `Apollo Physicians has one office, in South Sacramento at ${OFFICE.line}. Elk Grove patients are seen there.`;
 
-/** How to reach the Sacramento office from Elk Grove (OWNER: Highway 99 north or Bruceville Road). */
-export const ELK_GROVE_ROUTE = 'From Elk Grove, take Highway 99 north or Bruceville Road north to the Sacramento office, in the medical corridor beside Methodist Hospital of Sacramento.';
-
 /**
- * Which published facts the practice has confirmed. /llms.txt and /llms-full.txt, files meant to be
- * quoted by AI systems, include each fact only when its flag is true. All are true as of 5 Nov 2026,
- * when the owner supplied them as verified. Set a flag to false to remove that fact from those files.
+ * Which published facts /llms.txt may carry. The owner confirmed each of these on 6 Nov 2026, so all are on.
+ * Flip one to false to remove it from llms.txt if it ever needs to come down.
  */
 export const LLMS_CONFIRMED = {
   insurance: true,
   price: true,
   appointmentAvailability: true,
   physicianNpi: true,
-  hours: true,
-  newPatients: true,
-  credentials: true,
 } as const;
 
 /** Printed insurance list in reading order, e.g. "Aetna, Cigna, and Medicare". */
@@ -156,158 +115,122 @@ export function insuranceSentence(): string {
   return `${list.join(', ')}, and ${last}`;
 }
 
+const CALL = PHONES.main.display;
+const ELK_DRIVE = `about ${ELK_GROVE_DRIVE.minutes} minutes`;
+
 /**
- * Direct-answer copy. Each answer is a 40 to 60 word block that opens with a complete sentence naming
- * the practice, so it can be quoted on its own, then adds detail. Only facts already in this file are used.
- * Word counts are enforced by src/__tests__/aeo-copy.test.ts.
+ * Direct-answer copy. Each answer opens with the answer, names the practice so it can be quoted alone,
+ * and is 40 to 60 words (tests enforce this). Dr. Panesar's pronouns were not supplied, so none is used.
  */
 
-/** First sentence under the home page H1. Quotable on its own. */
+/** 40 to 60 words, directly under the home page H1. Quotable on its own. */
+export const HOME_DIRECT_ANSWER = `Apollo Physicians is a family medicine practice at ${OFFICE.line}, led by ${PROVIDER.name}, who is board certified in family medicine. The office offers same-day and next-day appointments, welcomes new patients, and accepts Medicare and several major health plans. Initial self-pay visits start at ${INITIAL_VISIT_FROM}. Call ${CALL}.`;
+
+/** 40 to 60 words, directly under the Elk Grove page H1. */
+export const ELK_GROVE_DIRECT_ANSWER = `Apollo Physicians is in South Sacramento at ${OFFICE.street}, and serves Elk Grove families with same-day and next-day appointments. Google Maps shows about ${ELK_GROVE_DRIVE.minutes} minutes by car from Elk Grove ZIP codes 95758 and 95624 with usual traffic. New patients are welcome, and the office accepts Medicare and several major health plans. Call ${CALL}.`;
+
+/** One quotable sentence, used inside answers. */
 export const HOME_LEAD = `Apollo Physicians is a family medicine practice at ${OFFICE.line}.`;
 
-/** First sentence under the physician page H1. */
-export const PANESAR_LEAD = `${PROVIDER.name}, practices family medicine at Apollo Physicians, ${OFFICE.line}.`;
+/** 40 to 60 words, directly under the physician page H1. */
+export const PANESAR_DIRECT_ANSWER = `${PROVIDER.name}, is a family physician at Apollo Physicians, ${OFFICE.line}. Dr. Panesar is board certified in family medicine by the ${CREDENTIALS.boardBody}, holds California medical license ${CREDENTIALS.licenseNumber}, and is a USCIS-designated civil surgeon. Call ${CALL} to book a visit.`;
 
-const PHONE = PHONES.main.display;
+/** Kept for the quotable sentence in answers. */
+export const PANESAR_LEAD = `${PROVIDER.name}, practices family medicine at Apollo Physicians, ${OFFICE.line}.`;
 
 export const HOME_FAQS: readonly FaqItem[] = [
   {
-    question: 'Who is a doctor accepting new patients in Sacramento with same-day appointments?',
-    answer: `Apollo Physicians is a family medicine practice in South Sacramento that is accepting new patients. Dr. Paramjit Panesar, MD, offers same-day and next-day appointments for new and returning patients. The office is at ${OFFICE.line}. Call ${PHONE} to book your visit.`,
+    question: 'Where is Apollo Physicians located?',
+    answer: `${HOME_LEAD} The office is in South Sacramento, about ${LOCATION.hospitalDistance} from ${LOCATION.nearHospital} and next to ${LOCATION.highway}. ${PROVIDER.shortName} sees patients at this one office. Call ${CALL} for directions.`,
   },
   {
-    question: 'Where is Apollo Physicians located?',
-    answer: `${HOME_LEAD} The office is in the South Sacramento medical corridor next to Methodist Hospital of Sacramento, just off Highway 99 near Bruceville Road and Cosumnes River Boulevard. Dr. Paramjit Panesar, MD, sees patients at this office.`,
+    question: 'How do I book an appointment?',
+    answer: `Call Apollo Physicians at ${CALL} to book an appointment with ${PROVIDER.name}. Same-day and next-day appointments are offered, so ask for the next available time. New patients are welcome. Tell the office whether you have insurance or will pay yourself, and bring a photo ID to your visit.`,
   },
   {
     question: 'What insurance does Apollo Physicians accept?',
-    answer: `Apollo Physicians accepts ${insuranceSentence()}. Self-pay patients are also welcome, with initial visits starting at ${INITIAL_VISIT_FROM}. Call ${PHONE} to confirm your plan before your visit.`,
+    answer: `Apollo Physicians accepts ${insuranceSentence()}. Plans and networks can change, so call ${CALL} to confirm your specific plan before your visit. The full list, with the date the practice provided it, is on the insurance page.`,
   },
   {
-    question: 'How much is an initial visit at Apollo Physicians?',
-    answer: `Initial doctor visits at Apollo Physicians start at ${INITIAL_VISIT_FROM} for self-pay patients. Apollo Physicians accepts cash, check, Visa, MasterCard, American Express and Discover for self-pay visits. With insurance, your cost depends on your plan, so call ${PHONE} to confirm before your visit.`,
+    question: 'How much is an initial visit?',
+    answer: `An initial self-pay visit at Apollo Physicians starts at ${INITIAL_VISIT_FROM}. Self-pay means you pay the office directly instead of billing insurance. The final cost can depend on what your visit includes, so call ${CALL} to ask what is covered before you book. Patients with insurance should confirm their plan instead.`,
   },
   {
     question: 'Can I get a same-day or next-day appointment?',
-    answer: `Apollo Physicians offers same-day and next-day appointments for both new and returning patients. Availability depends on the day, so call ${PHONE} to ask about the next open time. The office is also open Saturday from 9:00 AM to 2:00 PM Pacific Time.`,
-  },
-  {
-    question: 'What are the office hours at Apollo Physicians?',
-    answer: `Apollo Physicians is open Monday to Friday from 8:30 AM to 5:30 PM and Saturday from 9:00 AM to 2:00 PM Pacific Time. The office is closed on Sunday. Call ${PHONE} to book a same-day or next-day appointment at the Sacramento office.`,
+    answer: `Yes. Apollo Physicians offers same-day and next-day appointments. Availability on a given day depends on the schedule, so call ${CALL} as early as you can and ask for the next opening. If you have an emergency, call 911 instead of the office.`,
   },
   {
     question: 'Does Apollo Physicians serve patients from Elk Grove?',
-    answer: `Yes. Elk Grove patients are seen at the Apollo Physicians Sacramento office at ${OFFICE.line}, just north of Elk Grove off Highway 99. Same-day and next-day appointments are available, and Elk Grove patients book the same way as every other patient.`,
+    answer: `Yes. Apollo Physicians serves Elk Grove families from its single office in South Sacramento. Google Maps shows ${ELK_DRIVE} by car from Elk Grove ZIP codes 95758 and 95624 with usual traffic. Elk Grove patients book the same way as everyone else. Call ${CALL}.`,
   },
   {
     question: 'Who is Dr. Paramjit Panesar?',
-    answer: `${PROVIDER.name}, is a family medicine physician at Apollo Physicians in Sacramento, certified by the American Board of Family Medicine. Dr. Panesar completed his family medicine residency at the University of Arkansas for Medical Sciences. His NPI number is ${NPI.panesar}.`,
+    answer: `${PROVIDER.name}, is a family physician at Apollo Physicians in Sacramento. Dr. Panesar is board certified in family medicine by the ${CREDENTIALS.boardBody}, completed residency at UAMS, and is a USCIS-designated civil surgeon for immigration medical exams. Dr. Panesar sees patients at ${OFFICE.street}.`,
+  },
+  {
+    question: 'Is Apollo Physicians accepting new patients?',
+    answer: `Yes. Apollo Physicians is accepting new patients at ${OFFICE.street}, ${OFFICE.city}. To become a patient, call ${CALL}, tell the office your insurance plan or that you will pay yourself, and ask for the next available appointment. Bring a photo ID and your insurance card to the first visit.`,
   },
 ];
 
 export const PANESAR_FAQS: readonly FaqItem[] = [
   {
-    question: 'Who is Dr. Paramjit Panesar, MD?',
-    answer: `${PROVIDER.name}, is a family medicine physician at Apollo Physicians in Sacramento, certified by the American Board of Family Medicine. Dr. Panesar completed his family medicine residency at the University of Arkansas for Medical Sciences. His NPI number is ${NPI.panesar}.`,
+    question: 'Who is Dr. Paramjit Panesar?',
+    answer: `${PROVIDER.name}, is a family physician at Apollo Physicians in Sacramento. Dr. Panesar is board certified in family medicine, earned a medical degree from ${CREDENTIALS.medicalSchool} in ${CREDENTIALS.medicalSchoolYear}, and completed residency at UAMS from 2007 to 2010. Dr. Panesar holds an active California medical license issued in ${CREDENTIALS.licenseSince}.`,
   },
   {
-    question: 'What are the credentials of Dr. Paramjit Panesar, MD?',
-    answer: `Dr. Paramjit Panesar, MD, is certified by the American Board of Family Medicine and holds California medical license ${CREDENTIALS.licenseNumber}, active since ${CREDENTIALS.licenseSince}. He completed residency at the University of Arkansas for Medical Sciences and graduated from Dayanand Medical College in ${CREDENTIALS.medicalSchoolYear}. His NPI is ${NPI.panesar}.`,
+    question: 'Is Dr. Panesar board certified?',
+    answer: `Yes. ${PROVIDER.name}, is board certified in family medicine by the ${CREDENTIALS.boardBody}. You can check any physician's certification on the American Board of Medical Specialties website, and look up California license ${CREDENTIALS.licenseNumber} on the ${CREDENTIALS.licenseBody} license search, before you book an appointment.`,
   },
   {
-    question: 'Is Dr. Panesar a USCIS civil surgeon?',
-    answer: `Yes. Dr. Paramjit Panesar, MD, is a USCIS-designated civil surgeon who performs official immigration medical exams (Form I-693) at Apollo Physicians, with on-site vaccinations. Call ${PHONE} to schedule an immigration medical exam at the Sacramento office, ${OFFICE.line}.`,
+    question: 'Where did Dr. Panesar train?',
+    answer: `${PROVIDER.name}, earned a medical degree from ${CREDENTIALS.medicalSchool} in ${CREDENTIALS.medicalSchoolYear}. Dr. Panesar completed residency training at the ${CREDENTIALS.residency} from ${CREDENTIALS.residencyYears}. The California medical license, number ${CREDENTIALS.licenseNumber}, has been active since ${CREDENTIALS.licenseSince}, and can be checked on the Medical Board of California website.`,
+  },
+  {
+    question: 'What is a USCIS civil surgeon?',
+    answer: `A civil surgeon is a doctor designated by U.S. Citizenship and Immigration Services (USCIS) to perform the immigration medical exam and complete Form I-693. ${PROVIDER.name}, is a USCIS-designated civil surgeon at Apollo Physicians. You can confirm any designation with the USCIS Find a Civil Surgeon tool on uscis.gov.`,
+  },
+  {
+    question: 'Where does Dr. Panesar see patients?',
+    answer: `${PROVIDER.name}, sees patients at Apollo Physicians, ${OFFICE.line}, in South Sacramento near ${LOCATION.highway} and about ${LOCATION.hospitalDistance} from ${LOCATION.nearHospital}. Patients also come from Elk Grove. Call ${CALL} to book a visit. Same-day and next-day appointments are offered.`,
   },
   {
     question: 'How do I book an appointment with Dr. Panesar?',
-    answer: `Call Apollo Physicians at ${PHONE} to book an appointment with Dr. Paramjit Panesar, MD. The office offers same-day and next-day appointments for new and returning patients, and it is open Monday to Saturday. Dr. Panesar sees patients at ${OFFICE.line}.`,
+    answer: `Call Apollo Physicians at ${CALL} to book an appointment with ${PROVIDER.name}. Same-day and next-day appointments are offered, and new patients are welcome. Tell the office your insurance plan, or that you will pay yourself, and bring a photo ID and your insurance card to the visit.`,
   },
 ];
 
 export const ELK_GROVE_FAQS: readonly FaqItem[] = [
   {
-    question: 'Where are Elk Grove patients seen at Apollo Physicians?',
-    answer: `Elk Grove patients are seen at the Apollo Physicians Sacramento office, ${OFFICE.line}. The office is in the South Sacramento medical corridor beside Methodist Hospital of Sacramento, just off Highway 99 near Bruceville Road, just north of Elk Grove. Call ${PHONE} before you travel.`,
+    question: 'Does Apollo Physicians serve patients from Elk Grove?',
+    answer: `Yes. Elk Grove patients are seen at the one Apollo Physicians office, ${OFFICE.street}, in South Sacramento. Same-day and next-day appointments are offered, new patients are welcome, and the office accepts Medicare and several major health plans. Call ${CALL} to book your first visit.`,
   },
   {
-    question: 'How do Elk Grove patients get to Apollo Physicians?',
-    answer: `From Elk Grove, take Highway 99 north or Bruceville Road north to the Apollo Physicians Sacramento office at ${OFFICE.line}. Use Directions from Elk Grove on this page for a live route. Elk Grove patients (95624, 95757 and 95758) use the same office and the same phone number, ${PHONE}.`,
+    question: 'How long is the drive from Elk Grove?',
+    answer: `Google Maps estimates ${ELK_DRIVE} by car from Elk Grove ZIP codes 95758 and 95624 to the Apollo Physicians office, with usual traffic. From 95758 the trip is about ${ELK_GROVE_DRIVE.milesFrom95758} miles via ${ELK_GROVE_DRIVE.routeFrom95758}. Your time depends on where you start and when you leave, so check Google Maps first.`,
+  },
+  {
+    question: 'What route do Elk Grove patients take?',
+    answer: `To reach the Apollo Physicians office from the 95758 area, Google Maps suggests ${ELK_GROVE_DRIVE.routeFrom95758}, or ${ELK_GROVE_DRIVE.altRouteFrom95758}. From the 95624 area it suggests ${ELK_GROVE_DRIVE.routeFrom95624}. The office is next to ${LOCATION.highway} on ${OFFICE.streetName}. Use Directions from Elk Grove for your own address.`,
+  },
+  {
+    question: 'Which Elk Grove ZIP codes does Apollo Physicians serve?',
+    answer: `Apollo Physicians serves patients from Elk Grove ZIP codes 95624, 95757 and 95758, from Sacramento ZIP codes 95823 and 95828, and from neighborhoods including Valley Hi, Laguna, Florin, Meadowview and Parkway. Patients from other areas can call ${CALL} to ask about booking at the South Sacramento office.`,
   },
   {
     question: 'Which insurance plans are accepted for Elk Grove patients?',
-    answer: `Elk Grove patients use the same plans as every Apollo Physicians patient: ${insuranceSentence()}. Self-pay visits start at ${INITIAL_VISIT_FROM}. Confirm your plan with the office at ${PHONE} before you travel.`,
+    answer: `Elk Grove patients use the same plans as every Apollo Physicians patient: ${insuranceSentence()}. Confirm your plan with the office at ${CALL} before you travel, because plans and networks can change.`,
   },
   {
-    question: 'Why do Elk Grove patients choose Apollo Physicians?',
-    answer: `Elk Grove patients can book same-day and next-day appointments, visit on Saturday from 9:00 AM to 2:00 PM Pacific Time, and pay from ${INITIAL_VISIT_FROM} for a self-pay initial visit. Apollo Physicians also accepts Sutter Health, Hill Physicians, Nivano Physicians, Medicare and most Medi-Cal plans.`,
+    question: 'How much does an initial visit cost?',
+    answer: `An initial self-pay visit at Apollo Physicians starts at ${INITIAL_VISIT_FROM}. Self-pay means you pay the office directly instead of billing insurance. Ask what is included in the visit when you call ${CALL}. Patients with insurance should confirm their plan and any copay with their insurer before booking.`,
   },
   {
     question: 'Can Elk Grove patients get a same-day or next-day appointment?',
-    answer: `Yes. Apollo Physicians offers same-day and next-day appointments, and Elk Grove patients book the same way as every other patient. Availability depends on the day, so call ${PHONE} to find the next open time at the Sacramento office. The office is open Saturday from 9:00 AM to 2:00 PM Pacific Time.`,
+    answer: `Yes. Apollo Physicians offers same-day and next-day appointments, and Elk Grove patients book the same way as every other patient. Call ${CALL} early in the day and ask for the next opening. Because the drive takes ${ELK_DRIVE}, confirm your time with the office before you leave home.`,
+  },
+  {
+    question: 'Is the office near a hospital?',
+    answer: `Yes. The Apollo Physicians office is about ${LOCATION.hospitalDistance}, roughly a 9-minute walk, from ${LOCATION.nearHospital} at 7500 Hospital Dr, and next to ${LOCATION.highway}. Being nearby does not mean the practice is part of the hospital. Call ${CALL} for directions or to book an appointment.`,
   },
 ];
-
-export const ANNUAL_PHYSICAL_FAQS: readonly FaqItem[] = [
-  {
-    question: 'How much does an annual physical or initial family doctor visit cost at Apollo Physicians in Sacramento?',
-    answer: `Self-pay initial doctor visits at Apollo Physicians in Sacramento start at ${INITIAL_VISIT_FROM}. With insurance, your cost for an annual physical depends on your plan, so call ${PHONE} to confirm your coverage before your visit. Apollo Physicians accepts major commercial plans, Medicare and most Medi-Cal plans.`,
-  },
-  {
-    question: 'Can I book an annual physical in Sacramento with a same-day or next-day appointment?',
-    answer: `Apollo Physicians offers same-day and next-day appointments for new and returning patients. Call ${PHONE} to ask for the next open annual physical time. Hours: Monday to Friday 8:30 AM to 5:30 PM and Saturday 9:00 AM to 2:00 PM Pacific Time.`,
-  },
-  {
-    question: 'What kinds of physicals does Apollo Physicians offer?',
-    answer: `Apollo Physicians offers annual physicals, routine checkups, well-child exams from newborns to age 21, school and sports physicals, and USCIS immigration physicals. On-site lab blood draws and vaccinations are available at the Sacramento office. Cancer screenings are also offered. Call ${PHONE} to book.`,
-  },
-  {
-    question: 'How do I book an annual physical at Apollo Physicians?',
-    answer: `Call Apollo Physicians at ${PHONE} to book an annual physical at ${OFFICE.line}. Tell the office whether you are a new or returning patient and which insurance plan you have, or ask about self-pay pricing from ${INITIAL_VISIT_FROM}. Same-day and next-day appointments are available.`,
-  },
-];
-
-export const NEW_PATIENT_FAQS: readonly FaqItem[] = [
-  {
-    question: 'Is Apollo Physicians accepting new patients in Sacramento?',
-    answer: `Yes. Apollo Physicians is accepting new patients from Sacramento, Elk Grove and surrounding Northern California communities. Dr. Paramjit Panesar, MD, offers same-day and next-day appointments for new patients, and the office is open Saturday. Call ${PHONE} to book your first visit at the Sacramento office.`,
-  },
-  {
-    question: 'How do I make Dr. Paramjit Panesar, MD my primary care physician (PCP) in Sacramento?',
-    answer: `To make Dr. Paramjit Panesar, MD, your PCP, first confirm your plan with Apollo Physicians at ${PHONE}. Then contact your health plan or medical group, using the member services number on your card, and ask to name Dr. Panesar, NPI ${NPI.panesar}, as your primary care physician. The office can answer questions.`,
-  },
-  {
-    question: 'Which insurance plans does Dr. Paramjit Panesar, MD accept at Apollo Physicians?',
-    answer: `At Apollo Physicians, Dr. Paramjit Panesar, MD, sees patients with ${insuranceSentence()}. Self-pay is also available from ${INITIAL_VISIT_FROM}. Call ${PHONE} to confirm your plan and medical group before your first visit.`,
-  },
-  {
-    question: 'What new patient forms does Apollo Physicians use?',
-    answer: `New patient registration forms at Apollo Physicians are available in English and Spanish. Ask the office for the form in your language when you call ${PHONE} to book. Have your insurance card ready, or ask about self-pay pricing from ${INITIAL_VISIT_FROM} if you do not have coverage.`,
-  },
-  {
-    question: 'What is the self-pay price for a new patient visit at Apollo Physicians?',
-    answer: `Self-pay initial doctor visits at Apollo Physicians start at ${INITIAL_VISIT_FROM}. The office accepts cash, check, Visa, MasterCard, American Express and Discover. Patients with insurance should call ${PHONE} to confirm what their plan covers before the first visit at the Sacramento office.`,
-  },
-];
-
-/**
- * Plain-language comparison of primary care options. Deliberately general: it names no other provider
- * and states no wait time or price for anyone else, because none has been measured. Other options are
- * described as "varies" or "ask", and the caption tells readers to confirm with each provider.
- */
-export const ACCESS_COMPARISON = {
-  caption: 'How primary care options differ. Details for other providers vary, so confirm with each one.',
-  columns: ['Family medicine at Apollo Physicians', 'Typical large health system', 'Typical walk-in urgent care'] as const,
-  rows: [
-    {
-      label: 'New-patient appointments',
-      cells: ['Same-day and next-day appointments', 'Varies by system. Ask about the next new-patient opening.', 'Walk-in visits for immediate needs'],
-    },
-    {
-      label: 'Your own family doctor',
-      cells: [`${PROVIDER.name}, for ongoing family medicine`, 'Depends on the group and your assigned provider', 'Often a different clinician each visit'],
-    },
-    { label: 'Saturday hours', cells: ['9:00 AM to 2:00 PM Pacific Time', 'Varies by location', 'Varies by location'] },
-    { label: 'Initial self-pay visit', cells: [`From ${INITIAL_VISIT_FROM}`, 'Ask the practice', 'Ask the clinic'] },
-    { label: 'On-site labs and vaccines', cells: ['Lab blood draws and vaccinations on site', 'Varies by location', 'Varies by location'] },
-  ],
-} as const;

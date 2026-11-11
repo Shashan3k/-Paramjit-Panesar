@@ -2,15 +2,14 @@ import Image from 'next/image';
 import { CheckCircle2, MapPin, Phone, Stethoscope } from 'lucide-react';
 import { ButtonLink } from '@/components/ui/Button';
 import { InsurancePills } from '@/components/ui/InsurancePills';
-import { ACCEPTING_NEW_PATIENTS, APPOINTMENT_AVAILABILITY, HOME_LEAD, HOURS_SENTENCE, INITIAL_VISIT_PRICE, PROVIDER } from '@/data/practice';
+import { APPOINTMENT_AVAILABILITY, CREDENTIALS, HOME_DIRECT_ANSWER, INITIAL_VISIT_PRICE, PROVIDER } from '@/data/practice';
 import { OFFICE, PHONES } from '@/data/site';
 import { mapsDirectionsUrl, telHref } from '@/lib/utils';
 
 /**
- * Home hero. The H1 is the target phrase for the home page. The primary action calls the
- * office, and the secondary action gets directions. The panel on the right lists facts the
- * practice has confirmed. Above it sits a generic clinical interior photo. No photo of Apollo's own
- * office or team has been supplied yet, so none is shown.
+ * Home hero. The H1 is the target phrase for the home page, and the 40 to 60 word direct answer sits right
+ * under it (marked for voice assistants). The primary action calls the office, and the secondary action gets
+ * directions. No photo is shown, because none has been supplied.
  */
 export function HomeHero() {
   return (
@@ -21,9 +20,8 @@ export function HomeHero() {
           <h1 id="hero-heading" className="mt-3 text-4xl font-bold leading-tight tracking-tight md:text-5xl">
             Family Physician in Sacramento, CA
           </h1>
-          <h2 className="mt-3 text-2xl font-semibold text-teal-100 md:text-3xl">{APPOINTMENT_AVAILABILITY}</h2>
-          <p className="mt-5 max-w-xl text-lg leading-relaxed text-navy-100">
-            {HOME_LEAD} {ACCEPTING_NEW_PATIENTS} Call {PHONES.main.display} to book your visit.
+          <p data-speakable="direct-answer" className="mt-5 max-w-xl text-lg leading-relaxed text-navy-100">
+            {HOME_DIRECT_ANSWER}
           </p>
 
           <div className="mt-8 flex flex-wrap gap-3">
@@ -50,11 +48,7 @@ export function HomeHero() {
             </li>
             <li className="flex items-start gap-2">
               <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-teal-300" aria-hidden="true" />
-              <span>{ACCEPTING_NEW_PATIENTS}</span>
-            </li>
-            <li className="flex items-start gap-2">
-              <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-teal-300" aria-hidden="true" />
-              <span>Open Saturday, 9:00 AM to 2:00 PM.</span>
+              <span>New patients welcome</span>
             </li>
           </ul>
         </div>
@@ -62,22 +56,19 @@ export function HomeHero() {
         <div className="space-y-6">
         {/* Generic clinical interior photo, decorative, so the alt text is empty. */}
         <div className="relative aspect-[16/9] overflow-hidden rounded-2xl shadow-2xl ring-1 ring-white/10">
-          <Image
-            src="/images/clinic-interior.jpg"
-            alt=""
-            fill
-            priority
-            sizes="(min-width: 1024px) 560px, 100vw"
-            className="object-cover"
-          />
+          <Image src="/images/clinic-interior.jpg" alt="" fill priority sizes="(min-width: 1024px) 560px, 100vw" className="object-cover" />
         </div>
-        <aside aria-label="Office details" className="rounded-2xl bg-white/5 p-8 shadow-2xl ring-1 ring-white/10">
+        <aside aria-label="Provider" className="rounded-2xl bg-white/5 p-8 shadow-2xl ring-1 ring-white/10">
           <div className="flex items-center gap-3">
             <Stethoscope className="h-6 w-6 text-teal-300" aria-hidden="true" />
             <p className="text-lg font-semibold">{PROVIDER.name}</p>
           </div>
-          <p className="mt-2 text-navy-100">Family Medicine</p>
+          <p className="mt-2 text-navy-100">Board certified in family medicine</p>
           <dl className="mt-6 space-y-4 text-navy-100">
+            <div>
+              <dt className="text-sm font-semibold uppercase tracking-wide text-teal-300">Certification</dt>
+              <dd className="mt-1">{CREDENTIALS.boardBody}</dd>
+            </div>
             <div>
               <dt className="text-sm font-semibold uppercase tracking-wide text-teal-300">Office</dt>
               <dd className="mt-1">{OFFICE.line}</dd>
@@ -85,10 +76,6 @@ export function HomeHero() {
             <div>
               <dt className="text-sm font-semibold uppercase tracking-wide text-teal-300">Phone</dt>
               <dd className="mt-1">{PHONES.main.display}</dd>
-            </div>
-            <div>
-              <dt className="text-sm font-semibold uppercase tracking-wide text-teal-300">Hours</dt>
-              <dd className="mt-1">{HOURS_SENTENCE}</dd>
             </div>
           </dl>
         </aside>

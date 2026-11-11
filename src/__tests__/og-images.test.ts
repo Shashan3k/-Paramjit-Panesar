@@ -1,6 +1,6 @@
 import { existsSync, readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
-import { PAGE_META } from '@/data/pages';
+import { PAGE_META, type PageKey } from '@/data/pages';
 import { buildMetadata } from '@/lib/seo';
 
 /**
@@ -8,7 +8,6 @@ import { buildMetadata } from '@/lib/seo';
  * These tests keep the files, the page titles and the generator's headline list in agreement.
  */
 
-type PageKey = keyof typeof PAGE_META;
 const KEYS = Object.keys(PAGE_META) as PageKey[];
 const generator = readFileSync('scripts/generate-og.mjs', 'utf8');
 

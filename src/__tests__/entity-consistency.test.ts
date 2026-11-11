@@ -28,6 +28,7 @@ const PHONE_PATTERN = /(?:\+?1[-. ]?)?\(?\d{3}\)?[-. ]\d{3}[-. ]\d{4}|\+1\d{10}/
 
 /** Numbers found in directories or the NPI registry that must never be published as a phone line. */
 const NON_PUBLIC_NUMBERS = [
+  '916-266-7473', // NPPES fax number for the organisation
   '916-824-3278', // legacy number named by the client, role unconfirmed
   '916-655-9883',
   '916-281-5963',
@@ -70,9 +71,14 @@ describe('one source of truth for phone and address', () => {
 });
 
 describe('page meta reads the shared data', () => {
-  it.each(Object.values(PAGE_META).map((p) => [p.path, p] as const))('%s description carries the office street and phone', (_path, page) => {
-    expect(page.description).toContain(OFFICE.street);
+  it.each(Object.values(PAGE_META).map((p) => [p.path, p] as const))('%s description carries the phone', (_path, page) => {
     expect(page.description).toContain(PHONES.main.display);
+  });
+
+  it('puts the office street in the descriptions of the pages about the office and its physician', () => {
+    for (const key of ['home', 'newPatients', 'annualPhysical', 'elkGrove', 'panesar'] as const) {
+      expect(PAGE_META[key].description, key).toContain(OFFICE.street);
+    }
   });
 
   it('footer call link is built from the shared phone', () => {
@@ -82,14 +88,19 @@ describe('page meta reads the shared data', () => {
 });
 
 describe('business name', () => {
-  it('uses the owner-confirmed legal name, and never the registry typo', () => {
+  it('uses the confirmed legal name and never the registry typo', () => {
     expect(BRAND.legalName).toBe('Apollo Physicians Medical Group');
     const hits: string[] = [];
     for (const file of PUBLISHED_FILES.filter((f) => f !== SITE_DATA)) {
-      const text = readFileSync(file, 'utf8').replace(/\/\*[\s\S]*?\*\//g, '').replace(/^\s*\/\/.*$/gm, '');
+      const text = readFileSync(file, 'utf8');
       if (/PHYSICANS/i.test(text)) hits.push(relative('.', file).split(sep).join('/'));
     }
     expect(hits).toEqual([]);
+  });
+
+  it('shows the legal name in the footer and the schema only', () => {
+    expect(clinicNode().legalName).toBe(BRAND.legalName);
+    expect(readFileSync('src/components/layout/Footer.tsx', 'utf8')).toContain('BRAND.legalName');
   });
 
   it('keeps the brand name identical in schema and llms.txt', () => {

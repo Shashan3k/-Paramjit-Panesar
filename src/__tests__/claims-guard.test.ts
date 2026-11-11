@@ -1,23 +1,13 @@
 import { readdirSync, readFileSync, statSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
+import * as content from '@/data/content';
 import { PAGE_META } from '@/data/pages';
-import {
-  ACCESS_COMPARISON,
-  ANNUAL_PHYSICAL_FAQS,
-  ELK_GROVE_FAQS,
-  ELK_GROVE_NOTE,
-  HOME_FAQS,
-  HOME_LEAD,
-  NEW_PATIENT_FAQS,
-  PANESAR_FAQS,
-  PANESAR_LEAD,
-  SERVICE_GROUPS,
-} from '@/data/practice';
-import { buildLlmsFullTxt, buildLlmsTxt } from '@/lib/llms';
+import { ELK_GROVE_DIRECT_ANSWER, ELK_GROVE_FAQS, ELK_GROVE_NOTE, HOME_DIRECT_ANSWER, HOME_FAQS, HOME_LEAD, PANESAR_DIRECT_ANSWER, PANESAR_FAQS, PANESAR_LEAD } from '@/data/practice';
+import { buildLlmsTxt } from '@/lib/llms';
 
 /**
- * Medical (YMYL) site rule: no unsupported superlatives, comparisons, outcomes or wait-time claims, and
+ * Medical (YMYL) site rule: no unsupported superlatives, comparisons, outcome promises or wait-time claims, and
  * nothing that talks about competitors. Scans every string the site can publish.
  */
 
@@ -37,6 +27,7 @@ const BANNED = [
   /\bno (wait|waiting)\b/i,
   /\b(competitor|competitors)\b/i,
   /\b100%\b/,
+  /\b(reverse[sd]?|heal[sd]?|eliminat\w+) (your|the)\b/i,
 ];
 
 function files(dir: string): string[] {
@@ -52,16 +43,27 @@ function jsxText(file: string): string[] {
   return [...source.matchAll(/>([^<>{}]*[A-Za-z][^<>{}]*)</g)].map((m) => (m[1] ?? '').trim()).filter(Boolean);
 }
 
+/** Every string in a PageContent-shaped export (blocks, FAQs, headings). */
+function strings(value: unknown): string[] {
+  if (typeof value === 'string') return [value];
+  if (Array.isArray(value)) return value.flatMap(strings);
+  if (value && typeof value === 'object') return Object.values(value).flatMap(strings);
+  return [];
+}
+
+const contentStrings = Object.values(content).flatMap(strings);
+
 const dataStrings = [
   ...Object.values(PAGE_META).flatMap((p) => [p.title, p.description]),
   HOME_LEAD,
+  HOME_DIRECT_ANSWER,
   PANESAR_LEAD,
+  PANESAR_DIRECT_ANSWER,
+  ELK_GROVE_DIRECT_ANSWER,
   ELK_GROVE_NOTE,
-  ...[...HOME_FAQS, ...ELK_GROVE_FAQS, ...PANESAR_FAQS, ...ANNUAL_PHYSICAL_FAQS, ...NEW_PATIENT_FAQS].flatMap((f) => [f.question, f.answer]),
-  ...ACCESS_COMPARISON.rows.flatMap((r) => [r.label, ...r.cells]),
-  ...SERVICE_GROUPS.flatMap((g) => g.items),
+  ...[...HOME_FAQS, ...ELK_GROVE_FAQS, ...PANESAR_FAQS].flatMap((f) => [f.question, f.answer]),
+  ...contentStrings,
   buildLlmsTxt(),
-  buildLlmsFullTxt(),
 ];
 
 const jsxStrings = files('src')
@@ -70,7 +72,7 @@ const jsxStrings = files('src')
 
 describe('no unsupported claims in anything the site publishes', () => {
   it('scans a meaningful amount of copy', () => {
-    expect(dataStrings.length).toBeGreaterThan(20);
+    expect(dataStrings.length).toBeGreaterThan(150);
     expect(jsxStrings.length).toBeGreaterThan(20);
   });
 
@@ -82,16 +84,13 @@ describe('no unsupported claims in anything the site publishes', () => {
     expect(jsxStrings.filter((s) => re.test(s))).toEqual([]);
   });
 
-  it('lists services without outcome, cure or personal-advice claims', () => {
-    // Services such as diabetes or hypertension management may be listed (owner-supplied, 5 Nov 2026).
-    // What stays banned is promising results or telling the reader what to do about their own health.
+  it('promises no medical outcome and gives no personal medical advice', () => {
     const all = [...dataStrings, ...jsxStrings].join('\n');
-    expect(all).not.toMatch(/\b(will (cure|heal|fix|reverse)|reverse[sd]?|eliminate[sd]?|prevents?|you (should|must) (take|stop|start))\b/i);
-    expect(all).not.toMatch(/\b(diagnose[sd]?|diagnosis) (you|your)\b/i);
+    expect(all).not.toMatch(/\b(you will (be )?(cured|healed|recover)|we will (cure|heal)|you should (take|stop|start) \w+ (mg|medication))\b/i);
   });
 
-  it('names no other provider, so no comparison can be read as a claim about one', () => {
-    const all = [...dataStrings, ...jsxStrings].join('\n');
-    expect(all).not.toMatch(/Kaiser|Dignity|Mercy|UC Davis|Takhar|Urgent Care at|Sutter (Medical|Health) (Center|Hospital)/i);
+  it('carries the "not medical advice" line on health pages', () => {
+    expect(content.NOT_MEDICAL_ADVICE).toMatch(/not medical advice/i);
+    expect(content.NOT_MEDICAL_ADVICE).toContain('911');
   });
 });

@@ -25,7 +25,7 @@ describe('which links become events', () => {
   });
 
   it('ignores every other link, and counts no booking click while there is no booking URL', () => {
-    for (const href of ['/', '/dr-paramjit-panesar-md', 'https://www.doximity.com/pub/x', 'mailto:a@b.c', '#insurance', '', null, undefined]) {
+    for (const href of ['/', '/dr-paramjit-panesar', 'https://www.doximity.com/pub/x', 'mailto:a@b.c', '#insurance', '', null, undefined]) {
       expect(classifyLink(href as string | null | undefined), String(href)).toBeNull();
     }
   });
@@ -50,7 +50,7 @@ describe('events carry no health information', () => {
   });
 
   it('reports only known site paths and never a query string, hash or other text', () => {
-    const attempts = ['/?name=Jane+Doe&dob=1980-01-01', '/dr-paramjit-panesar-md#diabetes', '/anything-else', '/family-physician-elk-grove?symptom=chest+pain', 42, undefined];
+    const attempts = ['/?name=Jane+Doe&dob=1980-01-01', '/dr-paramjit-panesar#diabetes', '/anything-else', '/family-physician-elk-grove?symptom=chest+pain', 42, undefined];
     for (const path of attempts) expect(buildEvent('call_click', 'page', path)?.path, String(path)).toBe('other');
     for (const page of Object.values(PAGE_META)) expect(buildEvent('call_click', 'page', page.path)?.path).toBe(page.path);
   });

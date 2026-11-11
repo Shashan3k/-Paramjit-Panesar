@@ -23,9 +23,19 @@ const OUT = join(ROOT, 'public', 'og');
 const PAGES = [
   ['home', 'Family Physician in Sacramento, CA'],
   ['newPatients', 'Doctor Accepting New Patients Sacramento'],
-  ['annualPhysical', 'Annual Physical Sacramento, CA'],
+  ['annualPhysical', 'Annual Physical in Sacramento, CA'],
+  ['sameDay', 'Same-Day Doctor Appointments Sacramento'],
   ['elkGrove', 'Family Physician for Elk Grove Patients'],
-  ['panesar', 'Dr. Paramjit Panesar, MD, Family Doctor'],
+  ['panesar', 'Dr. Paramjit Panesar, Family Doctor'],
+  ['services', 'Family Medicine Services in Sacramento'],
+  ['immigration', 'Immigration Medical Exam in Sacramento'],
+  ['insurance', 'Doctor Accepting Medicare in Sacramento'],
+  ['medicare', 'Medicare Family Doctor in Sacramento'],
+  ['mediCal', 'Medi-Cal Doctor in South Sacramento'],
+  ['nivano', 'Nivano Physicians Doctor, Sacramento'],
+  ['selfPay', 'Doctor Without Insurance in Sacramento'],
+  ['contact', 'Contact and Directions in Sacramento'],
+  ['faq', 'Family Doctor Questions, Sacramento'],
 ];
 
 const BRAND = 'Apollo Physicians';

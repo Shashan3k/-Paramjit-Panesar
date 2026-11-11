@@ -1,6 +1,18 @@
-import { ASSETS, BRAND, FAX, GEO, NPI, OFFICE, PHONES, PHYSICIAN_PROFILES, SITE_URL, absoluteUrl } from '@/data/site';
-import { CREDENTIALS, HOURS, INITIAL_VISIT_FROM, PAYMENT_METHODS, PROVIDER, SPECIALTY } from '@/data/practice';
-import { PAGE_META } from '@/data/pages';
+import {
+  AREAS_SERVED,
+  ASSETS,
+  BRAND,
+  GEO,
+  NPI,
+  OFFICE,
+  OFFICE_HOURS,
+  PHONES,
+  PHYSICIAN_PROFILES,
+  SITE_URL,
+  absoluteUrl,
+} from '@/data/site';
+import { CREDENTIALS, INITIAL_VISIT_FROM, PROVIDER } from '@/data/practice';
+import { CLINICAL_REVIEW, PAGE_META, isLive, type PageKey } from '@/data/pages';
 import type { Crumb } from '@/data/navigation';
 import type { FaqItem } from '@/types';
 import { mapsPlaceUrl } from '@/lib/utils';
@@ -11,14 +23,13 @@ import { mapsPlaceUrl } from '@/lib/utils';
  *
  * Rules this file follows:
  * - Only facts that are visible on the page and present in src/data are emitted.
- * - Owner-supplied facts (5 Nov 2026) are emitted: opening hours, priceRange, isAcceptingNewPatients,
- *   paymentAccepted (payment methods only), areaServed, legalName, credentials, alma mater and board.
- * - Still not emitted: knowsLanguage, hospitalAffiliation, the organisation NPI, and accepted
- *   insurance. schema.org has no property for "accepts plan X" on a clinic, and paymentAccepted means
- *   payment methods, so the plan list stays as visible page content only.
- * - medicalSpecialty uses PrimaryCare. "FamilyPractice" is not a schema.org value.
- * - No AggregateRating or Review: there is no real, current, on-page rating.
- * - FAQPage is for machine readability; it mirrors the visible FAQ text exactly.
+ * - Not emitted, because they are not confirmed (docs/seo/client-confirmations.md): openingHours (until
+ *   OFFICE_HOURS is set), knowsLanguage, hospitalAffiliation, other providers, and any plan beyond the owner's list.
+ * - lastReviewed and reviewedBy appear only after Dr. Panesar has reviewed the health content
+ *   (CLINICAL_REVIEW.reviewedOn is set), so a review can never be claimed before it happened.
+ * - No AggregateRating or Review: Google ignores self-serving review markup, and the real counts are unconfirmed.
+ * - FAQPage mirrors the visible FAQ text exactly.
+ * - medicalSpecialty is PrimaryCare: schema.org has no "Family Practice" value, so "FamilyPractice" is invalid.
  */
 
 type Node = Record<string, unknown>;
@@ -48,23 +59,6 @@ const postalAddress = (): Node => ({
   addressCountry: 'US',
 });
 
-const city = (name: string): Node => ({
-  '@type': 'City',
-  name,
-  containedInPlace: { '@type': 'State', name: 'California' },
-});
-
-const AREA_SERVED = (): Node[] => [city('Sacramento'), city('Elk Grove')];
-
-/** Opening hours from the shared HOURS data. Sunday is closed, so it has no entry. */
-const openingHours = (): Node[] =>
-  HOURS.map((slot) => ({
-    '@type': 'OpeningHoursSpecification',
-    dayOfWeek: [...slot.schemaDays],
-    opens: slot.opens,
-    closes: slot.closes,
-  }));
-
 /** WebSite node. Published by the clinic, so it links to the clinic entity by @id. */
 export function websiteNode(): Node {
   return {
@@ -77,27 +71,63 @@ export function websiteNode(): Node {
   };
 }
 
+function areaServed(): Node[] {
+  const place = (name: string): Node => ({ '@type': 'Place', name });
+  const zip = (postalCode: string): Node => ({
+    '@type': 'Place',
+    name: `ZIP code ${postalCode}`,
+    address: { '@type': 'PostalAddress', postalCode, addressCountry: 'US' },
+  });
+  return [
+    ...AREAS_SERVED.cities.map((name) => ({ '@type': 'City', name })),
+    ...AREAS_SERVED.neighborhoods.map(place),
+    ...[...AREAS_SERVED.zipSacramento, ...AREAS_SERVED.zipElkGrove].map(zip),
+  ];
+}
+
+/** Services appear in the schema only when their page is live (and so reviewed by Dr. Panesar). */
+function availableServices(): Node[] {
+  const services: Node[] = [];
+  if (isLive(PAGE_META.annualPhysical)) services.push({ '@type': 'MedicalProcedure', name: 'Annual physical exam' });
+  if (isLive(PAGE_META.immigration)) services.push({ '@type': 'MedicalProcedure', name: 'USCIS immigration medical examination (Form I-693)' });
+  return services;
+}
+
+function openingHours(): Node[] | null {
+  if (!OFFICE_HOURS) return null;
+  return OFFICE_HOURS.map((row) => ({
+    '@type': 'OpeningHoursSpecification',
+    dayOfWeek: [...row.days],
+    opens: row.opens,
+    closes: row.closes,
+  }));
+}
+
 export function clinicNode(): Node {
+  const hours = openingHours();
+  const services = availableServices();
   return {
+    // MedicalClinic is a subtype of MedicalOrganization, MedicalBusiness, LocalBusiness and Organization.
     '@type': 'MedicalClinic',
     '@id': CLINIC_ID,
     name: BRAND.name,
-    // Only when the practice has confirmed the legal name (BRAND.legalName is null until then).
     ...(BRAND.legalName ? { legalName: BRAND.legalName } : {}),
     url: SITE_URL,
     logo: { '@type': 'ImageObject', url: ASSETS.logo },
     image: ASSETS.shareCard,
     telephone: PHONES.main.tel,
-    faxNumber: FAX.tel,
     medicalSpecialty: SPECIALTY_ENUM,
-    isAcceptingNewPatients: true,
-    priceRange: `${INITIAL_VISIT_FROM}+`,
-    paymentAccepted: PAYMENT_METHODS.join(', '),
-    openingHoursSpecification: openingHours(),
-    areaServed: AREA_SERVED(),
     address: postalAddress(),
+    // The pin on the practice's own Google listing (see GEO in src/data/site.ts).
     geo: { '@type': 'GeoCoordinates', latitude: GEO.latitude, longitude: GEO.longitude },
     hasMap: mapsPlaceUrl(OFFICE.line),
+    areaServed: areaServed(),
+    isAcceptingNewPatients: true,
+    // The plans are listed on the insurance page. paymentAccepted means payment methods, so it says only that.
+    paymentAccepted: 'Health insurance, self-pay',
+    priceRange: `From ${INITIAL_VISIT_FROM}`,
+    ...(hours ? { openingHoursSpecification: hours } : {}),
+    ...(services.length ? { availableService: services } : {}),
     employee: { '@id': PHYSICIAN_ID },
   };
 }
@@ -105,12 +135,11 @@ export function clinicNode(): Node {
 export function physicianNode(): Node {
   return {
     // schema.org defines Physician as a medical organization, not a person, so honorificPrefix,
-    // honorificSuffix and worksFor are only valid because the node is also typed Person.
+    // honorificSuffix, worksFor and the credential properties are only valid because the node is also typed Person.
     '@type': ['Physician', 'Person'],
     '@id': PHYSICIAN_ID,
     // Name parts follow schema.org: the honorifics are separate from the name itself.
     name: PROVIDER.fullName,
-    alternateName: PROVIDER.shortName.replace('Dr. ', ''),
     honorificPrefix: PROVIDER.honorificPrefix,
     honorificSuffix: PROVIDER.honorificSuffix,
     url: absoluteUrl(PAGE_META.panesar.path),
@@ -118,93 +147,34 @@ export function physicianNode(): Node {
     sameAs: PHYSICIAN_PROFILES,
     telephone: PHONES.main.tel,
     medicalSpecialty: SPECIALTY_ENUM,
-    isAcceptingNewPatients: true,
     address: postalAddress(),
     worksFor: { '@id': CLINIC_ID },
-    identifier: [
-      { '@type': 'PropertyValue', propertyID: 'NPI', value: NPI.panesar },
-      { '@type': 'PropertyValue', propertyID: 'California medical license', value: CREDENTIALS.licenseNumber },
-    ],
+    identifier: { '@type': 'PropertyValue', propertyID: 'NPI', value: NPI.panesar },
     hasCredential: [
       {
         '@type': 'EducationalOccupationalCredential',
-        credentialCategory: 'license',
-        name: `California medical license ${CREDENTIALS.licenseNumber}`,
-        recognizedBy: { '@type': 'Organization', name: 'Medical Board of California' },
+        credentialCategory: 'Board certification',
+        name: 'Board certified in family medicine',
+        recognizedBy: { '@type': 'Organization', name: CREDENTIALS.boardBody },
       },
       {
         '@type': 'EducationalOccupationalCredential',
-        credentialCategory: 'board certification',
-        name: `${CREDENTIALS.boardCertification} certification in ${SPECIALTY}`,
-        recognizedBy: { '@type': 'Organization', name: CREDENTIALS.boardCertification },
+        credentialCategory: 'License',
+        name: `California medical license ${CREDENTIALS.licenseNumber}`,
+        recognizedBy: { '@type': 'GovernmentOrganization', name: CREDENTIALS.licenseBody },
+      },
+      {
+        '@type': 'EducationalOccupationalCredential',
+        credentialCategory: 'Designation',
+        name: 'USCIS-designated civil surgeon',
+        recognizedBy: { '@type': 'GovernmentOrganization', name: 'U.S. Citizenship and Immigration Services' },
       },
     ],
     alumniOf: [
-      { '@type': 'EducationalOrganization', name: CREDENTIALS.residency },
-      { '@type': 'EducationalOrganization', name: CREDENTIALS.medicalSchool },
+      { '@type': 'CollegeOrUniversity', name: CREDENTIALS.medicalSchool },
+      { '@type': 'CollegeOrUniversity', name: 'University of Arkansas for Medical Sciences' },
     ],
-    memberOf: { '@type': 'Organization', name: CREDENTIALS.boardCertification },
-  };
-}
-
-/**
- * Service nodes for the practice's main offerings. Each is provided by the clinic and covers the same
- * two cities. The nodes are standalone so a page can reference only the ones it shows.
- */
-export const SERVICE_KEYS = ['annualPhysical', 'sameDay', 'immigrationExam', 'pediatrics', 'telemedicine'] as const;
-export type ServiceKey = (typeof SERVICE_KEYS)[number];
-
-const SERVICE_DEFS: Record<ServiceKey, { slug: string; name: string; type: string; description: string; path: string }> = {
-  annualPhysical: {
-    slug: 'annual-physical',
-    name: 'Annual Physical Sacramento',
-    type: 'Annual physical and preventive checkup',
-    description: 'Annual physicals, routine checkups, school and sports physicals and cancer screenings in Sacramento.',
-    path: PAGE_META.annualPhysical.path,
-  },
-  sameDay: {
-    slug: 'same-day-and-next-day-appointments',
-    name: 'Same-Day and Next-Day Appointments',
-    type: 'Same-day and next-day primary care',
-    description: 'Same-day and next-day family medicine appointments for new and returning patients.',
-    path: PAGE_META.newPatients.path,
-  },
-  immigrationExam: {
-    slug: 'uscis-immigration-medical-exam',
-    name: 'USCIS Immigration Medical Exam',
-    type: 'Immigration medical exam (Form I-693)',
-    description: 'USCIS immigration medical exams (Form I-693) from a USCIS-designated civil surgeon, with on-site vaccinations.',
-    path: PAGE_META.panesar.path,
-  },
-  pediatrics: {
-    slug: 'pediatrics',
-    name: 'Pediatrics and Well-Child Exams',
-    type: 'Well-child exams and pediatric sick visits',
-    description: 'Well-child exams from newborns to age 21 and pediatric sick visits.',
-    path: PAGE_META.annualPhysical.path,
-  },
-  telemedicine: {
-    slug: 'telemedicine',
-    name: 'Telemedicine',
-    type: 'Telemedicine visit',
-    description: 'Telemedicine visits for patients across California.',
-    path: PAGE_META.home.path,
-  },
-};
-
-export const serviceId = (key: ServiceKey) => `${SITE_URL}/#service-${SERVICE_DEFS[key].slug}`;
-
-export function serviceNode(key: ServiceKey): Node {
-  const def = SERVICE_DEFS[key];
-  return {
-    '@type': 'Service',
-    '@id': serviceId(key),
-    name: def.name,
-    serviceType: def.type,
-    description: def.description,
-    url: absoluteUrl(def.path),
-    provider: { '@id': CLINIC_ID },
-    areaServed: AREA_SERVED(),
+    knowsAbout: ['Family medicine', 'Immigration medical exams', 'Preventive care'],
   };
 }
 
@@ -213,32 +183,20 @@ interface WebPageInput {
   /** The page title, identical to the <title> tag. */
   name: string;
   description: string;
-  /** "ProfilePage" for the physician page, "WebPage" otherwise. */
-  type?: 'WebPage' | 'ProfilePage';
+  /** "ProfilePage" for the physician page, "MedicalWebPage" for health information, "WebPage" otherwise. */
+  type?: 'WebPage' | 'ProfilePage' | 'MedicalWebPage';
   /** True when the page shows a breadcrumb trail (the home page does not). */
   breadcrumb?: boolean;
   /** True when the page shows an FAQ. */
   faq?: boolean;
   /** The entity the page is about. Defaults to the clinic. */
   about?: 'clinic' | 'physician';
-  /** Services the page is also about. Each must be in the page's @graph. */
-  services?: readonly ServiceKey[];
 }
 
-/** One WebPage (or ProfilePage) node per page, tying the site, entity, breadcrumb and FAQ together. */
-export function webPageNode({
-  path,
-  name,
-  description,
-  type = 'WebPage',
-  breadcrumb = false,
-  faq = false,
-  about = 'clinic',
-  services = [],
-}: WebPageInput): Node {
+/** One WebPage (or ProfilePage, or MedicalWebPage) node per page, tying the site, entity, breadcrumb and FAQ together. */
+export function webPageNode({ path, name, description, type = 'WebPage', breadcrumb = false, faq = false, about = 'clinic' }: WebPageInput): Node {
   const subject = { '@id': about === 'physician' ? PHYSICIAN_ID : CLINIC_ID };
-  const aboutRefs = [subject, ...services.map((key) => ({ '@id': serviceId(key) }))];
-  const modified = Object.values(PAGE_META).find((p) => p.path === path)?.lastModified;
+  const reviewed = type === 'MedicalWebPage' && CLINICAL_REVIEW.reviewedOn;
   return {
     '@type': type,
     '@id': webPageId(path),
@@ -246,11 +204,13 @@ export function webPageNode({
     name,
     description,
     inLanguage: 'en-US',
-    ...(modified ? { dateModified: modified } : {}),
     isPartOf: { '@id': WEBSITE_ID },
-    ...(type === 'ProfilePage' ? { mainEntity: subject } : { about: aboutRefs.length === 1 ? subject : aboutRefs }),
+    ...(type === 'ProfilePage' ? { mainEntity: subject } : { about: subject }),
     ...(breadcrumb ? { breadcrumb: { '@id': breadcrumbId(path) } } : {}),
     ...(faq ? { hasPart: { '@id': faqId(path) } } : {}),
+    // Read aloud by voice assistants: the direct-answer paragraph (and nothing else) carries data-speakable.
+    speakable: { '@type': 'SpeakableSpecification', cssSelector: ['[data-speakable]'] },
+    ...(reviewed ? { lastReviewed: CLINICAL_REVIEW.reviewedOn, reviewedBy: { '@id': PHYSICIAN_ID } } : {}),
   };
 }
 
@@ -285,4 +245,38 @@ export function breadcrumbNode(path: string, items: readonly Crumb[]): Node {
 /** Wraps nodes in a single @graph document for one page. */
 export function graph(...nodes: Node[]): Node {
   return { '@context': 'https://schema.org', '@graph': nodes };
+}
+
+interface PageGraphInput {
+  key: PageKey;
+  faqs?: readonly FaqItem[];
+  breadcrumb?: readonly Crumb[];
+  about?: 'clinic' | 'physician';
+}
+
+/**
+ * The full JSON-LD document for one page: site, clinic, physician, the page itself, and its FAQ and
+ * breadcrumb when it shows them. Clinical pages are typed MedicalWebPage; the physician page is a ProfilePage.
+ */
+export function pageGraph({ key, faqs, breadcrumb, about }: PageGraphInput): Node {
+  const meta: { path: string; title: string; description: string; clinical?: boolean } = {
+    ...PAGE_META[key],
+  };
+  const type: WebPageInput['type'] = key === 'panesar' ? 'ProfilePage' : meta.clinical ? 'MedicalWebPage' : 'WebPage';
+  return graph(
+    websiteNode(),
+    clinicNode(),
+    physicianNode(),
+    webPageNode({
+      path: meta.path,
+      name: meta.title,
+      description: meta.description,
+      type,
+      about: about ?? (key === 'panesar' ? 'physician' : 'clinic'),
+      breadcrumb: Boolean(breadcrumb),
+      faq: Boolean(faqs?.length),
+    }),
+    ...(faqs?.length ? [faqNode(meta.path, faqs)] : []),
+    ...(breadcrumb ? [breadcrumbNode(meta.path, breadcrumb)] : []),
+  );
 }
