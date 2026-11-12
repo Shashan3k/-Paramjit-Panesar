@@ -7,6 +7,11 @@ export const TITLE_MIN = 50;
 export const TITLE_MAX = 60;
 export const DESCRIPTION_MIN = 150;
 export const DESCRIPTION_MAX = 160;
+/**
+ * Stricter cap for pages that are live (HTTP 200), so the whole description shows on mobile results.
+ * Held health pages keep DESCRIPTION_MAX until Dr. Panesar's review; trim them to this cap when they publish.
+ */
+export const DESCRIPTION_MAX_LIVE = 155;
 
 /**
  * Returns the first candidate whose length falls in the title range. Throws when

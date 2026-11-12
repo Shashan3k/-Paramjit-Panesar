@@ -35,7 +35,8 @@ import { mapsPlaceUrl } from '@/lib/utils';
 type Node = Record<string, unknown>;
 
 export const CLINIC_ID = `${SITE_URL}/#clinic`;
-export const PHYSICIAN_ID = `${SITE_URL}/#dr-paramjit-panesar`;
+/** The physician entity is anchored on the profile page, so the @id and the page that describes it agree. */
+export const PHYSICIAN_ID = `${absoluteUrl(PAGE_META.panesar.path)}#physician`;
 export const WEBSITE_ID = `${SITE_URL}/#website`;
 
 /** Prefix for page-level ids: the home page keeps its trailing slash so fragments read cleanly. */
@@ -79,7 +80,8 @@ function areaServed(): Node[] {
     address: { '@type': 'PostalAddress', postalCode, addressCountry: 'US' },
   });
   return [
-    ...AREAS_SERVED.cities.map((name) => ({ '@type': 'City', name })),
+    // Placed in California, so "Sacramento" and "Elk Grove" cannot be read as places elsewhere.
+    ...AREAS_SERVED.cities.map((name) => ({ '@type': 'City', name, containedInPlace: { '@type': 'State', name: 'California' } })),
     ...AREAS_SERVED.neighborhoods.map(place),
     ...[...AREAS_SERVED.zipSacramento, ...AREAS_SERVED.zipElkGrove].map(zip),
   ];
@@ -142,6 +144,9 @@ export function physicianNode(): Node {
     name: PROVIDER.fullName,
     honorificPrefix: PROVIDER.honorificPrefix,
     honorificSuffix: PROVIDER.honorificSuffix,
+    // The form patients search for and the site shows ("Dr. Paramjit Panesar, MD").
+    alternateName: PROVIDER.name,
+    jobTitle: 'Family Medicine Physician',
     url: absoluteUrl(PAGE_META.panesar.path),
     // Physician profiles on other sites, each checked to show this physician at this office.
     sameAs: PHYSICIAN_PROFILES,
@@ -175,6 +180,8 @@ export function physicianNode(): Node {
       { '@type': 'CollegeOrUniversity', name: 'University of Arkansas for Medical Sciences' },
     ],
     knowsAbout: ['Family medicine', 'Immigration medical exams', 'Preventive care'],
+    // OWNER: accepting new patients. Valid here because schema.org types Physician as a MedicalOrganization.
+    isAcceptingNewPatients: true,
   };
 }
 
@@ -191,10 +198,12 @@ interface WebPageInput {
   faq?: boolean;
   /** The entity the page is about. Defaults to the clinic. */
   about?: 'clinic' | 'physician';
+  /** Date of the last content change (YYYY-MM-DD), the same value as the sitemap lastmod. */
+  dateModified?: string;
 }
 
 /** One WebPage (or ProfilePage, or MedicalWebPage) node per page, tying the site, entity, breadcrumb and FAQ together. */
-export function webPageNode({ path, name, description, type = 'WebPage', breadcrumb = false, faq = false, about = 'clinic' }: WebPageInput): Node {
+export function webPageNode({ path, name, description, type = 'WebPage', breadcrumb = false, faq = false, about = 'clinic', dateModified }: WebPageInput): Node {
   const subject = { '@id': about === 'physician' ? PHYSICIAN_ID : CLINIC_ID };
   const reviewed = type === 'MedicalWebPage' && CLINICAL_REVIEW.reviewedOn;
   return {
@@ -210,6 +219,7 @@ export function webPageNode({ path, name, description, type = 'WebPage', breadcr
     ...(faq ? { hasPart: { '@id': faqId(path) } } : {}),
     // Read aloud by voice assistants: the direct-answer paragraph (and nothing else) carries data-speakable.
     speakable: { '@type': 'SpeakableSpecification', cssSelector: ['[data-speakable]'] },
+    ...(dateModified ? { dateModified } : {}),
     ...(reviewed ? { lastReviewed: CLINICAL_REVIEW.reviewedOn, reviewedBy: { '@id': PHYSICIAN_ID } } : {}),
   };
 }
@@ -259,7 +269,7 @@ interface PageGraphInput {
  * breadcrumb when it shows them. Clinical pages are typed MedicalWebPage; the physician page is a ProfilePage.
  */
 export function pageGraph({ key, faqs, breadcrumb, about }: PageGraphInput): Node {
-  const meta: { path: string; title: string; description: string; clinical?: boolean } = {
+  const meta: { path: string; title: string; description: string; lastModified: string; clinical?: boolean } = {
     ...PAGE_META[key],
   };
   const type: WebPageInput['type'] = key === 'panesar' ? 'ProfilePage' : meta.clinical ? 'MedicalWebPage' : 'WebPage';
@@ -275,6 +285,7 @@ export function pageGraph({ key, faqs, breadcrumb, about }: PageGraphInput): Nod
       about: about ?? (key === 'panesar' ? 'physician' : 'clinic'),
       breadcrumb: Boolean(breadcrumb),
       faq: Boolean(faqs?.length),
+      dateModified: meta.lastModified,
     }),
     ...(faqs?.length ? [faqNode(meta.path, faqs)] : []),
     ...(breadcrumb ? [breadcrumbNode(meta.path, breadcrumb)] : []),

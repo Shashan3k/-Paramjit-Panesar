@@ -1,6 +1,8 @@
 import Link from 'next/link';
 import { MapPin, Phone } from 'lucide-react';
 import { FaqList } from '@/components/page/FaqList';
+import { HoursList } from '@/components/page/HoursList';
+import { InsuranceTable } from '@/components/page/InsuranceTable';
 import { QuickFacts } from '@/components/page/QuickFacts';
 import { Breadcrumbs } from '@/components/ui/Breadcrumbs';
 import { ButtonLink } from '@/components/ui/Button';
@@ -123,6 +125,7 @@ export default function ElkGrovePage() {
           </Link>
           .
         </p>
+        <HoursList className="mt-6" />
         <div className="mt-6">
           <ButtonLink href={telHref(PHONES.main.tel)} variant="primary">
             <Phone className="h-5 w-5" aria-hidden="true" />
@@ -132,13 +135,14 @@ export default function ElkGrovePage() {
       </Section>
 
       <Section id="insurance" headingId="elk-insurance-heading" title="Insurance for Elk Grove patients" tone="muted">
-        <p className="max-w-3xl text-navy-800">
-          Elk Grove patients use the same plans as every patient, shown above. {INITIAL_VISIT_PRICE} Call {PHONES.main.display} to confirm your plan before you travel, or see the{' '}
+        <p className="mb-6 max-w-3xl text-navy-800">
+          Elk Grove patients use the same plans as every patient, listed below. {INITIAL_VISIT_PRICE} Call {PHONES.main.display} to confirm your plan before you travel, or see the{' '}
           <Link href="/insurance-accepted" className="font-semibold text-teal-800 hover:underline">
             insurance page
           </Link>
           .
         </p>
+        <InsuranceTable />
       </Section>
 
       <FaqList idPrefix="elk" title="Elk Grove questions" faqs={ELK_GROVE_FAQS} />

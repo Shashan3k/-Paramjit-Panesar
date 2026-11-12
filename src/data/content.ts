@@ -53,7 +53,7 @@ const VERIFY_BLOCK: ContentBlock = { id: 'verify-your-plan', heading: 'Verify yo
 export const NEW_PATIENTS_DIRECT_ANSWER = `Apollo Physicians is accepting new patients at ${ADDRESS}. To become a patient, call ${CALL} and book an appointment with ${DOC}. Same-day and next-day appointments are offered. Initial self-pay visits start at ${INITIAL_VISIT_FROM}, and the office accepts Medicare and several major health plans.`;
 
 export const NEW_PATIENTS: PageContent = {
-  h1: 'Doctor Accepting New Patients in Sacramento',
+  h1: 'Primary Care Doctor Accepting New Patients in Sacramento',
   eyebrow: 'New patients',
   blocks: [
     {
@@ -121,8 +121,8 @@ export const NEW_PATIENTS: PageContent = {
   ],
   faqs: [
     {
-      question: 'Is Apollo Physicians accepting new patients?',
-      answer: `Yes. Apollo Physicians welcomes new patients at its South Sacramento office, ${OFFICE.street}. ${DOC}, is the physician. New patients can ask for a same-day or next-day appointment by calling ${CALL}. Please confirm the next available time when you call.`,
+      question: 'Is Dr. Paramjit Panesar accepting new patients in Sacramento and Elk Grove?',
+      answer: `Yes. ${DOC}, is accepting new patients at Apollo Physicians, ${OFFICE.street}, in South Sacramento, and patients from Elk Grove are welcome at the same office. New patients can ask for a same-day or next-day appointment by calling ${CALL}. Please confirm the next available time when you call.`,
     },
     {
       question: 'How do I become a new patient at Apollo Physicians?',
@@ -199,8 +199,8 @@ export const INSURANCE: PageContent = {
   ],
   faqs: [
     {
-      question: 'What insurance does Apollo Physicians accept?',
-      answer: `Apollo Physicians accepts ${insuranceSentence()}. Sutter Health and Hill Physicians are medical groups and networks rather than insurance companies. Call ${CALL} to confirm your specific plan before your first visit, because plans and networks can change over time.`,
+      question: 'Which insurance plans and IPAs does Apollo Physicians accept?',
+      answer: `Apollo Physicians accepts ${insuranceSentence()}. Sutter Health, Hill Physicians and Nivano Physicians are medical groups rather than insurance companies. Call ${CALL} to confirm your specific plan before your first visit, because plans and networks can change over time.`,
     },
     {
       question: 'Does Apollo Physicians accept Medicare?',
@@ -227,7 +227,7 @@ export const INSURANCE: PageContent = {
       answer: `If your plan is not listed, call Apollo Physicians at ${CALL} and give the office your plan name. Plans and networks change, and only the plans on the insurance page have been confirmed by the practice. The office can tell you whether your coverage works, or you can book an initial self-pay visit that starts at ${INITIAL_VISIT_FROM}.`,
     },
     {
-      question: 'How much is a doctor visit without insurance?',
+      question: 'How much is a visit at Apollo Physicians without insurance?',
       answer: `Initial self-pay visits at Apollo Physicians start at ${INITIAL_VISIT_FROM}. Self-pay is for patients who do not use insurance and pay the office directly. Ask when you call ${CALL} what the visit includes, and whether any tests or forms cost extra, so there are no surprises on the day.`,
     },
     {

@@ -202,8 +202,8 @@ export const PANESAR_FAQS: readonly FaqItem[] = [
 
 export const ELK_GROVE_FAQS: readonly FaqItem[] = [
   {
-    question: 'Does Apollo Physicians serve patients from Elk Grove?',
-    answer: `Yes. Elk Grove patients are seen at the one Apollo Physicians office, ${OFFICE.street}, in South Sacramento. Same-day and next-day appointments are offered, new patients are welcome, and the office accepts Medicare and several major health plans. Call ${CALL} to book your first visit.`,
+    question: 'Where is Apollo Physicians located relative to Elk Grove?',
+    answer: `Apollo Physicians is at ${OFFICE.street}, in South Sacramento next to ${LOCATION.highway}, ${ELK_DRIVE} by car from Elk Grove ZIP codes 95758 and 95624 with usual traffic. Elk Grove patients are seen at this one office, and new patients are welcome. Call ${CALL} to book your first visit.`,
   },
   {
     question: 'How long is the drive from Elk Grove?',

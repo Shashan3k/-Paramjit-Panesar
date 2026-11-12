@@ -1,3 +1,4 @@
+import LASTMOD from './lastmod.json';
 import { OFFICE, PHONES } from './site';
 
 /**
@@ -28,26 +29,37 @@ export interface PageMeta {
   navLabel?: string;
 }
 
-const TODAY = '2026-11-06';
+/**
+ * The date a page's visible content last changed, from src/data/lastmod.json. That file stores, for each page,
+ * the date and a fingerprint of the text inside <main> on the built page. `npm run lastmod` (after a build)
+ * fails when a live page's text no longer matches its fingerprint; `npm run lastmod -- --write` sets that
+ * page's date to today. So the sitemap lastmod and the schema dateModified move only when the words a visitor
+ * reads change, not on every deploy (file timestamps on a fresh checkout would all be the build date).
+ */
+function lastmod(path: string): string {
+  const entry = (LASTMOD as Record<string, { date: string } | undefined>)[path];
+  if (!entry) throw new Error(`No lastmod entry for ${path} in src/data/lastmod.json`);
+  return entry.date;
+}
 
 export const PAGE_META = {
   home: {
     path: '/',
-    lastModified: TODAY,
+    lastModified: lastmod('/'),
     title: 'Family Physician in Sacramento, CA | Apollo Physicians',
-    description: `Family physician in Sacramento at Apollo Physicians, ${OFFICE.street}. Same-day and next-day visits, new patients welcome. Call ${PHONES.main.display}.`,
+    description: `Family physician and primary care doctor in Sacramento, CA: Apollo Physicians, ${OFFICE.street}. New patients welcome. Call ${PHONES.main.display}.`,
     navLabel: 'Home',
   },
   newPatients: {
     path: '/new-patients',
-    lastModified: '2026-11-11',
+    lastModified: lastmod('/new-patients'),
     title: 'Doctor Accepting New Patients Sacramento | Apollo Physicians',
-    description: `Family doctor accepting new patients in Sacramento? Apollo Physicians welcomes new patients at ${OFFICE.street}. Call ${PHONES.main.display} to book.`,
+    description: `Primary care accepting new patients in Sacramento: Apollo Physicians, ${OFFICE.street}. Same-day and next-day visits. Call ${PHONES.main.display}.`,
     navLabel: 'New patients',
   },
   annualPhysical: {
     path: '/annual-physical-sacramento',
-    lastModified: TODAY,
+    lastModified: lastmod('/annual-physical-sacramento'),
     title: 'Annual Physical in Sacramento, CA | Apollo Physicians',
     description: `Book an annual physical in Sacramento with Dr. Paramjit Panesar at Apollo Physicians, ${OFFICE.street}. See what to expect. Call ${PHONES.main.display}.`,
     clinical: true,
@@ -55,28 +67,28 @@ export const PAGE_META = {
   },
   sameDay: {
     path: '/same-day-appointments-sacramento',
-    lastModified: '2026-11-11',
+    lastModified: lastmod('/same-day-appointments-sacramento'),
     title: 'Same-Day Doctor Appointments Sacramento | Apollo Physicians',
     description: `Same-day and next-day doctor appointments in Sacramento with Dr. Paramjit Panesar, MD, at ${OFFICE.street}. Call ${PHONES.main.display} early to book.`,
     clinical: true,
   },
   elkGrove: {
     path: '/family-physician-elk-grove',
-    lastModified: TODAY,
+    lastModified: lastmod('/family-physician-elk-grove'),
     title: 'Family Physician for Elk Grove Patients | Apollo Physicians',
-    description: `Family physician for Elk Grove patients at Apollo Physicians, ${OFFICE.street}, ${OFFICE.city}. About 12 minutes from Elk Grove. Call ${PHONES.main.display}.`,
+    description: `Family physician for Elk Grove patients at Apollo Physicians, ${OFFICE.street}, ${OFFICE.city}. About 12 minutes away by car. Call ${PHONES.main.display}.`,
     navLabel: 'Elk Grove patients',
   },
   panesar: {
     path: '/dr-paramjit-panesar-md',
-    lastModified: TODAY,
-    title: 'Dr. Paramjit Panesar, Family Doctor | Apollo Physicians',
-    description: `Dr. Paramjit Panesar, MD, is a board-certified family physician at Apollo Physicians, ${OFFICE.street}, ${OFFICE.city}. Call ${PHONES.main.display} to book.`,
+    lastModified: lastmod('/dr-paramjit-panesar-md'),
+    title: 'Dr. Paramjit Panesar, MD, Family Doctor | Apollo Physicians',
+    description: `Dr. Paramjit Panesar, MD, is a board-certified family doctor at Apollo Physicians, ${OFFICE.street}, ${OFFICE.city}. Call ${PHONES.main.display} to book.`,
     navLabel: 'Dr. Panesar',
   },
   services: {
     path: '/services',
-    lastModified: TODAY,
+    lastModified: lastmod('/services'),
     title: 'Family Medicine Services in Sacramento | Apollo Physicians',
     description: `Family medicine services in Sacramento at Apollo Physicians: physicals, vaccinations, chronic condition care and immigration exams. Call ${PHONES.main.display} to book.`,
     clinical: true,
@@ -84,56 +96,56 @@ export const PAGE_META = {
   },
   immigration: {
     path: '/immigration-medical-exam-sacramento',
-    lastModified: TODAY,
+    lastModified: lastmod('/immigration-medical-exam-sacramento'),
     title: 'Immigration Medical Exam in Sacramento | Apollo Physicians',
     description: `USCIS immigration medical exam (Form I-693) in South Sacramento with civil surgeon Dr. Paramjit Panesar, MD. What to bring and how to book: ${PHONES.main.display}.`,
     clinical: true,
   },
   insurance: {
     path: '/insurance-accepted',
-    lastModified: '2026-11-11',
+    lastModified: lastmod('/insurance-accepted'),
     title: 'Doctor Accepting Medicare in Sacramento | Apollo Physicians',
-    description: `Medicare, Aetna, Anthem Blue Cross, Blue Shield of California, Cigna, Health Net, UnitedHealthcare accepted in Sacramento. Self-pay from $65. Call ${PHONES.main.display}.`,
+    description: `Medicare, Aetna, Anthem Blue Cross, Blue Shield, Cigna, Health Net, UnitedHealthcare accepted in Sacramento. Self-pay visits from $65. Call ${PHONES.main.display}.`,
     navLabel: 'Insurance',
   },
   medicare: {
     path: '/medicare-doctor-sacramento',
-    lastModified: '2026-11-11',
+    lastModified: lastmod('/medicare-doctor-sacramento'),
     title: 'Medicare Family Doctor in Sacramento | Apollo Physicians',
     description: `Family doctor in Sacramento who accepts Original Medicare. Dr. Paramjit Panesar, MD, is board certified and taking new patients. Call ${PHONES.main.display} to book.`,
     clinical: true,
   },
   selfPay: {
     path: '/doctor-without-insurance-sacramento',
-    lastModified: '2026-11-11',
+    lastModified: lastmod('/doctor-without-insurance-sacramento'),
     title: 'Doctor Without Insurance in Sacramento | Apollo Physicians',
     description: `See a family doctor in South Sacramento without insurance. Initial self-pay visits start at $65 with Dr. Paramjit Panesar, MD. Call ${PHONES.main.display} to book.`,
     clinical: true,
   },
   mediCal: {
     path: '/medi-cal-doctor-sacramento',
-    lastModified: '2026-11-11',
+    lastModified: lastmod('/medi-cal-doctor-sacramento'),
     title: 'Medi-Cal Doctor in South Sacramento | Apollo Physicians',
     description: `South Sacramento family doctor who accepts most Medi-Cal plans. How to choose Dr. Paramjit Panesar, MD, as your primary doctor. Call ${PHONES.main.display} to verify.`,
     clinical: true,
   },
   nivano: {
     path: '/nivano-physicians-doctor-sacramento',
-    lastModified: '2026-11-11',
+    lastModified: lastmod('/nivano-physicians-doctor-sacramento'),
     title: 'Nivano Physicians Doctor, Sacramento | Apollo Physicians',
     description: `Nivano Physicians family doctor in South Sacramento. How to choose Dr. Paramjit Panesar, MD, as your primary care doctor. Call ${PHONES.main.display} to verify.`,
     clinical: true,
   },
   contact: {
     path: '/contact',
-    lastModified: TODAY,
+    lastModified: lastmod('/contact'),
     title: 'Contact and Directions in Sacramento | Apollo Physicians',
-    description: `Contact Apollo Physicians at ${OFFICE.line}. Call ${PHONES.main.display} to book or get directions. Serves Sacramento, Elk Grove.`,
+    description: `Apollo Physicians, ${OFFICE.line}. Call ${PHONES.main.display} to book or get directions. Serving Sacramento and Elk Grove.`,
     navLabel: 'Contact',
   },
   faq: {
     path: '/faq',
-    lastModified: TODAY,
+    lastModified: lastmod('/faq'),
     title: 'Family Doctor Questions, Sacramento | Apollo Physicians',
     description: `Common questions about Apollo Physicians in Sacramento: new patients, insurance, pricing, appointments, Dr. Panesar and the office. Call ${PHONES.main.display}.`,
   },

@@ -45,6 +45,30 @@ const LEGACY_REDIRECTS = [
   ...['/accessibility-statement', '/your-privacy', '/our-terms'].map((source) => ({ source, destination: '/' })),
 ].map((rule) => ({ ...rule, permanent: true, statusCode: 301 }));
 
+/** Path redirects on the canonical host: the old location URLs, then the legacy map. */
+const PATH_REDIRECTS = [
+  ...['/family-physician-sacramento', '/locations', '/locations/:slug*'].map((source) => ({ source, destination: '/', permanent: true, statusCode: 301 })),
+  ...LEGACY_REDIRECTS,
+];
+
+/**
+ * Hosts that must never serve pages: the bare apex and the previous domain. They only work once each host is
+ * attached to this Vercel project. On 12 Nov 2026 drparamjitpanesar.com and www.drparamjitpanesar.com were still
+ * a parked page at Hostinger (DNS not pointed at Vercel), and Vercel itself redirected the apex with a 308.
+ */
+const OTHER_HOSTS = ['apollophysicians.com', 'drparamjitpanesar.com', 'www.drparamjitpanesar.com'];
+
+/** Every path redirect again for each other host, with the absolute final URL, so a crawler makes one hop. */
+const DIRECT_HOST_REDIRECTS = OTHER_HOSTS.flatMap((host) =>
+  PATH_REDIRECTS.map((rule) => ({
+    source: rule.source,
+    has: [{ type: 'host', value: host }],
+    destination: `https://${SITE_HOST}${rule.destination}`,
+    permanent: true,
+    statusCode: 301,
+  })),
+);
+
 /**
  * Retired content with nothing to carry over: cosmetic services, testimonials and the blog. Served as
  * 410 Gone (through the /gone route) so search engines drop them faster than a 404.
@@ -82,33 +106,17 @@ const nextConfig = {
   },
   async redirects() {
     return [
-      // Non-www to www, on the single canonical host.
-      {
+      // A legacy path on another host goes straight to its final page in one hop (no host hop, then path hop).
+      ...DIRECT_HOST_REDIRECTS,
+      // Everything else on another host keeps its path on the canonical host.
+      ...OTHER_HOSTS.map((host) => ({
         source: '/:path*',
-        has: [{ type: 'host', value: 'apollophysicians.com' }],
+        has: [{ type: 'host', value: host }],
         destination: `https://${SITE_HOST}/:path*`,
         permanent: true,
         statusCode: 301,
-      },
-      // The previous domain. Works once both hosts are attached to this Vercel project.
-      {
-        source: '/:path*',
-        has: [{ type: 'host', value: 'drparamjitpanesar.com' }],
-        destination: `https://${SITE_HOST}/:path*`,
-        permanent: true,
-        statusCode: 301,
-      },
-      {
-        source: '/:path*',
-        has: [{ type: 'host', value: 'www.drparamjitpanesar.com' }],
-        destination: `https://${SITE_HOST}/:path*`,
-        permanent: true,
-        statusCode: 301,
-      },
-      { source: '/family-physician-sacramento', destination: '/', permanent: true, statusCode: 301 },
-      { source: '/locations', destination: '/', permanent: true, statusCode: 301 },
-      { source: '/locations/:slug*', destination: '/', permanent: true, statusCode: 301 },
-      ...LEGACY_REDIRECTS,
+      })),
+      ...PATH_REDIRECTS,
     ];
   },
   async rewrites() {

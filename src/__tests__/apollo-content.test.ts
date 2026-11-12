@@ -2,9 +2,9 @@ import { readdirSync, readFileSync, statSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { ELK_GROVE_FAQS, HOME_FAQS, INSURANCE_ACCEPTED, INSURANCE_GROUPS, INITIAL_VISIT_PRICE } from '@/data/practice';
-import { PAGE_META } from '@/data/pages';
+import { PAGE_META, isLive } from '@/data/pages';
 import { BRAND, GEO, NPI, OFFICE, OFFICE_HOURS, PHONES, PHYSICIAN_PROFILES, SITE_URL } from '@/data/site';
-import { DESCRIPTION_MAX, DESCRIPTION_MIN, TITLE_MAX, TITLE_MIN } from '@/lib/seo-fit';
+import { DESCRIPTION_MAX, DESCRIPTION_MAX_LIVE, DESCRIPTION_MIN, TITLE_MAX, TITLE_MIN } from '@/lib/seo-fit';
 import { CLINIC_ID, PHYSICIAN_ID, WEBSITE_ID, clinicNode, faqNode, graph, physicianNode, webPageNode, websiteNode } from '@/lib/structured-data';
 
 const PAGES = Object.values(PAGE_META);
@@ -14,7 +14,7 @@ describe('page titles and descriptions', () => {
     expect(page.title.length).toBeGreaterThanOrEqual(TITLE_MIN);
     expect(page.title.length).toBeLessThanOrEqual(TITLE_MAX);
     expect(page.description.length).toBeGreaterThanOrEqual(DESCRIPTION_MIN);
-    expect(page.description.length).toBeLessThanOrEqual(DESCRIPTION_MAX);
+    expect(page.description.length).toBeLessThanOrEqual(isLive(page) ? DESCRIPTION_MAX_LIVE : DESCRIPTION_MAX);
   });
 
   it('only the home page targets "Family Physician in Sacramento" in its title', () => {
@@ -86,7 +86,7 @@ describe('structured data graph', () => {
     expect(ids.has(CLINIC_ID)).toBe(true);
     expect(ids.has(PHYSICIAN_ID)).toBe(true);
     expect(CLINIC_ID).toBe(`${SITE_URL}/#clinic`);
-    expect(PHYSICIAN_ID).toBe(`${SITE_URL}/#dr-paramjit-panesar`);
+    expect(PHYSICIAN_ID).toBe(`${SITE_URL}/dr-paramjit-panesar-md#physician`);
   });
 
   it('gives every node an absolute @id', () => {

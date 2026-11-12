@@ -4,6 +4,7 @@
  * so the images are plain static files: nothing renders them at build time or on the server.
  *
  * Run after changing a page title, the address or the phone:   npm run generate:og
+ * Only some pages (for example after one title change):            npm run generate:og -- panesar home
  * A unit test (src/__tests__/og-images.test.ts) fails when a title in src/data/pages.ts and this list disagree,
  * or when an image is missing or the wrong size.
  *
@@ -26,7 +27,7 @@ const PAGES = [
   ['annualPhysical', 'Annual Physical in Sacramento, CA'],
   ['sameDay', 'Same-Day Doctor Appointments Sacramento'],
   ['elkGrove', 'Family Physician for Elk Grove Patients'],
-  ['panesar', 'Dr. Paramjit Panesar, Family Doctor'],
+  ['panesar', 'Dr. Paramjit Panesar, MD, Family Doctor'],
   ['services', 'Family Medicine Services in Sacramento'],
   ['immigration', 'Immigration Medical Exam in Sacramento'],
   ['insurance', 'Doctor Accepting Medicare in Sacramento'],
@@ -78,7 +79,14 @@ mkdirSync(OUT, { recursive: true });
 const work = mkdtempSync(join(tmpdir(), 'apollo-og-'));
 let failed = 0;
 
-for (const [key, headline] of PAGES) {
+const only = new Set(process.argv.slice(2));
+const unknown = [...only].filter((key) => !PAGES.some(([k]) => k === key));
+if (unknown.length) {
+  console.error(`Unknown page key(s): ${unknown.join(', ')}`);
+  process.exit(1);
+}
+
+for (const [key, headline] of PAGES.filter(([k]) => only.size === 0 || only.has(k))) {
   const page = join(work, `${key}.html`);
   const target = join(OUT, `${key}.png`);
   writeFileSync(page, html(headline), 'utf8');

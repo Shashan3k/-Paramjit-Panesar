@@ -1,6 +1,8 @@
 import Link from 'next/link';
 import { CheckCircle2, MapPin, Phone, Star, Stethoscope } from 'lucide-react';
+import { AppointmentOptionsTable } from '@/components/page/AppointmentOptionsTable';
 import { FaqList } from '@/components/page/FaqList';
+import { HoursList } from '@/components/page/HoursList';
 import { ButtonLink } from '@/components/ui/Button';
 import { MapEmbed } from '@/components/ui/MapEmbed';
 import { Section } from '@/components/ui/Section';
@@ -29,7 +31,7 @@ export function HomeSections() {
 
   return (
     <>
-      <Section id="how-we-help" headingId="home-help-heading" title="How we can help" eyebrow="Family medicine in Sacramento">
+      <Section id="how-we-help" headingId="home-help-heading" title="Primary care doctor in Sacramento, CA" eyebrow="Family medicine in Sacramento">
         <div className="grid gap-6 lg:grid-cols-2">
           <div className="space-y-4">
             <p className="text-lg leading-relaxed text-navy-800">
@@ -54,6 +56,7 @@ export function HomeSections() {
             ))}
           </ul>
         </div>
+        <AppointmentOptionsTable className="mt-10" />
       </Section>
 
       <Section headingId="home-provider-heading" title="Our physician" tone="muted">
@@ -120,6 +123,7 @@ export function HomeSections() {
             <p className="text-navy-800">
               The office is next to {LOCATION.highway} and about {LOCATION.hospitalDistance} from {LOCATION.nearHospital}. It is the only Apollo Physicians location.
             </p>
+            <HoursList />
             <div className="flex flex-wrap gap-3">
               <ButtonLink href={mapsDirectionsUrl(OFFICE.line)} variant="outline" external>
                 <MapPin className="h-5 w-5" aria-hidden="true" />

@@ -6,6 +6,13 @@
  * collect content that may be used to train models. They are separate decisions.
  */
 
+/**
+ * Classic search engine crawlers. Always allowed, whatever the AI policy. They are also covered by "User-agent: *",
+ * but are named in their own Allow group so the intent is explicit in robots.txt. (A crawler follows the most
+ * specific group that names it, so this group must never carry a Disallow.)
+ */
+export const SEARCH_ENGINE_AGENTS = ['Googlebot', 'Bingbot'] as const;
+
 /** Retrieval for search results or for a user's own request. Blocking these removes the site from those answers. */
 export const AI_SEARCH_AND_USER_AGENTS = [
   'OAI-SearchBot', // ChatGPT search index

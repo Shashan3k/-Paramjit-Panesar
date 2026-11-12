@@ -22,6 +22,26 @@ describe('robots.txt', () => {
 
   it('points at the absolute sitemap URL', () => {
     expect(live.sitemap).toBe(absoluteUrl('/sitemap.xml'));
+    expect(live.sitemap).toBe('https://www.apollophysicians.com/sitemap.xml');
+  });
+
+  it('names and allows Googlebot and Bingbot under every policy, never with a Disallow', () => {
+    for (const policy of ['allow-all', 'search-only', 'block-all'] as const) {
+      const g = groups(buildRobotsRules(policy));
+      for (const bot of ['Googlebot', 'Bingbot']) {
+        const own = g.filter((x) => agentsOf(x).includes(bot));
+        expect(own.length, `${policy} ${bot}`).toBe(1);
+        expect(own[0]?.allow, `${policy} ${bot}`).toBe('/');
+        expect(own[0]?.disallow, `${policy} ${bot}`).toBeUndefined();
+      }
+    }
+  });
+
+  it('explicitly allows every crawler the owner named (12 Nov 2026)', () => {
+    const allowed = groups(live.rules).filter((x) => x.allow === '/').flatMap(agentsOf);
+    for (const bot of ['Googlebot', 'Bingbot', 'GPTBot', 'OAI-SearchBot', 'ChatGPT-User', 'ClaudeBot', 'Claude-SearchBot', 'PerplexityBot', 'Google-Extended']) {
+      expect(allowed, bot).toContain(bot);
+    }
   });
 
   it('applies the owner decision (allow all) and names the AI crawlers with an explicit Allow', () => {

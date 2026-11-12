@@ -1,0 +1,62 @@
+{
+  "/": {
+    "date": "2026-11-11",
+    "fingerprint": "6d56b799598d1b93"
+  },
+  "/new-patients": {
+    "date": "2026-11-11",
+    "fingerprint": "c16127c2b05d5794"
+  },
+  "/annual-physical-sacramento": {
+    "date": "2026-11-06",
+    "fingerprint": null
+  },
+  "/same-day-appointments-sacramento": {
+    "date": "2026-11-11",
+    "fingerprint": null
+  },
+  "/family-physician-elk-grove": {
+    "date": "2026-11-11",
+    "fingerprint": "0a06d150fd8711d2"
+  },
+  "/dr-paramjit-panesar-md": {
+    "date": "2026-11-11",
+    "fingerprint": "3d9f97a8295e8610"
+  },
+  "/services": {
+    "date": "2026-11-06",
+    "fingerprint": null
+  },
+  "/immigration-medical-exam-sacramento": {
+    "date": "2026-11-06",
+    "fingerprint": null
+  },
+  "/insurance-accepted": {
+    "date": "2026-11-11",
+    "fingerprint": "8d2723e9abba2992"
+  },
+  "/medicare-doctor-sacramento": {
+    "date": "2026-11-11",
+    "fingerprint": null
+  },
+  "/doctor-without-insurance-sacramento": {
+    "date": "2026-11-11",
+    "fingerprint": null
+  },
+  "/medi-cal-doctor-sacramento": {
+    "date": "2026-11-11",
+    "fingerprint": null
+  },
+  "/nivano-physicians-doctor-sacramento": {
+    "date": "2026-11-11",
+    "fingerprint": null
+  },
+  "/contact": {
+    "date": "2026-11-11",
+    "fingerprint": "437be3ab2afe63a6"
+  },
+  "/faq": {
+    "date": "2026-11-11",
+    "fingerprint": "2dcbd0e007d831f3"
+  }
+}

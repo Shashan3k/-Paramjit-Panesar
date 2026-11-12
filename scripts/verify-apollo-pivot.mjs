@@ -29,7 +29,7 @@ const PAGES = pagesFromSitemap();
 const REQUIRED = ['/', '/new-patients', '/insurance-accepted', '/contact', '/faq', '/family-physician-elk-grove', '/dr-paramjit-panesar-md'];
 
 const TITLE = [50, 60];
-const DESCRIPTION = [140, 160];
+const DESCRIPTION = [140, 155];
 
 const LEGACY_TOKENS = [
   'chcahealth.org',
@@ -135,7 +135,7 @@ for (const page of PAGES) {
   report.push({ path: page.path, title, titleLength: title?.length, description, descriptionLength: description?.length, h1: h1s, canonical, ogUrl });
 
   check(`${page.path} title is 50-60 characters`, title !== null && title.length >= TITLE[0] && title.length <= TITLE[1], `${title?.length}`);
-  check(`${page.path} description is 140-160 characters`, description !== null && description.length >= DESCRIPTION[0] && description.length <= DESCRIPTION[1], `${description?.length}`);
+  check(`${page.path} description is 140-155 characters`, description !== null && description.length >= DESCRIPTION[0] && description.length <= DESCRIPTION[1], `${description?.length}`);
   check(`${page.path} has exactly one H1`, h1s.length === 1, `${h1s.length}`);
   // The home page canonical has no trailing slash in Next's output, so compare against that exact form.
   const expectedCanonical = `https://www.apollophysicians.com${page.path === '/' ? '' : page.path}`;
@@ -174,7 +174,11 @@ for (const page of PAGES) {
   // Deliberate deviations from the brief: these were not verified, so they must be absent.
   check(`${page.path} states new patients are accepted (owner confirmed)`, serialised.includes('"isAcceptingNewPatients":true'));
   check(`${page.path} lists the areas served, including Elk Grove and the ZIP codes`, serialised.includes('"Elk Grove"') && serialised.includes('ZIP code 95823') && serialised.includes('ZIP code 95758'));
-  check(`${page.path} states no opening hours until the owner confirms them`, !serialised.includes('openingHours'));
+  // Hours were confirmed by the practice on 11 Nov 2026 (client-confirmations.md, item 6): Mon to Fri 8:30 to 5:30, Sat 9:00 to 2:00, Sun closed.
+  check(
+    `${page.path} states the confirmed opening hours (Mon to Fri 08:30-17:30, Sat 09:00-14:00, Sun closed)`,
+    serialised.includes('"opens":"08:30","closes":"17:30"') && serialised.includes('"dayOfWeek":["Saturday"],"opens":"09:00","closes":"14:00"') && !serialised.includes('"Sunday"'),
+  );
   check(`${page.path} states no languages until the owner confirms them`, !serialised.includes('knowsLanguage'));
   check(`${page.path} omits unverified Wikidata areaServed`, !serialised.includes('wikidata.org'));
   check(`${page.path} carries the geo coordinates`, serialised.includes('"latitude":38.46019') && serialised.includes('"longitude":-121.41317'));
