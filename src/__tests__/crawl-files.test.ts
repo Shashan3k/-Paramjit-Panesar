@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import robots, { buildRobotsRules } from '@/app/robots';
 import sitemap from '@/app/sitemap';
 import { AI_CRAWLER_POLICY, AI_SEARCH_AND_USER_AGENTS, AI_TRAINING_AGENTS } from '@/data/crawlers';
-import { CLINICAL_REVIEW, livePages, PAGE_META } from '@/data/pages';
+import { isLive, livePages, PAGE_META } from '@/data/pages';
 import { INITIAL_VISIT_PRICE, INSURANCE_ACCEPTED } from '@/data/practice';
 import { NPI, OFFICE, PHONES, absoluteUrl } from '@/data/site';
 import { buildLlmsTxt } from '@/lib/llms';
@@ -72,7 +72,7 @@ describe('sitemap.xml', () => {
     const urls = entries.map((e) => e.url);
     for (const page of Object.values(PAGE_META)) {
       const clinical = 'clinical' in page && page.clinical;
-      expect(urls.includes(absoluteUrl(page.path)), page.path).toBe(!clinical || CLINICAL_REVIEW.reviewedOn !== null);
+      expect(urls.includes(absoluteUrl(page.path)), page.path).toBe(isLive(page));
     }
   });
 
@@ -114,14 +114,15 @@ describe('llms.txt', () => {
     for (const plan of INSURANCE_ACCEPTED) expect(text).toContain(plan);
   });
 
-  it('states the confirmed hours and telemedicine, and never languages or 24/7 support', () => {
+  it('states the confirmed hours, telemedicine and physician languages, and never staff languages or 24/7 support', () => {
     const text = buildLlmsTxt();
     expect(text).toContain('## Hours');
     expect(text).toContain('Telemedicine visits for patients in California.');
     expect(text).toContain('Medi-Cal: most plans.');
     expect(text).toContain('not a community health center or free clinic');
+    expect(text).toContain('Speaks English, Punjabi and Hindi with patients.');
     for (const flags of [none, all]) {
-      expect(buildLlmsTxt(flags)).not.toMatch(/bilingual|speaks|spanish|punjabi|hindi|telehealth|24\/7|sliding|Vivant|River City/i);
+      expect(buildLlmsTxt(flags)).not.toMatch(/bilingual|spanish|staff speak|telehealth|24\/7|sliding|Vivant|River City/i);
     }
   });
 
@@ -138,7 +139,7 @@ describe('llms.txt', () => {
     for (const page of Object.values(PAGE_META)) {
       const clinical = 'clinical' in page && page.clinical;
       const listed = text.includes(`- ${absoluteUrl(page.path)}\n`) || text.includes(`- ${absoluteUrl(page.path)}`);
-      expect(listed, page.path).toBe(!clinical || CLINICAL_REVIEW.reviewedOn !== null);
+      expect(listed, page.path).toBe(isLive(page));
     }
   });
 

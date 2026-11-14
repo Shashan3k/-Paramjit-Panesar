@@ -11,8 +11,8 @@ import {
   SITE_URL,
   absoluteUrl,
 } from '@/data/site';
-import { CREDENTIALS, INITIAL_VISIT_FROM, PROVIDER } from '@/data/practice';
-import { CLINICAL_REVIEW, PAGE_META, isLive, type PageKey } from '@/data/pages';
+import { CREDENTIALS, INITIAL_VISIT_FROM, PHYSICIAN_LANGUAGES, PROVIDER } from '@/data/practice';
+import { CLINICAL_REVIEW, PAGE_META, isLive, reviewDateFor, type PageKey } from '@/data/pages';
 import type { Crumb } from '@/data/navigation';
 import type { FaqItem } from '@/types';
 import { mapsPlaceUrl } from '@/lib/utils';
@@ -150,6 +150,7 @@ export function physicianNode(): Node {
     address: postalAddress(),
     worksFor: { '@id': CLINIC_ID },
     identifier: { '@type': 'PropertyValue', propertyID: 'NPI', value: NPI.panesar },
+    knowsLanguage: PHYSICIAN_LANGUAGES.map((lang) => ({ '@type': 'Language', name: lang.name, alternateName: lang.code })),
     hasCredential: [
       {
         '@type': 'EducationalOccupationalCredential',
@@ -171,7 +172,11 @@ export function physicianNode(): Node {
       },
     ],
     alumniOf: [
-      { '@type': 'CollegeOrUniversity', name: CREDENTIALS.medicalSchool },
+      {
+        '@type': 'CollegeOrUniversity',
+        name: CREDENTIALS.medicalSchool,
+        address: { '@type': 'PostalAddress', addressLocality: 'Ludhiana', addressRegion: 'Punjab', addressCountry: 'IN' },
+      },
       { '@type': 'CollegeOrUniversity', name: 'University of Arkansas for Medical Sciences' },
     ],
     knowsAbout: ['Family medicine', 'Immigration medical exams', 'Preventive care'],
@@ -193,12 +198,14 @@ interface WebPageInput {
   about?: 'clinic' | 'physician';
   /** Date of the last content change (YYYY-MM-DD), from PAGE_META.lastModified. */
   dateModified?: string;
+  /** Review date for this page when it differs from CLINICAL_REVIEW (second review batch). */
+  lastReviewed?: string | null;
 }
 
 /** One WebPage (or ProfilePage, or MedicalWebPage) node per page, tying the site, entity, breadcrumb and FAQ together. */
-export function webPageNode({ path, name, description, type = 'WebPage', breadcrumb = false, faq = false, about = 'clinic', dateModified }: WebPageInput): Node {
+export function webPageNode({ path, name, description, type = 'WebPage', breadcrumb = false, faq = false, about = 'clinic', dateModified, lastReviewed = CLINICAL_REVIEW.reviewedOn }: WebPageInput): Node {
   const subject = { '@id': about === 'physician' ? PHYSICIAN_ID : CLINIC_ID };
-  const reviewed = type === 'MedicalWebPage' && CLINICAL_REVIEW.reviewedOn;
+  const reviewed = type === 'MedicalWebPage' && lastReviewed;
   return {
     '@type': type,
     '@id': webPageId(path),
@@ -213,7 +220,7 @@ export function webPageNode({ path, name, description, type = 'WebPage', breadcr
     ...(faq ? { hasPart: { '@id': faqId(path) } } : {}),
     // Read aloud by voice assistants: the direct-answer paragraph (and nothing else) carries data-speakable.
     speakable: { '@type': 'SpeakableSpecification', cssSelector: ['[data-speakable]'] },
-    ...(reviewed ? { lastReviewed: CLINICAL_REVIEW.reviewedOn, reviewedBy: { '@id': PHYSICIAN_ID } } : {}),
+    ...(reviewed ? { lastReviewed, reviewedBy: { '@id': PHYSICIAN_ID } } : {}),
   };
 }
 
@@ -262,7 +269,7 @@ interface PageGraphInput {
  * breadcrumb when it shows them. Clinical pages are typed MedicalWebPage; the physician page is a ProfilePage.
  */
 export function pageGraph({ key, faqs, breadcrumb, about }: PageGraphInput): Node {
-  const meta: { path: string; title: string; description: string; clinical?: boolean; lastModified: string } = {
+  const meta: { path: string; title: string; description: string; clinical?: boolean; secondReview?: boolean; lastModified: string } = {
     ...PAGE_META[key],
   };
   const type: WebPageInput['type'] = key === 'panesar' ? 'ProfilePage' : meta.clinical ? 'MedicalWebPage' : 'WebPage';
@@ -276,6 +283,7 @@ export function pageGraph({ key, faqs, breadcrumb, about }: PageGraphInput): Nod
       description: meta.description,
       type,
       dateModified: meta.lastModified,
+      lastReviewed: reviewDateFor(meta),
       about: about ?? (key === 'panesar' ? 'physician' : 'clinic'),
       breadcrumb: Boolean(breadcrumb),
       faq: Boolean(faqs?.length),
