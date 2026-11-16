@@ -69,3 +69,28 @@ Off-site, which matters most for these searches:
 - Consider Punjabi and Hindi versions of this page later (hreflang), written by a fluent reviewer, not machine translation.
 
 Verified: 357 tests, typecheck, lint, build, crawl (17 pages), schema validator, no horizontal scroll at 375 px.
+
+## 7. SERP check for "best family physician in Sacramento" and "best primary care physician in Sacramento" (16 Nov 2026)
+
+Checked on Bing, logged out, from outside Sacramento, so the map results lean to Midtown. Google was not checked (it blocks automated searches); repeat by hand from a South Sacramento phone.
+
+What ranks:
+
+| Slot | "best family physician" | "best primary care physician" |
+|---|---|---|
+| AI answer (Copilot) | none shown | Cites **Zocdoc, Healthline FindCare, Healthgrades**, ourhealthnetwork.com, Buoy Health; names individual doctors with **5.0 ratings** on those sites |
+| Map pack | Mercy Midtown (2.5, 173 reviews), Sutter Medical Group (2.5, 44), Dr. Eric Tepper (4.0, 48) | Victoria Bennett PA-C (5.0 on Healthgrades, 32), UC Davis Internal Medicine (3.5, 34), Mercy Midtown |
+| Organic | WebMD "Best Family Physicians", Yelp "Top 10" (two lists), Healthgrades, ScoreDoc, npiguide, Sutter find-a-doctor, MediFind, one practice blog | Healthgrades "20 Best", Yelp "Top 10", WebMD, Zocdoc, Healthline FindCare |
+
+What this means: no practice website ranks in these results on its own merits; every slot is a directory list or a map listing. The order inside each comes from review count and rating. The site already has the pages these searches need (home, `/choosing-a-family-doctor-sacramento`). The rest of the work is off-site, in this order:
+
+1. **Google reviews.** The map pack winners have 32 to 173 reviews. Run the review routine in `offsite-2026-11-12.md` section 4 for every patient. Target: a steady flow every week, not a burst (bursts get filtered).
+2. **Healthgrades and Zocdoc** for Dr. Panesar: claim them, set accepting new patients, insurance, languages (English, Punjabi, Hindi), Suite 200 and 916-236-5800. These feed both the AI answer and the "20 Best" list. A Healthgrades rating needs patient surveys, so send the Healthgrades review link along with the Google one.
+3. **Healthline FindCare**: claim the profile; it is cited by the AI answer.
+4. **Yelp**: claim the business page so it can appear in the "Top 10" lists; Yelp does not allow asking for reviews, so only claim and correct it.
+5. **WebMD and Vitals**: fix hours and remove providers who no longer work there (item 17).
+6. **NPPES (NPI registry)**: npiguide and similar sites copy it. The record lists old phones (800-470-0071, 916-781-1927); update it to 916-236-5800 and Suite 200 at nppes.cms.hhs.gov. Only Dr. Panesar or the practice can sign in.
+7. **Bing Places**: claim it so the Bing and Copilot map pack shows the practice.
+8. Sutter Health find-a-doctor: if Dr. Panesar is in Sutter's network listing, check that it shows this office.
+
+On-site, nothing more would move these two searches: the site cannot use review stars about itself (Google ignores self-serving review markup for local businesses, and the practice has not supplied review data), and "best" stays banned by `claims-guard.test.ts`.
