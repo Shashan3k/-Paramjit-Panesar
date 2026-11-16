@@ -82,6 +82,20 @@ function visibleText(fragment) {
     .trim();
 }
 
+/** Compare the page-specific copy, excluding shared practice facts and navigation blocks. */
+function editorialText(main) {
+  const sharedHeadings = new Set(['Quick facts', 'Your doctor', 'Finding the office', 'Medical review', 'Next steps']);
+  const directAnswer = main.match(/<p[^>]*data-speakable="direct-answer"[^>]*>([\s\S]*?)<\/p>/);
+  const sections = [...main.matchAll(/<section\b[^>]*>[\s\S]*?<\/section>/g)].map((match) => match[0]);
+  return [directAnswer ? visibleText(directAnswer[1]) : '', ...sections
+    .filter((section) => {
+      const heading = section.match(/<h2\b[^>]*>([\s\S]*?)<\/h2>/);
+      return !heading || !sharedHeadings.has(visibleText(heading[1]));
+    })
+    .map(visibleText)]
+    .join(' ');
+}
+
 function shingles(text, n = 5) {
   const words = text.toLowerCase().match(/[a-z0-9$]+/g) ?? [];
   const set = new Set();
@@ -171,11 +185,11 @@ for (const page of PAGES) {
   check(`${page.path} JSON-LD marks the direct answer as speakable`, JSON.stringify(pageNode?.speakable ?? '').includes('[data-speakable]'));
   check(`${page.path} JSON-LD has no reviewed-by claim until Dr. Panesar reviews`, !serialised.includes('lastReviewed') || html.includes('Medical review'));
 
-  // Deliberate deviations from the brief: these were not verified, so they must be absent.
+  // Practice-confirmed facts must appear consistently in the structured data.
   check(`${page.path} states new patients are accepted (owner confirmed)`, serialised.includes('"isAcceptingNewPatients":true'));
   check(`${page.path} lists the areas served, including Elk Grove and the ZIP codes`, serialised.includes('"Elk Grove"') && serialised.includes('ZIP code 95823') && serialised.includes('ZIP code 95758'));
-  check(`${page.path} states no opening hours until the owner confirms them`, !serialised.includes('openingHours'));
-  check(`${page.path} states no languages until the owner confirms them`, !serialised.includes('knowsLanguage'));
+  check(`${page.path} includes the confirmed office hours`, serialised.includes('"openingHoursSpecification"') && serialised.includes('"opens":"08:30"') && serialised.includes('"closes":"17:30"') && serialised.includes('"opens":"09:00"') && serialised.includes('"closes":"14:00"'));
+  check(`${page.path} includes the confirmed physician languages`, serialised.includes('"knowsLanguage"') && ['English', 'Punjabi', 'Hindi'].every((language) => serialised.includes(`"name":"${language}"`)));
   check(`${page.path} omits unverified Wikidata areaServed`, !serialised.includes('wikidata.org'));
   check(`${page.path} carries the geo coordinates`, serialised.includes('"latitude":38.46019') && serialised.includes('"longitude":-121.41317'));
 
@@ -206,9 +220,9 @@ for (const page of PAGES) {
   const imagesWithoutAlt = [...html.matchAll(/<img\b[^>]*>/g)].filter((m) => !/\balt=/.test(m[0]));
   check(`${page.path} has no image without alt text`, imagesWithoutAlt.length === 0);
 
-  // Visible text for the shingle check: main content only, so shared header and footer text is excluded.
+  // Visible text for the shingle check: page-specific main content only.
   const main = html.match(/<main[\s\S]*?<\/main>/);
-  pageText[page.path] = main ? visibleText(main[0]) : '';
+  pageText[page.path] = main ? editorialText(main[0]) : '';
   check(`${page.path} has main content`, pageText[page.path].length > 200);
 }
 
@@ -233,8 +247,7 @@ const elk = pageText['/family-physician-elk-grove'] ?? '';
 const similarity = jaccard(shingles(home), shingles(elk));
 check('5-word shingle overlap between / and /family-physician-elk-grove is under 25%', similarity < 0.25, `${(similarity * 100).toFixed(1)}%`);
 
-// Highest overlap between any two live pages. The Quick facts table, FAQ answers and the call-to-action
-// repeat on purpose, so the limit is looser than for the two pages that target nearby keywords.
+// Highest overlap between any two live pages, after shared practice facts and navigation are removed.
 let worst = { pair: '', value: 0 };
 const paths = Object.keys(pageText);
 for (let i = 0; i < paths.length; i += 1) {
