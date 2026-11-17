@@ -161,7 +161,7 @@ for (const page of PAGES) {
   check(`${page.path} JSON-LD never spells the legal name with the registry typo`, !/PHYSICANS/i.test(html));
   check(`${page.path} JSON-LD carries the office address`, serialised.includes('8191 Timberlake Way, Suite 200'));
   check(`${page.path} JSON-LD carries the phone`, serialised.includes('+1-916-236-5800') || serialised.includes('+19162365800'));
-  check(`${page.path} JSON-LD carries the physician NPI shown on the page`, serialised.includes('"value":"1982892659"'));
+  check(`${page.path} JSON-LD omits the physician NPI (owner instruction)`, !serialised.includes('1982892659'));
   check(`${page.path} JSON-LD omits the organisation NPI, which no page shows`, !serialised.includes('1124405584'));
   check(`${page.path} JSON-LD lists payment as insurance and self-pay, not insurer names`, serialised.includes('"paymentAccepted":"Health insurance, self-pay"'));
   check(`${page.path} JSON-LD uses no invalid FamilyPractice specialty`, !serialised.includes('FamilyPractice') && serialised.includes('https://schema.org/PrimaryCare'));

@@ -1,8 +1,7 @@
 import type { PhoneNumber } from '@/types';
 
 /**
- * Site-wide constants for Apollo Physicians. Every value here is either from the
- * NPPES registry (NPI 1124405584) or was supplied by the practice. See practice.ts
+ * Site-wide constants for Apollo Physicians. Every value here was supplied by the practice or checked in a public source. See practice.ts
  * for the source of each claim shown on the pages.
  */
 
@@ -146,7 +145,7 @@ const OFFICE_PARTS = {
 } as const;
 
 /**
- * The only office. Confirmed by the practice; matches the NPPES location record (NPI 1124405584).
+ * The only office. Confirmed by the practice; matches the NPPES location record.
  * This is the single source of truth: every page, meta description, schema block and llms.txt reads
  * the address from here (a unit test fails if a literal copy appears elsewhere in src/).
  */
@@ -154,10 +153,4 @@ export const OFFICE = {
   ...OFFICE_PARTS,
   /** Full single-line form used in visible copy and map links. */
   line: `${OFFICE_PARTS.street}, ${OFFICE_PARTS.city}, ${OFFICE_PARTS.state} ${OFFICE_PARTS.postalCode}`,
-} as const;
-
-/** NPI identifiers from the NPPES registry. */
-export const NPI = {
-  organization: '1124405584',
-  panesar: '1982892659',
 } as const;

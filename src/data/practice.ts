@@ -48,15 +48,14 @@ export const INSURANCE_LIST_DATE = '11 November 2026';
 /** CONFIRMED 11 Nov 2026 (item 27): telemedicine for patients in California. Visit types were not supplied. */
 export const TELEMEDICINE = 'Telemedicine visits for patients in California.';
 
-/** OWNER: initial self-pay visits start at $65. What the price includes has not been supplied. */
-export const INITIAL_VISIT_FROM = '$65';
-export const INITIAL_VISIT_PRICE = `Initial self-pay visits start at ${INITIAL_VISIT_FROM}.`;
-
-/** OWNER: same-day and next-day appointments; new patients accepted. */
+/** OWNER: same-day and next-day appointments; new patients accepted. No prices are published anywhere on the site. */
 export const APPOINTMENT_AVAILABILITY = 'Same-day and next-day appointments.';
 
 /** OWNER and NPPES: family medicine. */
 export const SPECIALTY = 'Family Medicine';
+
+/** OWNER (Nov 2026): the practice has two other providers. Their names and details were not supplied, so none are shown. */
+export const OTHER_PROVIDERS = 'Apollo Physicians has two other providers besides Dr. Panesar.';
 
 /** Names used on the pages. */
 export const PROVIDER = {
@@ -68,29 +67,23 @@ export const PROVIDER = {
 } as const;
 
 /**
- * OWNER: the physician's credentials. Each can be checked by the public: license on the Medical Board of
- * California search, certification on the ABMS site, civil surgeon designation on the USCIS tool.
+ * OWNER: the physician's credentials. Board certification can be checked by the public on the ABMS site.
+ * The license number, NPI and immigration (civil surgeon) designation are deliberately NOT published (owner
+ * instruction, Nov 2026).
  * Languages spoken are NOT confirmed (the owner asked to confirm first), so none is published.
  */
 export const CREDENTIALS = {
   boardBody: 'American Board of Family Medicine',
   boardShort: 'ABFM',
-  licenseNumber: 'A 114684',
-  licenseBody: 'Medical Board of California',
-  licenseSince: '2010',
   medicalSchool: 'Dayanand Medical College',
   medicalSchoolYear: '2004',
   residency: 'University of Arkansas for Medical Sciences (UAMS)',
   residencyYears: '2007 to 2010',
-  civilSurgeon: 'USCIS-designated civil surgeon (Form I-693 immigration medical exams)',
 } as const;
 
 /** Public places to check the credentials above. */
 export const VERIFY_LINKS = {
-  license: { label: 'Medical Board of California license search', href: 'https://search.dca.ca.gov/' },
   certification: { label: 'ABMS Verify Certification', href: 'https://www.abms.org/verify-certification/' },
-  civilSurgeon: { label: 'USCIS Find a Civil Surgeon', href: 'https://www.uscis.gov/tools/find-a-civil-surgeon' },
-  i693: { label: 'USCIS Form I-693', href: 'https://www.uscis.gov/i-693' },
   medicare: { label: 'Medicare.gov', href: 'https://www.medicare.gov/' },
 } as const;
 
@@ -103,9 +96,7 @@ export const ELK_GROVE_NOTE = `Apollo Physicians has one office, in South Sacram
  */
 export const LLMS_CONFIRMED = {
   insurance: true,
-  price: true,
   appointmentAvailability: true,
-  physicianNpi: true,
 } as const;
 
 /** Printed insurance list in reading order, e.g. "Aetna, Cigna, and Medicare". */
@@ -124,7 +115,7 @@ const ELK_DRIVE = `about ${ELK_GROVE_DRIVE.minutes} minutes`;
  */
 
 /** 40 to 60 words, directly under the home page H1. Quotable on its own. */
-export const HOME_DIRECT_ANSWER = `Apollo Physicians is a family medicine practice at ${OFFICE.line}, led by ${PROVIDER.name}, who is board certified in family medicine. The office offers same-day and next-day appointments, welcomes new patients, and accepts Medicare and several major health plans. Initial self-pay visits start at ${INITIAL_VISIT_FROM}. Call ${CALL}.`;
+export const HOME_DIRECT_ANSWER = `Apollo Physicians is a family medicine practice at ${OFFICE.line}, led by ${PROVIDER.name}, who is board certified in family medicine. The office offers same-day and next-day appointments, welcomes new patients, and accepts Medicare and several major health plans. Patients without insurance are welcome too. Call ${CALL}.`;
 
 /** 40 to 60 words, directly under the Elk Grove page H1. */
 export const ELK_GROVE_DIRECT_ANSWER = `Apollo Physicians is in South Sacramento at ${OFFICE.street}, and serves Elk Grove families with same-day and next-day appointments. Google Maps shows about ${ELK_GROVE_DRIVE.minutes} minutes by car from Elk Grove ZIP codes 95758 and 95624 with usual traffic. New patients are welcome, and the office accepts Medicare and several major health plans. Call ${CALL}.`;
@@ -133,7 +124,7 @@ export const ELK_GROVE_DIRECT_ANSWER = `Apollo Physicians is in South Sacramento
 export const HOME_LEAD = `Apollo Physicians is a family medicine practice at ${OFFICE.line}.`;
 
 /** 40 to 60 words, directly under the physician page H1. */
-export const PANESAR_DIRECT_ANSWER = `${PROVIDER.name}, is a family physician at Apollo Physicians, ${OFFICE.line}. Dr. Panesar is board certified in family medicine by the ${CREDENTIALS.boardBody}, holds California medical license ${CREDENTIALS.licenseNumber}, and is a USCIS-designated civil surgeon. Call ${CALL} to book a visit.`;
+export const PANESAR_DIRECT_ANSWER = `${PROVIDER.name}, is a family physician at Apollo Physicians, ${OFFICE.line}. Dr. Panesar is board certified in family medicine by the ${CREDENTIALS.boardBody}, earned a medical degree from ${CREDENTIALS.medicalSchool}, and completed residency at UAMS. Apollo Physicians has two other providers. Call ${CALL} to book a visit.`;
 
 /** Kept for the quotable sentence in answers. */
 export const PANESAR_LEAD = `${PROVIDER.name}, practices family medicine at Apollo Physicians, ${OFFICE.line}.`;
@@ -152,10 +143,6 @@ export const HOME_FAQS: readonly FaqItem[] = [
     answer: `Apollo Physicians accepts ${insuranceSentence()}. Plans and networks can change, so call ${CALL} to confirm your specific plan before your visit. The full list, with the date the practice provided it, is on the insurance page.`,
   },
   {
-    question: 'How much is an initial visit?',
-    answer: `An initial self-pay visit at Apollo Physicians starts at ${INITIAL_VISIT_FROM}. Self-pay means you pay the office directly instead of billing insurance. The final cost can depend on what your visit includes, so call ${CALL} to ask what is covered before you book. Patients with insurance should confirm their plan instead.`,
-  },
-  {
     question: 'Can I get a same-day or next-day appointment?',
     answer: `Yes. Apollo Physicians offers same-day and next-day appointments. Availability on a given day depends on the schedule, so call ${CALL} as early as you can and ask for the next opening. If you have an emergency, call 911 instead of the office.`,
   },
@@ -165,7 +152,11 @@ export const HOME_FAQS: readonly FaqItem[] = [
   },
   {
     question: 'Who is Dr. Paramjit Panesar?',
-    answer: `${PROVIDER.name}, is a family physician at Apollo Physicians in Sacramento. Dr. Panesar is board certified in family medicine by the ${CREDENTIALS.boardBody}, completed residency at UAMS, and is a USCIS-designated civil surgeon for immigration medical exams. Dr. Panesar sees patients at ${OFFICE.street}.`,
+    answer: `${PROVIDER.name}, is a family physician at Apollo Physicians in Sacramento. Dr. Panesar is board certified in family medicine by the ${CREDENTIALS.boardBody}, and completed residency at UAMS. Apollo Physicians has two other providers. Dr. Panesar sees patients at ${OFFICE.street}.`,
+  },
+  {
+    question: 'Does Apollo Physicians have other providers?',
+    answer: `Yes. Apollo Physicians has two other providers besides ${PROVIDER.name}. Their names and details are not listed on this website yet. Call ${CALL} to ask about your visit, and ask for a same-day or next-day appointment at ${OFFICE.street}, ${OFFICE.city}.`,
   },
   {
     question: 'Is Apollo Physicians accepting new patients?',
@@ -176,19 +167,15 @@ export const HOME_FAQS: readonly FaqItem[] = [
 export const PANESAR_FAQS: readonly FaqItem[] = [
   {
     question: 'Who is Dr. Paramjit Panesar?',
-    answer: `${PROVIDER.name}, is a family physician at Apollo Physicians in Sacramento. Dr. Panesar is board certified in family medicine, earned a medical degree from ${CREDENTIALS.medicalSchool} in ${CREDENTIALS.medicalSchoolYear}, and completed residency at UAMS from 2007 to 2010. Dr. Panesar holds an active California medical license issued in ${CREDENTIALS.licenseSince}.`,
+    answer: `${PROVIDER.name}, is a family physician at Apollo Physicians in Sacramento. Dr. Panesar is board certified in family medicine, earned a medical degree from ${CREDENTIALS.medicalSchool} in ${CREDENTIALS.medicalSchoolYear}, and completed residency at UAMS from 2007 to 2010. Dr. Panesar practices at Apollo Physicians in South Sacramento.`,
   },
   {
     question: 'Is Dr. Panesar board certified?',
-    answer: `Yes. ${PROVIDER.name}, is board certified in family medicine by the ${CREDENTIALS.boardBody}. You can check any physician's certification on the American Board of Medical Specialties website, and look up California license ${CREDENTIALS.licenseNumber} on the ${CREDENTIALS.licenseBody} license search, before you book an appointment.`,
+    answer: `Yes. ${PROVIDER.name}, is board certified in family medicine by the ${CREDENTIALS.boardBody}. You can check any physician's certification on the American Board of Medical Specialties website before you book an appointment. Call ${CALL} to book a visit at Apollo Physicians.`,
   },
   {
     question: 'Where did Dr. Panesar train?',
-    answer: `${PROVIDER.name}, earned a medical degree from ${CREDENTIALS.medicalSchool} in ${CREDENTIALS.medicalSchoolYear}. Dr. Panesar completed residency training at the ${CREDENTIALS.residency} from ${CREDENTIALS.residencyYears}. The California medical license, number ${CREDENTIALS.licenseNumber}, has been active since ${CREDENTIALS.licenseSince}, and can be checked on the Medical Board of California website.`,
-  },
-  {
-    question: 'What is a USCIS civil surgeon?',
-    answer: `A civil surgeon is a doctor designated by U.S. Citizenship and Immigration Services (USCIS) to perform the immigration medical exam and complete Form I-693. ${PROVIDER.name}, is a USCIS-designated civil surgeon at Apollo Physicians. You can confirm any designation with the USCIS Find a Civil Surgeon tool on uscis.gov.`,
+    answer: `${PROVIDER.name}, earned a medical degree from ${CREDENTIALS.medicalSchool} in ${CREDENTIALS.medicalSchoolYear}. Dr. Panesar completed residency training at the ${CREDENTIALS.residency} from ${CREDENTIALS.residencyYears}. Dr. Panesar now sees patients at Apollo Physicians in South Sacramento.`,
   },
   {
     question: 'Where does Dr. Panesar see patients?',
@@ -222,12 +209,12 @@ export const ELK_GROVE_FAQS: readonly FaqItem[] = [
     answer: `Elk Grove patients use the same plans as every Apollo Physicians patient: ${insuranceSentence()}. Confirm your plan with the office at ${CALL} before you travel, because plans and networks can change.`,
   },
   {
-    question: 'How much does an initial visit cost?',
-    answer: `An initial self-pay visit at Apollo Physicians starts at ${INITIAL_VISIT_FROM}. Self-pay means you pay the office directly instead of billing insurance. Ask what is included in the visit when you call ${CALL}. Patients with insurance should confirm their plan and any copay with their insurer before booking.`,
-  },
-  {
     question: 'Can Elk Grove patients get a same-day or next-day appointment?',
     answer: `Yes. Apollo Physicians offers same-day and next-day appointments, and Elk Grove patients book the same way as every other patient. Call ${CALL} early in the day and ask for the next opening. Because the drive takes ${ELK_DRIVE}, confirm your time with the office before you leave home.`,
+  },
+  {
+    question: 'Can Elk Grove patients without insurance be seen?',
+    answer: `Yes. Apollo Physicians sees patients without insurance at its South Sacramento office, including patients from Elk Grove. Say you will pay for yourself when you call ${CALL}, ask what the visit includes, and ask for a same-day or next-day appointment. The office is ${ELK_DRIVE} by car from Elk Grove.`,
   },
   {
     question: 'Is the office near a hospital?',

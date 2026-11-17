@@ -3,7 +3,6 @@ import {
   ASSETS,
   BRAND,
   GEO,
-  NPI,
   OFFICE,
   OFFICE_HOURS,
   PHONES,
@@ -11,7 +10,7 @@ import {
   SITE_URL,
   absoluteUrl,
 } from '@/data/site';
-import { CREDENTIALS, INITIAL_VISIT_FROM, PROVIDER } from '@/data/practice';
+import { CREDENTIALS, PROVIDER } from '@/data/practice';
 import { CLINICAL_REVIEW, PAGE_META, isLive, type PageKey } from '@/data/pages';
 import type { Crumb } from '@/data/navigation';
 import type { FaqItem } from '@/types';
@@ -87,12 +86,14 @@ function areaServed(): Node[] {
   ];
 }
 
+/** Service names for the schema, by the page that describes each one (part of Dr. Panesar's review packet). */
+export const SCHEMA_SERVICES: readonly { key: PageKey; name: string }[] = [
+  { key: 'annualPhysical', name: 'Annual physical exam' },
+];
+
 /** Services appear in the schema only when their page is live (and so reviewed by Dr. Panesar). */
 function availableServices(): Node[] {
-  const services: Node[] = [];
-  if (isLive(PAGE_META.annualPhysical)) services.push({ '@type': 'MedicalProcedure', name: 'Annual physical exam' });
-  if (isLive(PAGE_META.immigration)) services.push({ '@type': 'MedicalProcedure', name: 'USCIS immigration medical examination (Form I-693)' });
-  return services;
+  return SCHEMA_SERVICES.filter((service) => isLive(PAGE_META[service.key])).map((service) => ({ '@type': 'MedicalProcedure', name: service.name }));
 }
 
 function openingHours(): Node[] | null {
@@ -127,7 +128,6 @@ export function clinicNode(): Node {
     isAcceptingNewPatients: true,
     // The plans are listed on the insurance page. paymentAccepted means payment methods, so it says only that.
     paymentAccepted: 'Health insurance, self-pay',
-    priceRange: `From ${INITIAL_VISIT_FROM}`,
     ...(hours ? { openingHoursSpecification: hours } : {}),
     ...(services.length ? { availableService: services } : {}),
     employee: { '@id': PHYSICIAN_ID },
@@ -154,7 +154,6 @@ export function physicianNode(): Node {
     medicalSpecialty: SPECIALTY_ENUM,
     address: postalAddress(),
     worksFor: { '@id': CLINIC_ID },
-    identifier: { '@type': 'PropertyValue', propertyID: 'NPI', value: NPI.panesar },
     hasCredential: [
       {
         '@type': 'EducationalOccupationalCredential',
@@ -162,24 +161,12 @@ export function physicianNode(): Node {
         name: 'Board certified in family medicine',
         recognizedBy: { '@type': 'Organization', name: CREDENTIALS.boardBody },
       },
-      {
-        '@type': 'EducationalOccupationalCredential',
-        credentialCategory: 'License',
-        name: `California medical license ${CREDENTIALS.licenseNumber}`,
-        recognizedBy: { '@type': 'GovernmentOrganization', name: CREDENTIALS.licenseBody },
-      },
-      {
-        '@type': 'EducationalOccupationalCredential',
-        credentialCategory: 'Designation',
-        name: 'USCIS-designated civil surgeon',
-        recognizedBy: { '@type': 'GovernmentOrganization', name: 'U.S. Citizenship and Immigration Services' },
-      },
     ],
     alumniOf: [
       { '@type': 'CollegeOrUniversity', name: CREDENTIALS.medicalSchool },
       { '@type': 'CollegeOrUniversity', name: 'University of Arkansas for Medical Sciences' },
     ],
-    knowsAbout: ['Family medicine', 'Immigration medical exams', 'Preventive care'],
+    knowsAbout: ['Family medicine', 'Preventive care'],
     // OWNER: accepting new patients. Valid here because schema.org types Physician as a MedicalOrganization.
     isAcceptingNewPatients: true,
   };

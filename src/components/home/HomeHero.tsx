@@ -2,7 +2,7 @@ import Image from 'next/image';
 import { CheckCircle2, MapPin, Phone, Stethoscope } from 'lucide-react';
 import { ButtonLink } from '@/components/ui/Button';
 import { InsurancePills } from '@/components/ui/InsurancePills';
-import { APPOINTMENT_AVAILABILITY, CREDENTIALS, HOME_DIRECT_ANSWER, INITIAL_VISIT_PRICE, PROVIDER } from '@/data/practice';
+import { APPOINTMENT_AVAILABILITY, CREDENTIALS, HOME_DIRECT_ANSWER, PROVIDER } from '@/data/practice';
 import { OFFICE, PHONES } from '@/data/site';
 import { mapsDirectionsUrl, telHref } from '@/lib/utils';
 
@@ -42,10 +42,6 @@ export function HomeHero() {
             <li className="flex items-start gap-2">
               <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-teal-300" aria-hidden="true" />
               <span>{APPOINTMENT_AVAILABILITY}</span>
-            </li>
-            <li className="flex items-start gap-2">
-              <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-teal-300" aria-hidden="true" />
-              <span>{INITIAL_VISIT_PRICE}</span>
             </li>
             <li className="flex items-start gap-2">
               <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-teal-300" aria-hidden="true" />

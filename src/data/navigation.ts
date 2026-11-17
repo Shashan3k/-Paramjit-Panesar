@@ -19,16 +19,27 @@ export const MAIN_NAV: readonly NavLink[] = NAV_ORDER.filter((key) => isLive(PAG
   href: PAGE_META[key].path,
 }));
 
+/**
+ * Cards on the home page that point visitors to the right next page. A card appears only when its page is live,
+ * so the cards for health pages are part of Dr. Panesar's review packet (src/lib/review-packet.ts).
+ */
+export const HOME_HELP_CARDS: readonly { key: PageKey; title: string; text: string }[] = [
+  { key: 'newPatients', title: 'New patients', text: 'Apollo Physicians is accepting new patients. See how to book and what to bring.' },
+  { key: 'annualPhysical', title: 'Annual physical', text: 'A yearly preventive visit with a physical exam. See what to expect and bring.' },
+  { key: 'services', title: 'Services', text: 'Family medicine services, from physicals and vaccinations to ongoing care.' },
+  { key: 'insurance', title: 'Insurance accepted', text: 'Medicare and several major health plans, and self-pay patients are welcome.' },
+  { key: 'elkGrove', title: 'Elk Grove patients', text: 'About 12 minutes from Elk Grove by car, with drive times and routes.' },
+  { key: 'contact', title: 'Contact and directions', text: 'Address, phone, a map and directions to the South Sacramento office.' },
+];
+
 /** Footer labels: longer than the navigation labels, and they include pages that are not in the navigation. */
 const FOOTER_LABELS: Record<PageKey, string> = {
   home: 'Family Physician in Sacramento',
   newPatients: 'New patients',
   annualPhysical: 'Annual physical',
-  sameDay: 'Same-day appointments',
   elkGrove: 'Family Physician in Elk Grove',
   panesar: PROVIDER.name,
   services: 'Services',
-  immigration: 'Immigration medical exam',
   insurance: 'Insurance accepted',
   medicare: 'Medicare patients',
   mediCal: 'Medi-Cal patients',
@@ -63,11 +74,9 @@ const HOME_CRUMB: Crumb = { name: 'Home', path: PAGE_META.home.path };
 const CRUMB_NAMES: Record<Exclude<PageKey, 'home'>, string> = {
   newPatients: 'New patients',
   annualPhysical: 'Annual physical',
-  sameDay: 'Same-day appointments',
   elkGrove: 'Family Physician in Elk Grove',
   panesar: PROVIDER.name,
   services: 'Services',
-  immigration: 'Immigration medical exam',
   insurance: 'Insurance accepted',
   medicare: 'Medicare',
   mediCal: 'Medi-Cal',

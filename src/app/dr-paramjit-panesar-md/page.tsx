@@ -9,8 +9,8 @@ import { PageHero } from '@/components/ui/PageHero';
 import { Section } from '@/components/ui/Section';
 import { BREADCRUMBS } from '@/data/navigation';
 import { PAGE_META } from '@/data/pages';
-import { CREDENTIALS, PANESAR_DIRECT_ANSWER, PANESAR_FAQS, PROVIDER, SPECIALTY, VERIFY_LINKS } from '@/data/practice';
-import { NPI, OFFICE, PHONES, PHYSICIAN_PROFILE_LIST } from '@/data/site';
+import { CREDENTIALS, OTHER_PROVIDERS, PANESAR_DIRECT_ANSWER, PANESAR_FAQS, PROVIDER, SPECIALTY, VERIFY_LINKS } from '@/data/practice';
+import { OFFICE, PHONES, PHYSICIAN_PROFILE_LIST } from '@/data/site';
 import { buildMetadata } from '@/lib/seo';
 import { pageGraph } from '@/lib/structured-data';
 import { mapsDirectionsUrl, telHref } from '@/lib/utils';
@@ -51,7 +51,7 @@ export default function PanesarPage() {
 
       <QuickFacts />
 
-      <Section id="credentials" headingId="panesar-credentials-heading" title="Credentials and training" description="Each item below can be checked in the public tools linked in the next section.">
+      <Section id="credentials" headingId="panesar-credentials-heading" title="Credentials and training" description="Board certification can be checked in the public tool linked in the next section.">
         <dl className="grid gap-5 sm:grid-cols-2">
           <div className="card">
             <dt className={CARD_LABEL}>Specialty</dt>
@@ -60,12 +60,6 @@ export default function PanesarPage() {
           <div className="card">
             <dt className={CARD_LABEL}>Board certification</dt>
             <dd className="mt-2 text-navy-900">Board certified in family medicine, {CREDENTIALS.boardBody}</dd>
-          </div>
-          <div className="card">
-            <dt className={CARD_LABEL}>California medical license</dt>
-            <dd className="mt-2 text-navy-900">
-              {CREDENTIALS.licenseNumber}, active since {CREDENTIALS.licenseSince}
-            </dd>
           </div>
           <div className="card">
             <dt className={CARD_LABEL}>Medical school</dt>
@@ -80,30 +74,20 @@ export default function PanesarPage() {
             </dd>
           </div>
           <div className="card">
-            <dt className={CARD_LABEL}>Immigration medical exams</dt>
-            <dd className="mt-2 text-navy-900">{CREDENTIALS.civilSurgeon}</dd>
-          </div>
-          <div className="card">
             <dt className={CARD_LABEL}>Areas of focus</dt>
-            <dd className="mt-2 text-navy-900">Family medicine, immigration medical exams, preventive care</dd>
+            <dd className="mt-2 text-navy-900">Family medicine, preventive care</dd>
           </div>
           <div className="card">
-            <dt className={CARD_LABEL}>NPI</dt>
-            <dd className="mt-2 text-navy-900">{NPI.panesar}</dd>
+            <dt className={CARD_LABEL}>Our team</dt>
+            <dd className="mt-2 text-navy-900">{OTHER_PROVIDERS}</dd>
           </div>
         </dl>
       </Section>
 
-      <Section id="verify" headingId="panesar-verify-heading" title="Check the credentials yourself" tone="muted">
+      <Section id="verify" headingId="panesar-verify-heading" title="Check the board certification yourself" tone="muted">
         <ul className="max-w-3xl space-y-1 text-navy-800">
           <li>
-            <ExternalLink href={VERIFY_LINKS.license.href}>{VERIFY_LINKS.license.label}</ExternalLink> (search for license {CREDENTIALS.licenseNumber})
-          </li>
-          <li>
             <ExternalLink href={VERIFY_LINKS.certification.href}>{VERIFY_LINKS.certification.label}</ExternalLink> (board certification, including the {CREDENTIALS.boardBody})
-          </li>
-          <li>
-            <ExternalLink href={VERIFY_LINKS.civilSurgeon.href}>{VERIFY_LINKS.civilSurgeon.label}</ExternalLink> (designated civil surgeons by location)
           </li>
         </ul>
         <h3 className="mt-6 text-lg font-semibold text-navy-900">Profiles on other sites</h3>

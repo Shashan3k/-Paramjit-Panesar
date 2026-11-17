@@ -13,7 +13,7 @@ import { OFFICE, PHONES } from './site';
 
 export const CLINICAL_REVIEW = {
   reviewer: 'Dr. Paramjit Panesar, MD',
-  /** PENDING. Set to the date Dr. Panesar approved the health content (see docs/clinical-review/). */
+  /** PENDING. Set to the date Dr. Panesar approved the health content (see docs/dr-panesar-review-packet.md). */
   reviewedOn: null as string | null,
 };
 
@@ -61,16 +61,9 @@ export const PAGE_META = {
     path: '/annual-physical-sacramento',
     lastModified: lastmod('/annual-physical-sacramento'),
     title: 'Annual Physical in Sacramento, CA | Apollo Physicians',
-    description: `Book an annual physical in Sacramento with Dr. Paramjit Panesar at Apollo Physicians, ${OFFICE.street}. See what to expect. Call ${PHONES.main.display}.`,
+    description: `Book an annual physical in Sacramento with Dr. Paramjit Panesar at Apollo Physicians, ${OFFICE.street}. What to expect. Call ${PHONES.main.display}.`,
     clinical: true,
     navLabel: 'Annual physical',
-  },
-  sameDay: {
-    path: '/same-day-appointments-sacramento',
-    lastModified: lastmod('/same-day-appointments-sacramento'),
-    title: 'Same-Day Doctor Appointments Sacramento | Apollo Physicians',
-    description: `Same-day and next-day doctor appointments in Sacramento with Dr. Paramjit Panesar, MD, at ${OFFICE.street}. Call ${PHONES.main.display} early to book.`,
-    clinical: true,
   },
   elkGrove: {
     path: '/family-physician-elk-grove',
@@ -90,22 +83,15 @@ export const PAGE_META = {
     path: '/services',
     lastModified: lastmod('/services'),
     title: 'Family Medicine Services in Sacramento | Apollo Physicians',
-    description: `Family medicine services in Sacramento at Apollo Physicians: physicals, vaccinations, chronic condition care and immigration exams. Call ${PHONES.main.display} to book.`,
+    description: `Family medicine services in Sacramento at Apollo Physicians: physicals, vaccinations and chronic condition care. New patients welcome. Call ${PHONES.main.display}.`,
     clinical: true,
     navLabel: 'Services',
-  },
-  immigration: {
-    path: '/immigration-medical-exam-sacramento',
-    lastModified: lastmod('/immigration-medical-exam-sacramento'),
-    title: 'Immigration Medical Exam in Sacramento | Apollo Physicians',
-    description: `USCIS immigration medical exam (Form I-693) in South Sacramento with civil surgeon Dr. Paramjit Panesar, MD. What to bring and how to book: ${PHONES.main.display}.`,
-    clinical: true,
   },
   insurance: {
     path: '/insurance-accepted',
     lastModified: lastmod('/insurance-accepted'),
     title: 'Doctor Accepting Medicare in Sacramento | Apollo Physicians',
-    description: `Medicare, Aetna, Anthem Blue Cross, Blue Shield, Cigna, Health Net, UnitedHealthcare accepted in Sacramento. Self-pay visits from $65. Call ${PHONES.main.display}.`,
+    description: `Medicare, Aetna, Anthem Blue Cross, Blue Shield, Cigna, Health Net, UnitedHealthcare accepted in Sacramento. Same-day appointments. Call ${PHONES.main.display}.`,
     navLabel: 'Insurance',
   },
   medicare: {
@@ -119,14 +105,14 @@ export const PAGE_META = {
     path: '/doctor-without-insurance-sacramento',
     lastModified: lastmod('/doctor-without-insurance-sacramento'),
     title: 'Doctor Without Insurance in Sacramento | Apollo Physicians',
-    description: `See a family doctor in South Sacramento without insurance. Initial self-pay visits start at $65 with Dr. Paramjit Panesar, MD. Call ${PHONES.main.display} to book.`,
+    description: `See a family doctor in South Sacramento without insurance. Same-day and next-day appointments with Dr. Paramjit Panesar, MD. Call ${PHONES.main.display} to book.`,
     clinical: true,
   },
   mediCal: {
     path: '/medi-cal-doctor-sacramento',
     lastModified: lastmod('/medi-cal-doctor-sacramento'),
     title: 'Medi-Cal Doctor in South Sacramento | Apollo Physicians',
-    description: `South Sacramento family doctor who accepts most Medi-Cal plans. How to choose Dr. Paramjit Panesar, MD, as your primary doctor. Call ${PHONES.main.display} to verify.`,
+    description: `South Sacramento family doctor accepting most Medi-Cal plans. How to choose Dr. Paramjit Panesar, MD, as your primary doctor. Call ${PHONES.main.display} to verify.`,
     clinical: true,
   },
   nivano: {
@@ -147,7 +133,7 @@ export const PAGE_META = {
     path: '/faq',
     lastModified: lastmod('/faq'),
     title: 'Family Doctor Questions, Sacramento | Apollo Physicians',
-    description: `Common questions about Apollo Physicians in Sacramento: new patients, insurance, pricing, appointments, Dr. Panesar and the office. Call ${PHONES.main.display}.`,
+    description: `Common questions about Apollo Physicians in Sacramento: new patients, insurance, appointments, hours, directions and the physician. Call ${PHONES.main.display}.`,
   },
 } as const satisfies Record<string, PageMeta>;
 

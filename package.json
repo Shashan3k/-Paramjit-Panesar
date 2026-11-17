@@ -12,7 +12,7 @@
     "test": "vitest run",
     "validate:schema": "node scripts/validate-schema.mjs",
     "generate:og": "node scripts/generate-og.mjs",
-    "export:review": "node scripts/export-review-packet.mjs",
+    "export:review": "vite-node --config vitest.config.ts scripts/export-review-packet.ts",
     "crawl:check": "node scripts/crawl-check.mjs",
     "lastmod": "node scripts/lastmod.mjs"
   },

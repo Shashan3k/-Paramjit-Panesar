@@ -1,12 +1,12 @@
 import type { FaqItem } from '@/types';
-import { CREDENTIALS, INITIAL_VISIT_FROM, INSURANCE_ACCEPTED, PROVIDER, VERIFY_LINKS, insuranceSentence } from './practice';
+import { CREDENTIALS, INSURANCE_ACCEPTED, PROVIDER, VERIFY_LINKS, insuranceSentence } from './practice';
 import { ELK_GROVE_DRIVE, LOCATION, OFFICE, PHONES } from './site';
 
 /**
  * Copy for the pages built from the shared template (src/components/page/ContentPage.tsx).
  * Same rules as practice.ts: only owner-supplied or checked facts, answers of 40 to 60 words, no pronouns
  * for Dr. Panesar. Pages and questions marked clinical contain general health information and are published
- * only after Dr. Panesar's review (CLINICAL_REVIEW in pages.ts). The review packet in docs/clinical-review/
+ * only after Dr. Panesar's review (CLINICAL_REVIEW in pages.ts). The review packet (docs/dr-panesar-review-packet.md)
  * is generated from this file.
  */
 
@@ -50,7 +50,7 @@ const VERIFY_BLOCK: ContentBlock = { id: 'verify-your-plan', heading: 'Verify yo
  * New patients
  * ----------------------------------------------------------------------------------------------- */
 
-export const NEW_PATIENTS_DIRECT_ANSWER = `Apollo Physicians is accepting new patients at ${ADDRESS}. To become a patient, call ${CALL} and book an appointment with ${DOC}. Same-day and next-day appointments are offered. Initial self-pay visits start at ${INITIAL_VISIT_FROM}, and the office accepts Medicare and several major health plans.`;
+export const NEW_PATIENTS_DIRECT_ANSWER = `Apollo Physicians is accepting new patients at ${ADDRESS}. To become a patient, call ${CALL} and book an appointment with ${DOC}. Same-day and next-day appointments are offered. The office accepts Medicare and several major health plans, and welcomes patients who pay for their own visit.`;
 
 export const NEW_PATIENTS: PageContent = {
   h1: 'Primary Care Doctor Accepting New Patients in Sacramento',
@@ -66,7 +66,6 @@ export const NEW_PATIENTS: PageContent = {
         'Bring a photo ID, your insurance card and a list of your current medicines.',
         `Come to ${ADDRESS}.`,
       ],
-      links: [{ label: 'How same-day appointments work', href: '/same-day-appointments-sacramento' }],
     },
     {
       id: 'what-to-bring',
@@ -84,7 +83,7 @@ export const NEW_PATIENTS: PageContent = {
       heading: 'Paying for your first visit',
       paragraphs: [
         `Apollo Physicians accepts ${insuranceSentence()}. Call ${CALL} with your plan name before you book so the office can confirm your coverage.`,
-        `If you do not use insurance, initial self-pay visits start at ${INITIAL_VISIT_FROM}. Ask the office what the visit includes when you call.`,
+        'If you do not use insurance, tell the office when you call and ask about a self-pay visit.',
       ],
       links: [{ label: 'See the insurance page', href: '/insurance-accepted' }],
     },
@@ -141,16 +140,16 @@ export const NEW_PATIENTS: PageContent = {
       answer: `New patients at Apollo Physicians can use ${insuranceSentence()}. Plans and networks can change, so call ${CALL} with your plan name before you book and the office can confirm your coverage.`,
     },
     {
-      question: 'How much is a first visit without insurance?',
-      answer: `An initial self-pay visit at Apollo Physicians starts at ${INITIAL_VISIT_FROM}. Self-pay means you pay the office directly instead of billing insurance. What the visit includes can change the final cost, so call ${CALL} and ask before you book. If you have insurance, confirm your plan and copay first.`,
-    },
-    {
       question: 'Where is the office and how do I get there?',
       answer: `Apollo Physicians is at ${ADDRESS}, in South Sacramento next to ${LOCATION.highway} and about ${LOCATION.hospitalDistance} from ${LOCATION.nearHospital}. Use the directions button on the contact page, or call ${CALL} if you need help finding the office before your first visit.`,
     },
     {
       question: 'Does Apollo Physicians take new patients from Elk Grove?',
       answer: `Yes. Apollo Physicians sees Elk Grove patients at its South Sacramento office, ${DRIVE} by car from Elk Grove ZIP codes 95758 and 95624 according to Google Maps. New patients from Elk Grove book the same way as everyone else: call ${CALL} and ask for the next available appointment.`,
+    },
+    {
+      question: 'Can I become a new patient without insurance?',
+      answer: `Yes. Apollo Physicians welcomes new patients who pay for their own visit instead of using insurance. Call ${CALL}, say you will pay yourself, and ask what the first visit includes. Same-day and next-day appointments are offered. Bring a photo ID and a list of your current medicines.`,
     },
   ],
 };
@@ -159,11 +158,11 @@ export const NEW_PATIENTS: PageContent = {
  * Insurance
  * ----------------------------------------------------------------------------------------------- */
 
-export const INSURANCE_DIRECT_ANSWER = `Apollo Physicians accepts Medicare, most Medi-Cal plans and these health plans: Aetna, Anthem Blue Cross, Blue Shield of California, Cigna, Health Net and UnitedHealthcare. It also accepts patients from the Sutter Health, Hill Physicians and Nivano Physicians medical groups. Patients without insurance can pay themselves; initial self-pay visits start at ${INITIAL_VISIT_FROM}. Call ${CALL} to confirm your plan.`;
+export const INSURANCE_DIRECT_ANSWER = `Apollo Physicians accepts Medicare, most Medi-Cal plans and these health plans: Aetna, Anthem Blue Cross, Blue Shield of California, Cigna, Health Net and UnitedHealthcare. It also accepts patients from the Sutter Health, Hill Physicians and Nivano Physicians medical groups. Patients without insurance can pay themselves. Call ${CALL} to confirm your plan.`;
 
 export const INSURANCE: PageContent = {
   h1: 'Insurance Accepted at Apollo Physicians',
-  eyebrow: 'Insurance and pricing',
+  eyebrow: 'Insurance',
   blocks: [
     {
       id: 'confirm-your-plan',
@@ -180,7 +179,7 @@ export const INSURANCE: PageContent = {
       id: 'self-pay',
       heading: 'Self-pay doctor visits without insurance',
       paragraphs: [
-        `Initial self-pay visits start at ${INITIAL_VISIT_FROM}. Self-pay means you pay the office directly instead of billing insurance. When you call ${CALL}, ask what the visit includes and whether any tests or forms cost extra.`,
+        `Self-pay means you pay the office directly instead of billing insurance. When you call ${CALL}, say you will pay yourself and ask what the visit includes.`,
       ],
       links: [{ label: 'Seeing a doctor without insurance', href: '/doctor-without-insurance-sacramento' }],
     },
@@ -224,11 +223,7 @@ export const INSURANCE: PageContent = {
     },
     {
       question: 'What if my insurance plan is not listed?',
-      answer: `If your plan is not listed, call Apollo Physicians at ${CALL} and give the office your plan name. Plans and networks change, and only the plans on the insurance page have been confirmed by the practice. The office can tell you whether your coverage works, or you can book an initial self-pay visit that starts at ${INITIAL_VISIT_FROM}.`,
-    },
-    {
-      question: 'How much is a visit at Apollo Physicians without insurance?',
-      answer: `Initial self-pay visits at Apollo Physicians start at ${INITIAL_VISIT_FROM}. Self-pay is for patients who do not use insurance and pay the office directly. Ask when you call ${CALL} what the visit includes, and whether any tests or forms cost extra, so there are no surprises on the day.`,
+      answer: `If your plan is not listed, call Apollo Physicians at ${CALL} and give the office your plan name. Plans and networks change, and only the plans on the insurance page have been confirmed by the practice. The office can tell you whether your coverage works, or you can ask about a self-pay visit.`,
     },
     {
       question: 'Does Apollo Physicians accept Medi-Cal?',
@@ -240,7 +235,7 @@ export const INSURANCE: PageContent = {
     },
     {
       question: 'Can I see a doctor at Apollo Physicians without insurance?',
-      answer: `Yes. Apollo Physicians sees patients who pay for their own visit instead of using insurance, and initial self-pay visits start at ${INITIAL_VISIT_FROM}. When you call ${CALL} to book with ${DOC}, say you will pay yourself and ask what the visit includes and whether any tests or forms cost extra.`,
+      answer: `Yes. Apollo Physicians sees patients who pay for their own visit instead of using insurance. When you call ${CALL} to book with ${DOC}, say you will pay yourself and ask what the visit includes. Same-day and next-day appointments are offered.`,
     },
     {
       question: 'How do I make Dr. Panesar my primary care doctor with Hill Physicians or Sutter Health?',
@@ -366,7 +361,7 @@ export const ANNUAL_PHYSICAL: PageContent = {
       id: 'paying',
       heading: 'Insurance and cost',
       paragraphs: [
-        `Apollo Physicians accepts ${insuranceSentence()}. Call ${CALL} to confirm your plan. Initial self-pay visits start at ${INITIAL_VISIT_FROM}; ask what a physical costs.`,
+        `Apollo Physicians accepts ${insuranceSentence()}. Call ${CALL} to confirm your plan. If you do not use insurance, ask about a self-pay visit.`,
       ],
       links: [{ label: 'See the insurance page', href: '/insurance-accepted' }],
     },
@@ -394,7 +389,7 @@ export const ANNUAL_PHYSICAL: PageContent = {
     {
       question: 'Does insurance cover an annual physical?',
       clinical: true,
-      answer: `Many plans cover a yearly preventive visit, but coverage depends on your specific plan. Apollo Physicians accepts Medicare, Aetna, Anthem Blue Cross, Blue Shield of California, Cigna, Health Net and UnitedHealthcare. Call ${CALL} to confirm your plan, or ask about an initial self-pay visit, which starts at ${INITIAL_VISIT_FROM}.`,
+      answer: `Many plans cover a yearly preventive visit, but coverage depends on your specific plan. Apollo Physicians accepts Medicare, Aetna, Anthem Blue Cross, Blue Shield of California, Cigna, Health Net and UnitedHealthcare. Call ${CALL} to confirm your plan, or ask about a self-pay visit.`,
     },
     {
       question: 'Can my child get a school or sports physical at Apollo Physicians?',
@@ -412,119 +407,6 @@ export const ANNUAL_PHYSICAL: PageContent = {
     },
   ],
   sources: [VERIFY_LINKS.medicare],
-};
-
-/* -------------------------------------------------------------------------------------------------
- * Same-day appointments (clinical: held until Dr. Panesar's review, because it carries emergency guidance)
- * Owner-confirmed: same-day and next-day appointments are offered. NOT confirmed, so not stated: a call-by
- * time, the number of slots, which visit types qualify, office hours, or any other visit option.
- * ----------------------------------------------------------------------------------------------- */
-
-export const SAME_DAY_DIRECT_ANSWER = `Apollo Physicians offers same-day and next-day appointments at ${ADDRESS}, with ${DOC}. Availability depends on the schedule each day, so call ${CALL} as early as you can and ask for the next opening. New patients can ask too. In an emergency, call 911 instead of the office.`;
-
-export const SAME_DAY: PageContent = {
-  h1: 'Same-Day Doctor Appointments in Sacramento',
-  eyebrow: 'Same-day appointments',
-  blocks: [
-    {
-      id: 'how-to-book',
-      heading: 'How to get a same-day or next-day appointment',
-      steps: [
-        `Call ${CALL} as early in the day as you can.`,
-        'Say whether you are a new or returning patient, and ask for a same-day or next-day appointment.',
-        'Tell the office your insurance plan, or that you will pay yourself.',
-        'Confirm the appointment time before you leave home.',
-        `Come to ${ADDRESS} with a photo ID, your insurance card and a list of your medicines.`,
-      ],
-    },
-    {
-      id: 'what-to-expect',
-      heading: 'What to expect',
-      paragraphs: [
-        `A same-day or next-day appointment is a scheduled office visit with ${DOC}. Times depend on the schedule that day, so the next opening may be later today or tomorrow. Ask the office which time works when you call.`,
-      ],
-    },
-    {
-      id: 'emergency',
-      heading: 'When to call 911 instead',
-      clinical: true,
-      paragraphs: [
-        'A same-day appointment is not emergency care. Call 911 or go to the nearest emergency room for a medical emergency, such as chest pain, trouble breathing, signs of a stroke, severe bleeding or a serious injury. If you are not sure whether it is an emergency, call 911.',
-        'In a mental health crisis, call or text 988, the Suicide and Crisis Lifeline.',
-      ],
-    },
-    {
-      id: 'who-can-book',
-      heading: 'Who can ask for one',
-      paragraphs: [
-        `New and returning patients can ask for a same-day or next-day appointment. Patients come from South Sacramento and from Elk Grove, ${DRIVE} away by car with usual traffic.`,
-      ],
-      links: [
-        { label: 'New patients', href: '/new-patients' },
-        { label: 'Family physician for Elk Grove patients', href: '/family-physician-elk-grove' },
-      ],
-    },
-    {
-      id: 'paying',
-      heading: 'Insurance and cost',
-      paragraphs: [
-        `Apollo Physicians accepts ${insuranceSentence()}. Call ${CALL} to confirm your plan. Initial self-pay visits start at ${INITIAL_VISIT_FROM}; ask what the visit includes when you call.`,
-      ],
-      links: [{ label: 'See the insurance page', href: '/insurance-accepted' }],
-    },
-    {
-      id: 'find-the-office',
-      heading: 'Finding the office',
-      paragraphs: [
-        `The office is at ${ADDRESS}, next to ${LOCATION.highway} and about ${LOCATION.hospitalDistance} from ${LOCATION.nearHospital}.`,
-      ],
-      links: [{ label: 'Directions and contact details', href: '/contact' }],
-    },
-  ],
-  faqs: [
-    {
-      question: 'Does Apollo Physicians offer same-day appointments?',
-      answer: `Yes. Apollo Physicians offers same-day and next-day appointments with ${DOC}, at ${OFFICE.street} in South Sacramento. Availability depends on the schedule each day, so call ${CALL} as early as you can and ask for the next opening. In an emergency, call 911 instead of the office.`,
-    },
-    {
-      question: 'How do I book a same-day appointment?',
-      answer: `Call Apollo Physicians at ${CALL} as early in the day as you can and ask for a same-day appointment with ${DOC}. Say whether you are a new or returning patient and give your insurance plan, or say you will pay yourself. If no time is left today, ask for the next-day opening.`,
-    },
-    {
-      question: 'Can new patients get a same-day appointment?',
-      answer: `Yes. New patients at Apollo Physicians can ask for a same-day or next-day appointment, the same way returning patients do. Call ${CALL}, say you are new, and bring a photo ID, your insurance card and a list of your medicines. Initial self-pay visits start at ${INITIAL_VISIT_FROM} if you do not use insurance.`,
-    },
-    {
-      question: 'Is a same-day appointment emergency care?',
-      clinical: true,
-      answer: `No. A same-day appointment at Apollo Physicians is a scheduled office visit with ${DOC}. It is not emergency care. For a medical emergency, such as chest pain, trouble breathing or signs of a stroke, call 911 or go to the nearest emergency room instead of calling the office.`,
-    },
-    {
-      question: 'What if no same-day appointment is left?',
-      answer: `Ask Apollo Physicians for the next-day opening. Same-day times depend on the schedule, so they may fill early in the day. Call ${CALL} as early as you can, and confirm your appointment time before you leave home. If your problem becomes an emergency while you wait, call 911.`,
-    },
-    {
-      question: 'What should I bring to a same-day appointment?',
-      answer: `Bring a photo ID, your insurance card if you have one, and a list of your current medicines and supplements to Apollo Physicians. Bring any past records that relate to the visit, plus your questions. If you are unsure what applies, call ${CALL} before you leave home.`,
-    },
-    {
-      question: 'Does insurance cover a same-day appointment?',
-      answer: `Apollo Physicians accepts ${insuranceSentence()}. Coverage and copays depend on your plan, so call ${CALL} with your plan name before you come in. Initial self-pay visits start at ${INITIAL_VISIT_FROM} if you do not use insurance.`,
-    },
-    {
-      question: 'Where is the office for same-day appointments?',
-      answer: `Apollo Physicians has one office, at ${ADDRESS}, next to ${LOCATION.highway} and about ${LOCATION.hospitalDistance} from ${LOCATION.nearHospital}. Patients from Elk Grove ZIP codes 95758 and 95624 drive ${DRIVE} with usual traffic, according to Google Maps. Confirm your appointment time by calling ${CALL} before you leave home.`,
-    },
-    {
-      question: 'What should I do in a mental health crisis?',
-      clinical: true,
-      answer: `In a mental health crisis, call or text 988, the Suicide and Crisis Lifeline, at any time of day. If someone is in immediate danger, call 911. A same-day appointment at Apollo Physicians is a scheduled office visit, not crisis care, so do not wait for an appointment in a crisis.`,
-    },
-  ],
-  sources: [
-    { label: 'MedlinePlus: Recognizing medical emergencies', href: 'https://medlineplus.gov/ency/article/001927.htm' },
-    { label: '988 Suicide and Crisis Lifeline', href: 'https://988lifeline.org/' },
-  ],
 };
 
 /** Shared "how to become a patient" steps for the payment pages. */
@@ -585,7 +467,7 @@ export const MEDICARE: PageContent = {
       id: 'your-doctor',
       heading: 'Your doctor',
       paragraphs: [
-        `${DOC}, is board certified in family medicine by the ${CREDENTIALS.boardBody} and holds California medical license ${CREDENTIALS.licenseNumber}. You can check both online.`,
+        `${DOC}, is board certified in family medicine by the ${CREDENTIALS.boardBody}. You can check the certification online.`,
       ],
       links: [{ label: `About ${DOC}`, href: '/dr-paramjit-panesar-md' }],
     },
@@ -630,23 +512,22 @@ export const MEDICARE: PageContent = {
     },
     {
       question: 'Is Dr. Panesar board certified?',
-      answer: `Yes. ${DOC}, is board certified in family medicine by the ${CREDENTIALS.boardBody} and holds California medical license ${CREDENTIALS.licenseNumber}. You can check both online. ${DOC}, sees Medicare patients at Apollo Physicians, ${OFFICE.street}, in South Sacramento.`,
+      answer: `Yes. ${DOC}, is board certified in family medicine by the ${CREDENTIALS.boardBody}. You can check the certification online. ${DOC}, sees Medicare patients at Apollo Physicians, ${OFFICE.street}, in South Sacramento.`,
     },
     {
       question: 'Where is Apollo Physicians?',
       answer: `Apollo Physicians is at ${ADDRESS}, in South Sacramento. The office is next to ${LOCATION.highway} and about ${LOCATION.hospitalDistance} from ${LOCATION.nearHospital}. Google Maps shows ${DRIVE} by car from Elk Grove ZIP codes 95758 and 95624 with usual traffic.`,
     },
   ],
-  sources: [VERIFY_LINKS.medicare, VERIFY_LINKS.license],
+  sources: [VERIFY_LINKS.medicare],
 };
 
 /* -------------------------------------------------------------------------------------------------
  * Doctor without insurance (held with the health pages until Dr. Panesar's review)
- * Owner-confirmed: initial self-pay visits start at $65. NOT stated until confirmed: what the $65 covers,
- * payment methods, any discount.
+ * No price is published (owner instruction, Nov 2026). Not stated: payment methods, any discount.
  * ----------------------------------------------------------------------------------------------- */
 
-export const SELF_PAY_DIRECT_ANSWER = `Apollo Physicians in South Sacramento sees patients without insurance. Initial self-pay visits start at ${INITIAL_VISIT_FROM} with ${DOC}, a board-certified family physician. Ask what the visit includes and whether tests or forms cost extra. Same-day and next-day appointments are offered. Call ${CALL} to book a self-pay visit.`;
+export const SELF_PAY_DIRECT_ANSWER = `Apollo Physicians in South Sacramento sees patients without insurance, with ${DOC}, a board-certified family physician. Ask what the visit includes and what to bring when you call. Same-day and next-day appointments are offered. Call ${CALL} to book a self-pay visit.`;
 
 export const SELF_PAY: PageContent = {
   h1: 'Doctor Without Insurance in Sacramento',
@@ -656,8 +537,8 @@ export const SELF_PAY: PageContent = {
       id: 'how-self-pay-works',
       heading: 'How self-pay visits work',
       paragraphs: [
-        `Self-pay means you pay the office directly instead of using insurance. Initial self-pay visits at Apollo Physicians start at ${INITIAL_VISIT_FROM}.`,
-        `When you call ${CALL}, say you will pay for yourself. Ask what the visit includes and whether any tests, vaccines or forms cost extra, so you know the total before your appointment.`,
+        `Self-pay means you pay the office directly instead of using insurance.`,
+        `When you call ${CALL}, say you will pay for yourself. Ask what the visit includes before your appointment.`,
       ],
     },
     {
@@ -692,7 +573,7 @@ export const SELF_PAY: PageContent = {
       id: 'your-doctor',
       heading: 'Your doctor',
       paragraphs: [
-        `${DOC}, is board certified in family medicine by the ${CREDENTIALS.boardBody} and holds California medical license ${CREDENTIALS.licenseNumber}.`,
+        `${DOC}, is board certified in family medicine by the ${CREDENTIALS.boardBody}.`,
       ],
       links: [{ label: `About ${DOC}`, href: '/dr-paramjit-panesar-md' }],
     },
@@ -711,11 +592,7 @@ export const SELF_PAY: PageContent = {
   faqs: [
     {
       question: 'Can I see a doctor without insurance in Sacramento?',
-      answer: `Yes. Apollo Physicians in South Sacramento sees patients who pay for their own visit. Initial self-pay visits start at ${INITIAL_VISIT_FROM} with ${DOC}. Say you will pay for yourself when you call ${CALL}, and ask what the visit includes.`,
-    },
-    {
-      question: 'How much does a self-pay visit cost at Apollo Physicians?',
-      answer: `Initial self-pay visits at Apollo Physicians start at ${INITIAL_VISIT_FROM}. Self-pay means you pay the office directly instead of using insurance. Ask what the visit includes and whether any tests, vaccines or forms cost extra, so you know the total before your appointment. Call ${CALL}.`,
+      answer: `Yes. Apollo Physicians in South Sacramento sees patients who pay for their own visit, with ${DOC}. Say you will pay for yourself when you call ${CALL}, and ask what the visit includes. Same-day and next-day appointments are offered.`,
     },
     {
       question: 'Can I get a same-day appointment without insurance?',
@@ -731,7 +608,7 @@ export const SELF_PAY: PageContent = {
     },
     {
       question: 'Who will I see at a self-pay visit?',
-      answer: `Self-pay patients at Apollo Physicians see ${DOC}, who is board certified in family medicine by the ${CREDENTIALS.boardBody} and holds California medical license ${CREDENTIALS.licenseNumber}. The office is at ${OFFICE.street}, in South Sacramento. Call ${CALL} to book.`,
+      answer: `Self-pay patients at Apollo Physicians see ${DOC}, who is board certified in family medicine by the ${CREDENTIALS.boardBody}. The office is at ${OFFICE.street}, in South Sacramento. Call ${CALL} to book.`,
     },
     {
       question: 'Where is Apollo Physicians?',
@@ -821,7 +698,7 @@ export const MEDI_CAL: PageContent = {
       id: 'not-enrolled-yet',
       heading: 'Not enrolled in Medi-Cal yet?',
       paragraphs: [
-        `You can apply for Medi-Cal at BenefitsCal.com or through Sacramento County. While you wait, you can book a self-pay visit at Apollo Physicians. Initial self-pay visits start at ${INITIAL_VISIT_FROM}.`,
+        `You can apply for Medi-Cal at BenefitsCal.com or through Sacramento County. While you wait, you can book a self-pay visit at Apollo Physicians.`,
       ],
       links: [
         { label: 'BenefitsCal', href: 'https://benefitscal.com/', external: true },
@@ -832,7 +709,7 @@ export const MEDI_CAL: PageContent = {
       id: 'your-doctor',
       heading: 'Your doctor',
       paragraphs: [
-        `${DOC}, is board certified in family medicine by the ${CREDENTIALS.boardBody} and holds California medical license ${CREDENTIALS.licenseNumber}.`,
+        `${DOC}, is board certified in family medicine by the ${CREDENTIALS.boardBody}.`,
       ],
       links: [{ label: `About ${DOC}`, href: '/dr-paramjit-panesar-md' }],
     },
@@ -866,7 +743,7 @@ export const MEDI_CAL: PageContent = {
     },
     {
       question: 'Can I see a doctor while my Medi-Cal application is pending?',
-      answer: `Yes, as a self-pay patient. Initial self-pay visits at Apollo Physicians start at ${INITIAL_VISIT_FROM}. Ask what the visit includes when you call ${CALL}. You can apply for Medi-Cal at BenefitsCal.com or through Sacramento County, and use your Medi-Cal plan once you are enrolled.`,
+      answer: `Yes, as a self-pay patient. Apollo Physicians sees patients who pay for their own visit while an application is pending. Ask what the visit includes when you call ${CALL}. You can apply for Medi-Cal at BenefitsCal.com or through Sacramento County, and use your Medi-Cal plan once you are enrolled.`,
     },
     HOURS_FAQ,
     TELEMEDICINE_FAQ,
@@ -907,20 +784,12 @@ export const NIVANO: PageContent = {
     },
     { id: 'documents', heading: 'Documents to bring', bullets: PLAN_DOCUMENTS },
     {
-      id: 'your-doctor',
-      heading: 'Your doctor',
-      paragraphs: [
-        `${DOC}, is board certified in family medicine by the ${CREDENTIALS.boardBody} and holds California medical license ${CREDENTIALS.licenseNumber}.`,
-      ],
-      links: [{ label: `About ${DOC}`, href: '/dr-paramjit-panesar-md' }],
-    },
-    {
-      id: 'find-the-office',
-      heading: 'Finding the office',
-      paragraphs: [
-        `The office is at ${ADDRESS}, next to ${LOCATION.highway} and about ${LOCATION.hospitalDistance} from ${LOCATION.nearHospital}. ${HOURS_SENTENCE}`,
-      ],
+      // Links only. The doctor, address and hours are in the Quick Facts box; repeating the Medi-Cal page's
+      // paragraphs here made the two pages near-duplicates (verify-apollo-pivot.mjs shingle check, 12 Nov 2026).
+      id: 'more-help',
+      heading: 'More help',
       links: [
+        { label: `About ${DOC}`, href: '/dr-paramjit-panesar-md' },
         { label: 'All insurance and payment options', href: '/insurance-accepted' },
         { label: 'Family physician for Elk Grove patients', href: '/family-physician-elk-grove' },
         { label: 'Directions and contact details', href: '/contact' },
@@ -928,6 +797,8 @@ export const NIVANO: PageContent = {
     },
     VERIFY_BLOCK,
   ],
+  // Hours, telemedicine and location questions are answered on /faq and /contact and in the Quick Facts box,
+  // so they are not repeated here (they made this page a near-duplicate of the Medi-Cal page).
   faqs: [
     {
       question: 'Does Apollo Physicians accept Nivano Physicians?',
@@ -945,118 +816,14 @@ export const NIVANO: PageContent = {
       question: 'Can Nivano Physicians patients get a same-day appointment?',
       answer: `Yes. Apollo Physicians offers same-day and next-day appointments to every patient, including people whose doctor is assigned through Nivano Physicians. Availability depends on the schedule each day, so call ${CALL} as early as you can and ask for the next opening.`,
     },
-    HOURS_FAQ,
-    TELEMEDICINE_FAQ,
-    LOCATION_FAQ,
   ],
-};
-
-/* -------------------------------------------------------------------------------------------------
- * Immigration medical exam (clinical: held until Dr. Panesar's review)
- * ----------------------------------------------------------------------------------------------- */
-
-export const IMMIGRATION_DIRECT_ANSWER = `Apollo Physicians performs USCIS immigration medical exams in Sacramento. ${DOC}, is a USCIS-designated civil surgeon and completes Form I-693 at ${ADDRESS}. You can check the designation on the USCIS website. Call ${CALL} to book your exam and ask what to bring.`;
-
-export const IMMIGRATION: PageContent = {
-  h1: 'USCIS Immigration Medical Exam in Sacramento',
-  eyebrow: 'Immigration medical exam',
-  blocks: [
-    {
-      id: 'what-is-i693',
-      heading: 'What is Form I-693?',
-      clinical: true,
-      paragraphs: [
-        'Form I-693 is the Report of Immigration Medical Examination and Vaccination Record. U.S. Citizenship and Immigration Services (USCIS) requires it for many green card applicants. Only a USCIS-designated civil surgeon can complete it.',
-        `${DOC}, is a USCIS-designated civil surgeon at Apollo Physicians.`,
-      ],
-    },
-    {
-      id: 'who-needs-it',
-      heading: 'Who needs the exam?',
-      clinical: true,
-      paragraphs: [
-        'Most people applying for a green card while in the United States need an exam by a civil surgeon, and some other applicants do too. USCIS decides who must have one. Check the current Form I-693 instructions on uscis.gov or ask your immigration attorney.',
-      ],
-      links: [
-        { label: VERIFY_LINKS.i693.label, href: VERIFY_LINKS.i693.href, external: true },
-        { label: VERIFY_LINKS.civilSurgeon.label, href: VERIFY_LINKS.civilSurgeon.href, external: true },
-      ],
-    },
-    {
-      id: 'what-to-bring',
-      heading: 'What to bring',
-      bullets: [
-        'A government-issued photo ID',
-        'Your vaccination records, if you have them',
-        'Records of past medical conditions or treatment that apply to you',
-        'Any documents your immigration attorney or USCIS told you to bring',
-      ],
-    },
-    {
-      id: 'vaccines',
-      heading: 'Vaccines',
-      clinical: true,
-      paragraphs: [
-        'USCIS sets the vaccine requirements, and they depend on your age and your past vaccines. The civil surgeon reviews your records and tells you if any vaccines are missing. Bring your vaccination records so the review can be as complete as possible.',
-      ],
-    },
-    {
-      id: 'how-to-book',
-      heading: 'How to book',
-      steps: [
-        `Call Apollo Physicians at ${CALL}.`,
-        'Say that you need an immigration medical exam for Form I-693.',
-        'Ask what to bring and what is available.',
-        `Come to ${ADDRESS}.`,
-      ],
-    },
-  ],
-  faqs: [
-    {
-      question: 'What is Form I-693?',
-      clinical: true,
-      answer: `Form I-693 is the Report of Immigration Medical Examination and Vaccination Record that U.S. Citizenship and Immigration Services (USCIS) requires for many green card applicants. A USCIS-designated civil surgeon completes it after your exam. ${DOC}, is a civil surgeon at Apollo Physicians. Read the current instructions on uscis.gov.`,
-    },
-    {
-      question: 'Who needs an immigration medical exam?',
-      clinical: true,
-      answer: `Most people applying for a green card while in the United States need an exam by a USCIS-designated civil surgeon, and some other applicants do too. Your situation decides it, so check the Form I-693 instructions on uscis.gov or ask your attorney. Apollo Physicians performs the exam; call ${CALL} to book.`,
-    },
-    {
-      question: 'Is Apollo Physicians a USCIS-designated civil surgeon?',
-      answer: `Yes. ${DOC}, is a USCIS-designated civil surgeon at Apollo Physicians, ${OFFICE.street}, Sacramento. You can confirm the designation with the USCIS Find a Civil Surgeon tool on uscis.gov. Call ${CALL} to book an immigration medical exam.`,
-    },
-    {
-      question: 'What should I bring to my immigration medical exam?',
-      answer: `Bring a government-issued photo ID, your vaccination records if you have them, any records of past medical conditions or treatment that apply to you, and the documents your immigration attorney or USCIS told you to bring. Call Apollo Physicians at ${CALL} to confirm what to bring before you come.`,
-    },
-    {
-      question: 'Which vaccines are needed for Form I-693?',
-      clinical: true,
-      answer: `USCIS sets the vaccine requirements, and they depend on your age and past vaccines. The civil surgeon reviews your records and tells you if any vaccines are missing. Bring your vaccination records to Apollo Physicians and check the current Form I-693 vaccine list on uscis.gov. Call ${CALL} to ask about your vaccines.`,
-    },
-    {
-      question: 'What happens after the immigration exam?',
-      clinical: true,
-      answer: `After the exam, the civil surgeon completes Form I-693 and returns it to you. Follow the current USCIS instructions on how and when to submit it, because the rules can change. Check uscis.gov or ask your immigration attorney. Call Apollo Physicians at ${CALL} with questions about booking your exam.`,
-    },
-    {
-      question: 'Do I need an appointment for an immigration medical exam?',
-      answer: `Booking is by phone. Call ${CALL} to book your immigration medical exam with ${DOC}. Same-day and next-day appointments are offered for patients, but ask the office what is available for immigration exams. Say that you need Form I-693 when you call so the office can tell you what to bring.`,
-    },
-    {
-      question: 'Where can I get an I-693 immigration medical exam in Sacramento?',
-      answer: `Apollo Physicians offers USCIS immigration medical exams in Sacramento at ${OFFICE.street}, in South Sacramento, with ${DOC}, a USCIS-designated civil surgeon. The office is next to ${LOCATION.highway} and ${DRIVE} from Elk Grove. Call ${CALL} to book your exam.`,
-    },
-  ],
-  sources: [VERIFY_LINKS.i693, VERIFY_LINKS.civilSurgeon],
 };
 
 /* -------------------------------------------------------------------------------------------------
  * Services (clinical: held until Dr. Panesar's review, which also confirms each service is offered)
  * ----------------------------------------------------------------------------------------------- */
 
-export const SERVICES_DIRECT_ANSWER = `Apollo Physicians provides family medicine in Sacramento with ${DOC}, including annual physicals, school and sports physicals, vaccinations, care for ongoing conditions such as diabetes and high blood pressure, and USCIS immigration medical exams. Same-day and next-day appointments are offered. Call ${CALL} to book.`;
+export const SERVICES_DIRECT_ANSWER = `Apollo Physicians provides family medicine in Sacramento with ${DOC}, including annual physicals, school and sports physicals, vaccinations, and care for ongoing conditions such as diabetes and high blood pressure. Same-day and next-day appointments are offered. Call ${CALL} to book.`;
 
 export const SERVICES: PageContent = {
   h1: 'Family Medicine Services in Sacramento',
@@ -1079,12 +846,10 @@ export const SERVICES: PageContent = {
         'School and sports physicals',
         'Vaccinations',
         'Care for ongoing conditions such as diabetes and high blood pressure',
-        'USCIS immigration medical exams (Form I-693)',
         'Same-day and next-day appointments',
       ],
       links: [
         { label: 'Annual physical', href: '/annual-physical-sacramento' },
-        { label: 'Immigration medical exam', href: '/immigration-medical-exam-sacramento' },
       ],
     },
     {
@@ -1103,12 +868,12 @@ export const SERVICES: PageContent = {
     {
       question: 'What services does Apollo Physicians offer?',
       clinical: true,
-      answer: `Apollo Physicians offers family medicine with ${DOC}, including annual physicals, school and sports physicals, vaccinations, care for ongoing conditions such as diabetes and high blood pressure, and USCIS immigration medical exams. Call ${CALL} to ask whether a specific service fits your needs before you book.`,
+      answer: `Apollo Physicians offers family medicine with ${DOC}, including annual physicals, school and sports physicals, vaccinations, and care for ongoing conditions such as diabetes and high blood pressure. Call ${CALL} to ask whether a specific service fits your needs before you book.`,
     },
     {
       question: 'Does Apollo Physicians give vaccinations?',
       clinical: true,
-      answer: `Apollo Physicians offers vaccinations as part of family medicine care, including the vaccines reviewed during USCIS immigration medical exams. Which vaccines you need depends on your age, health and past vaccines. Bring your vaccination records and call ${CALL} to ask about your visit.`,
+      answer: `Apollo Physicians offers vaccinations as part of family medicine care at ${OFFICE.street} in South Sacramento. Which vaccines you need depends on your age, health and past vaccines. Bring your vaccination records and call ${CALL} to ask about your visit.`,
     },
     {
       question: 'Does Apollo Physicians care for diabetes and high blood pressure?',
@@ -1116,16 +881,12 @@ export const SERVICES: PageContent = {
       answer: `Apollo Physicians provides ongoing care for conditions such as diabetes and high blood pressure. Regular visits let ${DOC}, review how you are doing and update your plan. Call ${CALL} to book a visit, and bring your medicines and any recent test results.`,
     },
     {
-      question: 'Does Apollo Physicians do immigration medical exams?',
-      answer: `Yes. ${DOC}, is a USCIS-designated civil surgeon and performs immigration medical exams and Form I-693 at Apollo Physicians. You can confirm the designation on the USCIS website. Call ${CALL} to book your exam and ask what to bring.`,
-    },
-    {
       question: 'Can I get a same-day appointment for these services?',
       answer: `Apollo Physicians offers same-day and next-day appointments, and availability depends on the schedule. Call ${CALL} early, say which service you need, and ask for the next opening. Tell the office if you are a new patient. For an emergency, call 911 instead of the office.`,
     },
     {
       question: 'Is Apollo Physicians accepting new patients for these services?',
-      answer: `Yes. Apollo Physicians is accepting new patients, and the office accepts Medicare and several major health plans. Initial self-pay visits start at ${INITIAL_VISIT_FROM}. Call ${CALL} to become a patient, and see the new patients page for what to bring to your first visit.`,
+      answer: `Yes. Apollo Physicians is accepting new patients, and the office accepts Medicare and several major health plans. Patients without insurance are welcome. Call ${CALL} to become a patient, and see the new patients page for what to bring to your first visit.`,
     },
   ],
 };
@@ -1134,7 +895,7 @@ export const SERVICES: PageContent = {
  * FAQ hub
  * ----------------------------------------------------------------------------------------------- */
 
-export const FAQ_DIRECT_ANSWER = `These are common questions about Apollo Physicians, a family medicine practice at ${ADDRESS}. They cover new patients, insurance, pricing, appointments, the physician and how to get here. For anything not answered, call ${CALL}. In an emergency, call 911.`;
+export const FAQ_DIRECT_ANSWER = `These are common questions about Apollo Physicians, a family medicine practice at ${ADDRESS}. They cover new patients, insurance, appointments, the physician and how to get here. For anything not answered, call ${CALL}. In an emergency, call 911.`;
 
 export const FAQ_HUB: PageContent = {
   h1: 'Family Doctor Questions in Sacramento',
@@ -1164,19 +925,15 @@ export const FAQ_HUB: PageContent = {
     },
     {
       question: 'How do I find out if Apollo Physicians accepts my insurance?',
-      answer: `Check the Apollo Physicians insurance page for the plans the practice accepts, then call ${CALL} with your plan name. Plans and networks can change, so the office confirms your coverage before your visit. If your plan is not listed, ask about a self-pay visit, which starts at ${INITIAL_VISIT_FROM}.`,
+      answer: `Check the Apollo Physicians insurance page for the plans the practice accepts, then call ${CALL} with your plan name. Plans and networks can change, so the office confirms your coverage before your visit. If your plan is not listed, ask about a self-pay visit.`,
     },
     {
       question: 'Which neighborhoods and ZIP codes do patients come from?',
       answer: `Apollo Physicians serves Sacramento ZIP codes 95823 and 95828 and Elk Grove ZIP codes 95624, 95757 and 95758, including South Sacramento, Valley Hi, Laguna, Florin, Meadowview and Parkway. Patients from other areas can call ${CALL} to ask whether they can book at the office.`,
     },
     {
-      question: 'How can I check Dr. Panesar\'s license and board certification?',
-      answer: `${DOC}, holds California medical license ${CREDENTIALS.licenseNumber} and is board certified in family medicine by the ${CREDENTIALS.boardBody}. You can check a license on the Medical Board of California license search and board certification on the ABMS Verify Certification page. Both are free public tools.`,
-    },
-    {
-      question: 'How can I confirm a civil surgeon is designated by USCIS?',
-      answer: `Use the USCIS Find a Civil Surgeon tool on uscis.gov, which lists designated civil surgeons by location. ${DOC}, is a USCIS-designated civil surgeon at Apollo Physicians. Check the current Form I-693 instructions on uscis.gov, and call ${CALL} to book an immigration medical exam.`,
+      question: 'How can I check Dr. Panesar\'s board certification?',
+      answer: `${DOC}, is board certified in family medicine by the ${CREDENTIALS.boardBody}. You can check any physician's board certification on the ABMS Verify Certification page, a free public tool from the American Board of Medical Specialties, before you book an appointment.`,
     },
     {
       question: 'What is the difference between a family physician and a primary care physician?',
@@ -1194,7 +951,7 @@ export const FAQ_HUB: PageContent = {
       answer: `Family medicine covers people of all ages, internal medicine focuses on adults, and pediatrics focuses on infants, children and teens. All three are primary care specialties. Apollo Physicians offers family medicine with ${DOC}. Call ${CALL} to ask which ages the office sees and to book an appointment.`,
     },
   ],
-  sources: [VERIFY_LINKS.license, VERIFY_LINKS.certification, VERIFY_LINKS.civilSurgeon],
+  sources: [VERIFY_LINKS.certification],
 };
 
 /** The plans table for the insurance page lives in practice.ts (INSURANCE_GROUPS); this keeps one import point. */

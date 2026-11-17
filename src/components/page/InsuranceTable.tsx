@@ -1,9 +1,9 @@
-import { INITIAL_VISIT_PRICE, INSURANCE_GROUPS } from '@/data/practice';
+import { INSURANCE_GROUPS } from '@/data/practice';
 
 /**
  * The accepted plans as a real table: Type, then the names, with self-pay as the last row. Shared by the
  * insurance, new-patient and Elk Grove pages so the plan list reads word for word the same everywhere.
- * Every value comes from INSURANCE_GROUPS and INITIAL_VISIT_PRICE in src/data/practice.ts.
+ * Every value comes from INSURANCE_GROUPS in src/data/practice.ts. No price is shown.
  */
 export function InsuranceTable() {
   return (
@@ -41,7 +41,7 @@ export function InsuranceTable() {
             <th scope="row" className="px-3 py-3 align-top font-semibold text-navy-900">
               Self-pay
             </th>
-            <td className="px-3 py-3">{INITIAL_VISIT_PRICE}</td>
+            <td className="px-3 py-3">Patients without insurance are welcome. Call to ask about a visit.</td>
           </tr>
         </tbody>
       </table>

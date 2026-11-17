@@ -22,8 +22,8 @@ const SITE_HOST = 'www.apollophysicians.com';
  *   /provider/jaspreet-tiwana-md, /provider/ramandeep-dhaliwal-md, /provider/ethelyne-j-acebedo-fnp-bc (item 17),
  *   /pay-now (item 29), /service/telemedicine (item 27), and the services that are not confirmed:
  *   chronic-disease-management, immunizations, pediatrics, mental-health, immigration-exams, women's-health (item 26).
- * After Dr. Panesar's review, re-point /service/primary-care to /services and /service/immigration-exams to
- * /immigration-medical-exam-sacramento.
+ * After Dr. Panesar's review, re-point /service/primary-care to /services. Immigration exams are no longer offered on
+ * the site (owner instruction, Nov 2026), so /service/immigration-exams stays unredirected.
  */
 const LEGACY_REDIRECTS = [
   // Generic pages of the old site: the home page is the closest equivalent.

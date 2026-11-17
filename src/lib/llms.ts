@@ -2,15 +2,15 @@ import {
   APPOINTMENT_AVAILABILITY,
   CREDENTIALS,
   ELK_GROVE_NOTE,
-  INITIAL_VISIT_PRICE,
   LLMS_CONFIRMED,
+  OTHER_PROVIDERS,
   PROVIDER,
   SPECIALTY,
   TELEMEDICINE,
   VERIFY_LINKS,
   insuranceSentence,
 } from '@/data/practice';
-import { AREAS_SERVED, BRAND, ELK_GROVE_DRIVE, LOCATION, NPI, OFFICE, OFFICE_HOURS, PHONES, PHYSICIAN_PROFILES, SITE_URL, absoluteUrl } from '@/data/site';
+import { AREAS_SERVED, BRAND, ELK_GROVE_DRIVE, LOCATION, OFFICE, OFFICE_HOURS, PHONES, PHYSICIAN_PROFILES, SITE_URL, absoluteUrl } from '@/data/site';
 import { formatHoursRow } from '@/lib/content-utils';
 import { livePages, PAGE_META, isLive } from '@/data/pages';
 
@@ -18,28 +18,32 @@ import { livePages, PAGE_META, isLive } from '@/data/pages';
  * Builds /llms.txt from the same data files as the pages, so the name, address and phone can never
  * drift from the site. A convenience file for AI systems, not a ranking signal.
  *
- * Confirmed facts only. Insurance, price, appointment availability and the physician NPI appear when their flag in
+ * Confirmed facts only. Insurance and appointment availability appear when their flag in
  * LLMS_CONFIRMED is true (the owner confirmed them on 6 Nov 2026). Hours and languages are not included until the
  * owner confirms them. The list of pages contains live pages only, so it never points at a page that answers 404.
  */
+/** The services section of llms.txt. Health information: added only once /services is live (Dr. Panesar's review). */
+export const LLMS_SERVICE_LINES = [
+  'Annual physicals and preventive care, school and sports physicals, vaccinations, care for ongoing conditions such as diabetes and high blood pressure.',
+] as const;
+
 export function buildLlmsTxt(c: { [K in keyof typeof LLMS_CONFIRMED]: boolean } = LLMS_CONFIRMED): string {
   const summary = [
     `${BRAND.name} (${BRAND.legalName ?? BRAND.name}) is a family medicine practice at ${OFFICE.line}.`,
     `Phone ${PHONES.main.display}.`,
     'New patients are accepted.',
     c.appointmentAvailability ? APPOINTMENT_AVAILABILITY : '',
-    c.price ? INITIAL_VISIT_PRICE : '',
   ]
     .filter(Boolean)
     .join(' ');
 
   const physician = [
-    `- ${PROVIDER.name}. ${SPECIALTY}.${c.physicianNpi ? ` NPI ${NPI.panesar}.` : ''}`,
-    `- Board certified in family medicine (${CREDENTIALS.boardBody}). California medical license ${CREDENTIALS.licenseNumber}, active since ${CREDENTIALS.licenseSince}.`,
+    `- ${PROVIDER.name}. ${SPECIALTY}.`,
+    `- Board certified in family medicine (${CREDENTIALS.boardBody}).`,
     `- Medical degree: ${CREDENTIALS.medicalSchool}, ${CREDENTIALS.medicalSchoolYear}. Residency: ${CREDENTIALS.residency}, ${CREDENTIALS.residencyYears}.`,
-    `- ${CREDENTIALS.civilSurgeon}.`,
     `- Profile page: ${absoluteUrl(PAGE_META.panesar.path)}`,
-    `- Check the credentials: ${VERIFY_LINKS.license.href} ; ${VERIFY_LINKS.certification.href} ; ${VERIFY_LINKS.civilSurgeon.href}`,
+    `- Check the board certification: ${VERIFY_LINKS.certification.href}`,
+    `- ${OTHER_PROVIDERS}`,
     `- Profiles on other sites: ${PHYSICIAN_PROFILES.join(' ; ')}`,
   ].join('\n');
 
@@ -50,9 +54,7 @@ export function buildLlmsTxt(c: { [K in keyof typeof LLMS_CONFIRMED]: boolean } 
   ];
 
   if (isLive(PAGE_META.services)) {
-    sections.push(
-      '## Services\n\n- Annual physicals and preventive care, school and sports physicals, vaccinations, care for ongoing conditions such as diabetes and high blood pressure.\n- USCIS immigration medical exams (Form I-693) with a designated civil surgeon.',
-    );
+    sections.push(`## Services\n\n${LLMS_SERVICE_LINES.map((line) => `- ${line}`).join('\n')}`);
   }
   if (OFFICE_HOURS) sections.push(`## Hours\n\n- ${OFFICE_HOURS.map(formatHoursRow).join('; ')}. Closed Sunday. Pacific time.`);
   if (c.appointmentAvailability) sections.push(`## Appointments\n\n- ${APPOINTMENT_AVAILABILITY}\n- ${TELEMEDICINE}\n- New patients are accepted. Call ${PHONES.main.display} to book.`);
@@ -61,7 +63,6 @@ export function buildLlmsTxt(c: { [K in keyof typeof LLMS_CONFIRMED]: boolean } 
       `## Insurance\n\nAccepted: ${insuranceSentence()}. Medi-Cal: most plans. Sutter Health, Hill Physicians and Nivano Physicians are medical groups. Call ${PHONES.main.display} to verify your exact plan, because networks change.\n\nApollo Physicians is a private family medicine practice, not a community health center or free clinic.`,
     );
   }
-  if (c.price) sections.push(`## Pricing\n\n- ${INITIAL_VISIT_PRICE}`);
 
   const pages = livePages().map((page) => `- ${absoluteUrl(page.path)}`).join('\n');
   sections.push(

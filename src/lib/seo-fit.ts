@@ -1,17 +1,13 @@
 /**
  * Length rules for search snippets. Titles render in search results at roughly
- * 50-60 characters, and descriptions are cut off after roughly 160, so every
- * indexable page is held to these ranges.
+ * 50-60 characters, and descriptions are capped at 155 so the whole description shows on mobile results.
+ * Every page is held to these ranges, including the health pages still waiting for Dr. Panesar's review,
+ * so publishing them never needs a copy change.
  */
 export const TITLE_MIN = 50;
 export const TITLE_MAX = 60;
 export const DESCRIPTION_MIN = 150;
-export const DESCRIPTION_MAX = 160;
-/**
- * Stricter cap for pages that are live (HTTP 200), so the whole description shows on mobile results.
- * Held health pages keep DESCRIPTION_MAX until Dr. Panesar's review; trim them to this cap when they publish.
- */
-export const DESCRIPTION_MAX_LIVE = 155;
+export const DESCRIPTION_MAX = 155;
 
 /**
  * Returns the first candidate whose length falls in the title range. Throws when

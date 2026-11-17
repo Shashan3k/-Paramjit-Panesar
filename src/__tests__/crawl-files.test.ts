@@ -3,8 +3,8 @@ import robots, { buildRobotsRules } from '@/app/robots';
 import sitemap from '@/app/sitemap';
 import { AI_CRAWLER_POLICY, AI_SEARCH_AND_USER_AGENTS, AI_TRAINING_AGENTS } from '@/data/crawlers';
 import { CLINICAL_REVIEW, livePages, PAGE_META } from '@/data/pages';
-import { INITIAL_VISIT_PRICE, INSURANCE_ACCEPTED } from '@/data/practice';
-import { NPI, OFFICE, PHONES, absoluteUrl } from '@/data/site';
+import { INSURANCE_ACCEPTED } from '@/data/practice';
+import { OFFICE, PHONES, absoluteUrl } from '@/data/site';
 import { buildLlmsTxt } from '@/lib/llms';
 import { buildLlmsFullTxt } from '@/lib/llms-full';
 
@@ -119,8 +119,8 @@ describe('sitemap.xml', () => {
 });
 
 describe('llms.txt', () => {
-  const none = { insurance: false, price: false, appointmentAvailability: false, physicianNpi: false };
-  const all = { insurance: true, price: true, appointmentAvailability: true, physicianNpi: true };
+  const none = { insurance: false, appointmentAvailability: false };
+  const all = { insurance: true, appointmentAvailability: true };
 
   it('carries the confirmed facts', () => {
     const text = buildLlmsTxt();
@@ -129,8 +129,7 @@ describe('llms.txt', () => {
     expect(text).toContain('Apollo Physicians Medical Group');
     expect(text).toContain('Dr. Paramjit Panesar, MD');
     expect(text).toContain('American Board of Family Medicine');
-    expect(text).toContain(NPI.panesar);
-    expect(text).toContain(INITIAL_VISIT_PRICE);
+    expect(text).not.toMatch(/NPI|licen[sc]e|USCIS|civil surgeon|immigration|\$\d/i);
     for (const plan of INSURANCE_ACCEPTED) expect(text).toContain(plan);
   });
 
@@ -147,9 +146,7 @@ describe('llms.txt', () => {
 
   it('lets each owner-confirmed fact be switched off', () => {
     const text = buildLlmsTxt(none);
-    expect(text).not.toContain(NPI.panesar);
     expect(text).not.toContain('## Insurance');
-    expect(text).not.toContain('## Pricing');
     expect(text).not.toContain('Same-day and next-day appointments.');
   });
 

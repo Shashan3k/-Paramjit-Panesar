@@ -6,27 +6,16 @@ import { HoursList } from '@/components/page/HoursList';
 import { ButtonLink } from '@/components/ui/Button';
 import { MapEmbed } from '@/components/ui/MapEmbed';
 import { Section } from '@/components/ui/Section';
-import { livePages, PAGE_META, type PageKey } from '@/data/pages';
-import { CREDENTIALS, HOME_FAQS, INITIAL_VISIT_PRICE, INSURANCE_ACCEPTED, PROVIDER, SPECIALTY } from '@/data/practice';
+import { HOME_HELP_CARDS } from '@/data/navigation';
+import { livePages, PAGE_META } from '@/data/pages';
+import { CREDENTIALS, HOME_FAQS, INSURANCE_ACCEPTED, OTHER_PROVIDERS, PROVIDER, SPECIALTY } from '@/data/practice';
 import { AREAS_SERVED, LOCATION, OFFICE, PHONES } from '@/data/site';
 import { mapsDirectionsUrl, mapsPlaceUrl, telHref } from '@/lib/utils';
-
-/** Cards that point visitors to the right next page. A card appears only when its page is live. */
-const HELP_CARDS: readonly { key: PageKey; title: string; text: string }[] = [
-  { key: 'newPatients', title: 'New patients', text: 'Apollo Physicians is accepting new patients. See how to book and what to bring.' },
-  { key: 'sameDay', title: 'Same-day appointments', text: 'Same-day and next-day visits. See how to ask for one, and when to call 911 instead.' },
-  { key: 'annualPhysical', title: 'Annual physical', text: 'A yearly preventive visit with a physical exam. See what to expect and bring.' },
-  { key: 'services', title: 'Services', text: 'Family medicine services, from physicals and vaccinations to ongoing care.' },
-  { key: 'immigration', title: 'Immigration medical exam', text: 'USCIS immigration medical exams with a designated civil surgeon (Form I-693).' },
-  { key: 'insurance', title: 'Insurance accepted', text: 'Medicare and several major health plans, plus self-pay visits from $65.' },
-  { key: 'elkGrove', title: 'Elk Grove patients', text: 'About 12 minutes from Elk Grove by car, with drive times and routes.' },
-  { key: 'contact', title: 'Contact and directions', text: 'Address, phone, a map and directions to the South Sacramento office.' },
-];
 
 /** Everything below the hero and Quick Facts on the home page. Each block uses only facts from the data files. */
 export function HomeSections() {
   const live = new Set(livePages().map((page) => page.path));
-  const cards = HELP_CARDS.filter((card) => live.has(PAGE_META[card.key].path));
+  const cards = HOME_HELP_CARDS.filter((card) => live.has(PAGE_META[card.key].path));
   const neighborhoods = AREAS_SERVED.neighborhoods;
 
   return (
@@ -36,7 +25,7 @@ export function HomeSections() {
           <div className="space-y-4">
             <p className="text-lg leading-relaxed text-navy-800">
               Looking for a family doctor near you in South Sacramento? Family medicine is a primary care specialty, and {PROVIDER.name}, practices it here at
-              a single office on {OFFICE.streetName}. Same-day and next-day appointments are offered, new patients are welcome, and {INITIAL_VISIT_PRICE.toLowerCase()}
+              a single office on {OFFICE.streetName}. Same-day and next-day appointments are offered, and new patients are welcome.
             </p>
             <p className="text-lg leading-relaxed text-navy-800">
               A family physician cares for people of all ages and is often the first doctor you call. If you are searching for a primary care physician in
@@ -72,9 +61,9 @@ export function HomeSections() {
             </h3>
             <p className="text-navy-800">
               {SPECIALTY} at Apollo Physicians. Board certified by the {CREDENTIALS.boardBody}. Medical degree from {CREDENTIALS.medicalSchool}, {CREDENTIALS.medicalSchoolYear};
-              residency at UAMS, {CREDENTIALS.residencyYears}. A USCIS-designated civil surgeon for immigration medical exams.
+              residency at UAMS, {CREDENTIALS.residencyYears}.
             </p>
-            <p className="text-sm text-navy-700">California medical license {CREDENTIALS.licenseNumber}. You can check it on the Medical Board of California license search.</p>
+            <p className="text-sm text-navy-700">{OTHER_PROVIDERS}</p>
           </div>
         </article>
       </Section>

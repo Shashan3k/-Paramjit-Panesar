@@ -6,8 +6,6 @@ import {
   CONTACT_DIRECT_ANSWER,
   FAQ_DIRECT_ANSWER,
   FAQ_HUB,
-  IMMIGRATION,
-  IMMIGRATION_DIRECT_ANSWER,
   INSURANCE,
   INSURANCE_DIRECT_ANSWER,
   NEW_PATIENTS,
@@ -18,8 +16,6 @@ import {
   MEDI_CAL_DIRECT_ANSWER,
   NIVANO,
   NIVANO_DIRECT_ANSWER,
-  SAME_DAY,
-  SAME_DAY_DIRECT_ANSWER,
   SELF_PAY,
   SELF_PAY_DIRECT_ANSWER,
   VERIFY_PLAN_LINE,
@@ -32,7 +28,6 @@ import {
   HOME_DIRECT_ANSWER,
   HOME_FAQS,
   HOME_LEAD,
-  INITIAL_VISIT_PRICE,
   PANESAR_DIRECT_ANSWER,
   PANESAR_FAQS,
   PANESAR_LEAD,
@@ -54,13 +49,11 @@ const ALL_SETS = [
   ['insurance', INSURANCE.faqs],
   ['contact', CONTACT.faqs],
   ['annual-physical', ANNUAL_PHYSICAL.faqs],
-  ['same-day', SAME_DAY.faqs],
-  ['medicare', MEDICARE.faqs],
+    ['medicare', MEDICARE.faqs],
   ['medi-cal', MEDI_CAL.faqs],
   ['nivano', NIVANO.faqs],
   ['self-pay', SELF_PAY.faqs],
-  ['immigration', IMMIGRATION.faqs],
-  ['services', SERVICES.faqs],
+    ['services', SERVICES.faqs],
   ['faq-hub', FAQ_HUB.faqs],
 ] as const;
 
@@ -72,12 +65,10 @@ const DIRECT_ANSWERS = [
   ['insurance', INSURANCE_DIRECT_ANSWER],
   ['contact', CONTACT_DIRECT_ANSWER],
   ['annual-physical', ANNUAL_DIRECT_ANSWER],
-  ['same-day', SAME_DAY_DIRECT_ANSWER],
   ['medicare', MEDICARE_DIRECT_ANSWER],
   ['medi-cal', MEDI_CAL_DIRECT_ANSWER],
   ['nivano', NIVANO_DIRECT_ANSWER],
   ['self-pay', SELF_PAY_DIRECT_ANSWER],
-  ['immigration', IMMIGRATION_DIRECT_ANSWER],
   ['services', SERVICES_DIRECT_ANSWER],
   ['faq-hub', FAQ_DIRECT_ANSWER],
 ] as const;
@@ -143,9 +134,7 @@ describe('every key page has 8 or more questions', () => {
     ['new-patients', NEW_PATIENTS.faqs],
     ['insurance', INSURANCE.faqs],
     ['annual-physical', ANNUAL_PHYSICAL.faqs],
-    ['same-day', SAME_DAY.faqs],
-    ['immigration', IMMIGRATION.faqs],
-  ] as const)('%s', (_name, faqs) => {
+          ] as const)('%s', (_name, faqs) => {
     expect(faqs.length).toBeGreaterThanOrEqual(8);
   });
 });
@@ -185,16 +174,19 @@ describe('only confirmed facts are answered', () => {
     expect(text).not.toMatch(/5:00 p\.m\.|Saturday closed/i);
   });
 
-  it('answers the owner-confirmed questions: new patients, board certification, insurance, price, same-day', () => {
+  it('answers the owner-confirmed questions: new patients, board certification, insurance, same-day', () => {
     const home = HOME_FAQS.map((f) => f.question).join('\n');
-    for (const pattern of [/located/i, /book/i, /insurance/i, /initial visit/i, /same-day or next-day/i, /Elk Grove/i, /Who is Dr\./i, /accepting new patients/i]) {
+    for (const pattern of [/located/i, /book/i, /insurance/i, /same-day or next-day/i, /Elk Grove/i, /Who is Dr\./i, /accepting new patients/i]) {
       expect(home).toMatch(pattern);
     }
   });
 
-  it('keeps the price and phone identical to the shared data', () => {
-    expect(INITIAL_VISIT_PRICE).toBe('Initial self-pay visits start at $65.');
+  it('keeps the phone identical to the shared data and publishes no prices', () => {
     expect(text).toContain(PHONES.main.display);
-    for (const price of text.match(/\$\d+/g) ?? []) expect(price).toBe('$65');
+    expect(text).not.toMatch(/\$\d/);
+  });
+
+  it('never publishes the NPI, the license number, immigration exams or the civil surgeon designation (owner instruction)', () => {
+    expect(text).not.toMatch(/\bNPI\b|licen[sc]e|USCIS|civil surgeon|immigration|I-693|1982892659|1124405584|A 114684/i);
   });
 });

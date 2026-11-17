@@ -117,6 +117,6 @@ Google Business Profile, WebMD and Vitals still show Mon-Fri 8:30-5:00 with Satu
 | 24 (part) | What the $65 covers and excludes | Not stated | Insurance page, FAQs |
 | 33 | Real Google review count and rating | 4.4 stars from 101 reviews was read on 5 Nov; the owner asked for the live numbers | Not displayed anywhere, and never marked up in schema |
 | 26 (rest) | Each service the practice offers: annual physicals, school and sports physicals, vaccinations, diabetes and high blood pressure care. Ages seen. | Needs Dr. Panesar's review | The health pages, held until `CLINICAL_REVIEW.reviewedOn` is set |
-| 37 | Dr. Panesar's clinical review of the health content | Not done | Set `CLINICAL_REVIEW.reviewedOn` in `src/data/pages.ts`, using `docs/clinical-review/review-packet.md` |
+| 37 | Dr. Panesar's clinical review of the health content | Not done | Set `CLINICAL_REVIEW.reviewedOn` in `src/data/pages.ts`, using `docs/dr-panesar-review-packet.md` |
 | 40 | Relationship to CHCA Health or another "community health clinic" | Unanswered | Resolve before changing any directory listing |
 | 41 | Google Business Profile website field still shows drparamjitpanesar.com | Needs the owner | Profile edit |

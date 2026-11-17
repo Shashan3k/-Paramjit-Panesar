@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import type { ReactNode } from 'react';
 import { PAGE_META, isLive } from '@/data/pages';
-import { APPOINTMENT_AVAILABILITY, INITIAL_VISIT_PRICE, INSURANCE_GROUPS, PROVIDER, TELEMEDICINE } from '@/data/practice';
+import { APPOINTMENT_AVAILABILITY, INSURANCE_GROUPS, PROVIDER, TELEMEDICINE } from '@/data/practice';
 import { OFFICE, PHONES } from '@/data/site';
 import { hoursRows } from '@/lib/content-utils';
 import { telHref } from '@/lib/utils';
@@ -45,7 +45,7 @@ export function AppointmentOptionsTable({ className }: { className?: string }) {
         </>
       ),
     },
-    { option: 'Without insurance', details: INITIAL_VISIT_PRICE },
+    { option: 'Without insurance', details: 'Self-pay patients are welcome. Call to ask about a visit.' },
     ...(hours ? [{ option: 'Office hours', details: `${hours} (Pacific time)` }] : []),
     {
       option: 'How to book',

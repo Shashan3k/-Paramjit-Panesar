@@ -8,8 +8,6 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 
 const CLINICAL_PATHS = [
   '/annual-physical-sacramento',
-  '/same-day-appointments-sacramento',
-  '/immigration-medical-exam-sacramento',
   '/services',
   '/medicare-doctor-sacramento',
   '/doctor-without-insurance-sacramento',
@@ -83,9 +81,7 @@ describe('before Dr. Panesar has reviewed the health content (the state we ship 
   it('answers 404 for a health page', async () => {
     const { pages } = await load(null);
     expect(pages.isLive(pages.PAGE_META.annualPhysical)).toBe(false);
-    expect(pages.isLive(pages.PAGE_META.immigration)).toBe(false);
     expect(pages.isLive(pages.PAGE_META.services)).toBe(false);
-    expect(pages.isLive(pages.PAGE_META.sameDay)).toBe(false);
     expect(pages.isLive(pages.PAGE_META.medicare)).toBe(false);
     expect(pages.isLive(pages.PAGE_META.selfPay)).toBe(false);
     expect(pages.isLive(pages.PAGE_META.contact)).toBe(true);
@@ -103,7 +99,6 @@ describe('after the owner sets the review date', () => {
     for (const path of CLINICAL_PATHS) expect(urls.some((u) => u.endsWith(path)), `sitemap ${path}`).toBe(true);
     expect(nav).toContain('/annual-physical-sacramento');
     expect(nav).toContain('/services');
-    expect(text).toContain('/immigration-medical-exam-sacramento');
     expect(text).toContain('## Services');
     expect(pages.reviewedOnLabel()).toBe('December 1, 2026');
   });
@@ -122,7 +117,7 @@ describe('after the owner sets the review date', () => {
     expect(page.reviewedBy).toEqual({ '@id': schema.PHYSICIAN_ID });
     const services = JSON.stringify((schema.clinicNode() as Record<string, unknown>).availableService);
     expect(services).toContain('Annual physical exam');
-    expect(services).toContain('Form I-693');
+    expect(services).not.toContain('I-693');
   });
 
   it('does not add a review date to pages that are not health pages', async () => {

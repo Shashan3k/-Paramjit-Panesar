@@ -13,7 +13,7 @@ import { PageHero } from '@/components/ui/PageHero';
 import { Section } from '@/components/ui/Section';
 import { BREADCRUMBS } from '@/data/navigation';
 import { PAGE_META } from '@/data/pages';
-import { ELK_GROVE_DIRECT_ANSWER, ELK_GROVE_FAQS, ELK_GROVE_NOTE, INITIAL_VISIT_PRICE } from '@/data/practice';
+import { ELK_GROVE_DIRECT_ANSWER, ELK_GROVE_FAQS, ELK_GROVE_NOTE } from '@/data/practice';
 import { AREAS_SERVED, ELK_GROVE_DRIVE, LOCATION, OFFICE, PHONES } from '@/data/site';
 import { buildMetadata } from '@/lib/seo';
 import { pageGraph } from '@/lib/structured-data';
@@ -136,7 +136,7 @@ export default function ElkGrovePage() {
 
       <Section id="insurance" headingId="elk-insurance-heading" title="Insurance for Elk Grove patients" tone="muted">
         <p className="mb-6 max-w-3xl text-navy-800">
-          Elk Grove patients use the same plans as every patient, listed below. {INITIAL_VISIT_PRICE} Call {PHONES.main.display} to confirm your plan before you travel, or see the{' '}
+          Elk Grove patients use the same plans as every patient, listed below. Call {PHONES.main.display} to confirm your plan before you travel, or see the{' '}
           <Link href="/insurance-accepted" className="font-semibold text-teal-800 hover:underline">
             insurance page
           </Link>

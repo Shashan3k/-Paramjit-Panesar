@@ -1,10 +1,10 @@
 import { readdirSync, readFileSync, statSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
-import { ELK_GROVE_FAQS, HOME_FAQS, INSURANCE_ACCEPTED, INSURANCE_GROUPS, INITIAL_VISIT_PRICE } from '@/data/practice';
-import { PAGE_META, isLive } from '@/data/pages';
-import { BRAND, GEO, NPI, OFFICE, OFFICE_HOURS, PHONES, PHYSICIAN_PROFILES, SITE_URL } from '@/data/site';
-import { DESCRIPTION_MAX, DESCRIPTION_MAX_LIVE, DESCRIPTION_MIN, TITLE_MAX, TITLE_MIN } from '@/lib/seo-fit';
+import { ELK_GROVE_FAQS, HOME_FAQS, INSURANCE_ACCEPTED, INSURANCE_GROUPS } from '@/data/practice';
+import { PAGE_META } from '@/data/pages';
+import { BRAND, GEO, OFFICE, OFFICE_HOURS, PHONES, PHYSICIAN_PROFILES, SITE_URL } from '@/data/site';
+import { DESCRIPTION_MAX, DESCRIPTION_MIN, TITLE_MAX, TITLE_MIN } from '@/lib/seo-fit';
 import { CLINIC_ID, PHYSICIAN_ID, WEBSITE_ID, clinicNode, faqNode, graph, physicianNode, webPageNode, websiteNode } from '@/lib/structured-data';
 
 const PAGES = Object.values(PAGE_META);
@@ -14,7 +14,7 @@ describe('page titles and descriptions', () => {
     expect(page.title.length).toBeGreaterThanOrEqual(TITLE_MIN);
     expect(page.title.length).toBeLessThanOrEqual(TITLE_MAX);
     expect(page.description.length).toBeGreaterThanOrEqual(DESCRIPTION_MIN);
-    expect(page.description.length).toBeLessThanOrEqual(isLive(page) ? DESCRIPTION_MAX_LIVE : DESCRIPTION_MAX);
+    expect(page.description.length).toBeLessThanOrEqual(DESCRIPTION_MAX);
   });
 
   it('only the home page targets "Family Physician in Sacramento" in its title', () => {
@@ -56,11 +56,6 @@ describe('verified facts', () => {
     expect(BRAND.legalName).toBe('Apollo Physicians Medical Group');
     expect(OFFICE.line).toBe('8191 Timberlake Way, Suite 200, Sacramento, CA 95823');
     expect(PHONES.main.display).toBe('916-236-5800');
-    expect(NPI.organization).toBe('1124405584');
-  });
-
-  it('states the initial self-pay price as supplied', () => {
-    expect(INITIAL_VISIT_PRICE).toBe('Initial self-pay visits start at $65.');
   });
 
   it('publishes the hours the practice confirmed on 11 Nov 2026: Mon-Fri 8:30-5:30, Sat 9:00-2:00', () => {
@@ -122,7 +117,7 @@ describe('structured data graph', () => {
     expect(clinic.medicalSpecialty).toBe('https://schema.org/PrimaryCare');
     expect(clinic.geo).toEqual({ '@type': 'GeoCoordinates', latitude: GEO.latitude, longitude: GEO.longitude });
     expect(clinic.isAcceptingNewPatients).toBe(true);
-    expect(clinic.priceRange).toBe('From $65');
+    expect(clinic).not.toHaveProperty('priceRange');
     expect(clinic.paymentAccepted).toBe('Health insurance, self-pay');
     expect(JSON.stringify(clinic.areaServed)).toContain('Elk Grove');
     // Hours confirmed by the practice on 11 Nov 2026 (item 6).
@@ -151,7 +146,7 @@ describe('structured data graph', () => {
     const physician = physicianNode();
     expect(physician.sameAs).toEqual([...PHYSICIAN_PROFILES]);
     expect(PHYSICIAN_PROFILES.length).toBeGreaterThan(0);
-    expect(physician.identifier).toEqual({ '@type': 'PropertyValue', propertyID: 'NPI', value: NPI.panesar });
+    expect(physician).not.toHaveProperty('identifier');
     expect(physician.worksFor).toEqual({ '@id': CLINIC_ID });
   });
 

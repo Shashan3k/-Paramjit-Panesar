@@ -1,7 +1,7 @@
 import type { ContentBlock } from '@/data/content';
 import { CLINICAL_REVIEW, livePages } from '@/data/pages';
-import { INITIAL_VISIT_PRICE, PROVIDER, TELEMEDICINE, insuranceSentence } from '@/data/practice';
-import { BRAND, NPI, OFFICE, OFFICE_HOURS, PHONES, type OfficeHoursRow } from '@/data/site';
+import { PROVIDER, TELEMEDICINE, insuranceSentence } from '@/data/practice';
+import { BRAND, OFFICE, OFFICE_HOURS, PHONES, type OfficeHoursRow } from '@/data/site';
 import type { FaqItem } from '@/types';
 
 /** True once Dr. Panesar has reviewed the health content, so clinical items may be shown. */
@@ -88,9 +88,8 @@ export function quickFacts(): QuickFact[] {
     facts.push({ label: 'Hours', value: `${[...OFFICE_HOURS.map(formatHoursRow), ...closed].join('; ')} (Pacific time)` });
   }
   facts.push(
-    { label: 'Provider', value: `${PROVIDER.name} (NPI ${NPI.panesar})`, href: '/dr-paramjit-panesar-md' },
+    { label: 'Provider', value: PROVIDER.name, href: '/dr-paramjit-panesar-md' },
     { label: 'Insurance', value: insuranceSentence(), href: '/insurance-accepted' },
-    { label: 'Price', value: INITIAL_VISIT_PRICE },
     { label: 'Appointments', value: 'Same-day and next-day appointments' },
     { label: 'Telemedicine', value: TELEMEDICINE },
     { label: 'New patients', value: 'Accepted', href: '/new-patients' },
