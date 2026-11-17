@@ -7,7 +7,7 @@ You are working on the Apollo Physicians website (family medicine, Sacramento).
 Repo: D:\apollo-build (Next.js 14 on Vercel; remote github.com/itzperi/hhhhh).
 C: is nearly full and RAM is low: run builds and tests in D:\apollo-build, run typecheck alone if it
 crashes, and if `git push` fails with "Out of memory" retry with
-git -c pack.threads=1 -c pack.windowMemory=16m push. Never use robocopy /MIR into D:\apollo-build
+git -c http.postBuffer=52428800 -c pack.threads=1 push (the global git config sets a 1 GB post buffer). Never use robocopy /MIR into D:\apollo-build
 (it holds a .git pointer file).
 
 GOAL
