@@ -1483,6 +1483,10 @@ export const CHOOSE_DOCTOR: PageContent = {
       answer: `Check five things before you book: board certification, a current California license, whether the office takes your insurance, how soon you can be seen, and the drive time. Apollo Physicians in South Sacramento lists each of these for ${DOC}, with links to verify them. Call ${CALL} with questions.`,
     },
     {
+      question: 'What makes a good family doctor?',
+      answer: `A good family doctor is board certified, holds a current California license, explains your care plan clearly, takes your insurance, and can see you soon. You can check training and license online; fit and communication show up at a first visit. Apollo Physicians in South Sacramento lists the checkable facts for ${DOC}. Call ${CALL}.`,
+    },
+    {
       question: 'How can I check if a Sacramento doctor is board certified?',
       answer: `Search the doctor's name on ABMS Verify Certification, and check the California license on the Medical Board of California license search. For Apollo Physicians, ${DOC}, is board certified in family medicine and holds California license ${CREDENTIALS.licenseNumber}. Both searches are free and online.`,
     },
