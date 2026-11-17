@@ -1,26 +1,33 @@
 import Link from 'next/link';
 import { CheckCircle2, MapPin, Phone, Star, Stethoscope } from 'lucide-react';
-import { AppointmentOptionsTable } from '@/components/page/AppointmentOptionsTable';
 import { FaqList } from '@/components/page/FaqList';
-import { HoursList } from '@/components/page/HoursList';
 import { ButtonLink } from '@/components/ui/Button';
 import { MapEmbed } from '@/components/ui/MapEmbed';
 import { Section } from '@/components/ui/Section';
-import { HOME_HELP_CARDS } from '@/data/navigation';
-import { livePages, PAGE_META } from '@/data/pages';
+import { livePages, PAGE_META, type PageKey } from '@/data/pages';
 import { CREDENTIALS, HOME_FAQS, INSURANCE_ACCEPTED, OTHER_PROVIDERS, PROVIDER, SPECIALTY } from '@/data/practice';
 import { AREAS_SERVED, LOCATION, OFFICE, PHONES } from '@/data/site';
 import { mapsDirectionsUrl, mapsPlaceUrl, telHref } from '@/lib/utils';
 
+/** Cards that point visitors to the right next page. A card appears only when its page is live. */
+const HELP_CARDS: readonly { key: PageKey; title: string; text: string }[] = [
+  { key: 'newPatients', title: 'New patients', text: 'Apollo Physicians is accepting new patients. See how to book and what to bring.' },
+  { key: 'annualPhysical', title: 'Annual physical', text: 'A yearly preventive visit with a physical exam. See what to expect and bring.' },
+  { key: 'services', title: 'Services', text: 'Family medicine services, from physicals and vaccinations to ongoing care.' },
+  { key: 'insurance', title: 'Insurance accepted', text: 'Medicare and several major health plans, and self-pay patients are welcome.' },
+  { key: 'elkGrove', title: 'Elk Grove patients', text: 'About 12 minutes from Elk Grove by car, with drive times and routes.' },
+  { key: 'contact', title: 'Contact and directions', text: 'Address, phone, a map and directions to the South Sacramento office.' },
+];
+
 /** Everything below the hero and Quick Facts on the home page. Each block uses only facts from the data files. */
 export function HomeSections() {
   const live = new Set(livePages().map((page) => page.path));
-  const cards = HOME_HELP_CARDS.filter((card) => live.has(PAGE_META[card.key].path));
+  const cards = HELP_CARDS.filter((card) => live.has(PAGE_META[card.key].path));
   const neighborhoods = AREAS_SERVED.neighborhoods;
 
   return (
     <>
-      <Section id="how-we-help" headingId="home-help-heading" title="Primary care doctor in Sacramento, CA" eyebrow="Family medicine in Sacramento">
+      <Section id="how-we-help" headingId="home-help-heading" title="How we can help" eyebrow="Family medicine in Sacramento">
         <div className="grid gap-6 lg:grid-cols-2">
           <div className="space-y-4">
             <p className="text-lg leading-relaxed text-navy-800">
@@ -45,7 +52,6 @@ export function HomeSections() {
             ))}
           </ul>
         </div>
-        <AppointmentOptionsTable className="mt-10" />
       </Section>
 
       <Section headingId="home-provider-heading" title="Our physician" tone="muted">
@@ -112,7 +118,6 @@ export function HomeSections() {
             <p className="text-navy-800">
               The office is next to {LOCATION.highway} and about {LOCATION.hospitalDistance} from {LOCATION.nearHospital}. It is the only Apollo Physicians location.
             </p>
-            <HoursList />
             <div className="flex flex-wrap gap-3">
               <ButtonLink href={mapsDirectionsUrl(OFFICE.line)} variant="outline" external>
                 <MapPin className="h-5 w-5" aria-hidden="true" />

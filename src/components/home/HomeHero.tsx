@@ -9,8 +9,7 @@ import { mapsDirectionsUrl, telHref } from '@/lib/utils';
 /**
  * Home hero. The H1 is the target phrase for the home page, and the 40 to 60 word direct answer sits right
  * under it (marked for voice assistants). The primary action calls the office, and the secondary action gets
- * directions. The photo is a generic clinical interior (public/images/clinic-interior.jpg), decorative, so its alt
- * text is empty. No photo of Apollo's own office or team has been supplied yet.
+ * directions. No photo is shown, because none has been supplied.
  */
 export function HomeHero() {
   return (

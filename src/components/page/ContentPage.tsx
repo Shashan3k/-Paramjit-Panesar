@@ -13,7 +13,7 @@ import { BREADCRUMBS } from '@/data/navigation';
 import { CLINICAL_REVIEW, livePages, PAGE_META, reviewedOnLabel, type PageKey } from '@/data/pages';
 import { PROVIDER } from '@/data/practice';
 import { OFFICE, PHONES } from '@/data/site';
-import { liveLinks, visibleBlocks, visibleFaqs } from '@/lib/content-utils';
+import { visibleBlocks, visibleFaqs } from '@/lib/content-utils';
 import { pageGraph } from '@/lib/structured-data';
 import { mapsDirectionsUrl, telHref } from '@/lib/utils';
 
@@ -26,11 +26,6 @@ interface ContentPageProps {
   before?: ReactNode;
   /** Extra content after the main sections and before the FAQ. */
   after?: ReactNode;
-  /**
-   * Extra content shown at the end of a content block, keyed by block id (for example the hours list in
-   * "find-the-office"). It appears only when that block is visible, and keeps the sections' alternating tones.
-   */
-  blockExtras?: Readonly<Record<string, ReactNode>>;
 }
 
 /** Pages that every inner page links to, in this order, when they are live. */
@@ -46,11 +41,11 @@ const NEXT_STEPS: readonly { key: PageKey; label: string }[] = [
  * FAQ, sources and medical review note (health pages), next steps. Health content is filtered until
  * Dr. Panesar's review; the caller is responsible for returning 404 before reaching here (assertLive).
  */
-export function ContentPage({ pageKey, content, directAnswer, before, after, blockExtras }: ContentPageProps) {
+export function ContentPage({ pageKey, content, directAnswer, before, after }: ContentPageProps) {
   const meta = PAGE_META[pageKey];
   const clinical = 'clinical' in meta && meta.clinical;
   const faqs = visibleFaqs(content.faqs);
-  const reviewed = reviewedOnLabel();
+  const reviewed = reviewedOnLabel(meta);
   const livePaths = new Set(livePages().map((page) => page.path));
 
   return (
@@ -127,26 +122,27 @@ export function ContentPage({ pageKey, content, directAnswer, before, after, blo
                 </table>
               </div>
             ) : null}
-            {liveLinks(block.links).length ? (
+            {block.links ? (
               <ul className="flex flex-wrap gap-x-6">
-                {liveLinks(block.links).map((link) => (
-                  <li key={link.href}>
-                    {link.external ? (
-                      <a href={link.href} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-[44px] items-center font-semibold text-teal-800 hover:underline">
-                        {link.label}
-                        <span className="sr-only"> (opens in a new tab)</span>
-                      </a>
-                    ) : (
-                      <Link href={link.href} className="inline-flex min-h-[44px] items-center font-semibold text-teal-800 hover:underline">
-                        {link.label}
-                      </Link>
-                    )}
-                  </li>
-                ))}
+                {block.links
+                  .filter((link) => link.external || livePaths.has(link.href))
+                  .map((link) => (
+                    <li key={link.href}>
+                      {link.external ? (
+                        <a href={link.href} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-[44px] items-center font-semibold text-teal-800 hover:underline">
+                          {link.label}
+                          <span className="sr-only"> (opens in a new tab)</span>
+                        </a>
+                      ) : (
+                        <Link href={link.href} className="inline-flex min-h-[44px] items-center font-semibold text-teal-800 hover:underline">
+                          {link.label}
+                        </Link>
+                      )}
+                    </li>
+                  ))}
               </ul>
             ) : null}
           </div>
-          {blockExtras?.[block.id] ? <div className="mt-6 max-w-3xl">{blockExtras[block.id]}</div> : null}
         </Section>
       ))}
 

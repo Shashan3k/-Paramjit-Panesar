@@ -10,8 +10,8 @@ import {
   SITE_URL,
   absoluteUrl,
 } from '@/data/site';
-import { CREDENTIALS, PROVIDER } from '@/data/practice';
-import { CLINICAL_REVIEW, PAGE_META, isLive, type PageKey } from '@/data/pages';
+import { CREDENTIALS, PHYSICIAN_LANGUAGES, PROVIDER } from '@/data/practice';
+import { CLINICAL_REVIEW, PAGE_META, isLive, reviewDateFor, type PageKey } from '@/data/pages';
 import type { Crumb } from '@/data/navigation';
 import type { FaqItem } from '@/types';
 import { mapsPlaceUrl } from '@/lib/utils';
@@ -34,8 +34,7 @@ import { mapsPlaceUrl } from '@/lib/utils';
 type Node = Record<string, unknown>;
 
 export const CLINIC_ID = `${SITE_URL}/#clinic`;
-/** The physician entity is anchored on the profile page, so the @id and the page that describes it agree. */
-export const PHYSICIAN_ID = `${absoluteUrl(PAGE_META.panesar.path)}#physician`;
+export const PHYSICIAN_ID = `${SITE_URL}/#dr-paramjit-panesar`;
 export const WEBSITE_ID = `${SITE_URL}/#website`;
 
 /** Prefix for page-level ids: the home page keeps its trailing slash so fragments read cleanly. */
@@ -79,21 +78,17 @@ function areaServed(): Node[] {
     address: { '@type': 'PostalAddress', postalCode, addressCountry: 'US' },
   });
   return [
-    // Placed in California, so "Sacramento" and "Elk Grove" cannot be read as places elsewhere.
-    ...AREAS_SERVED.cities.map((name) => ({ '@type': 'City', name, containedInPlace: { '@type': 'State', name: 'California' } })),
+    ...AREAS_SERVED.cities.map((name) => ({ '@type': 'City', name })),
     ...AREAS_SERVED.neighborhoods.map(place),
     ...[...AREAS_SERVED.zipSacramento, ...AREAS_SERVED.zipElkGrove].map(zip),
   ];
 }
 
-/** Service names for the schema, by the page that describes each one (part of Dr. Panesar's review packet). */
-export const SCHEMA_SERVICES: readonly { key: PageKey; name: string }[] = [
-  { key: 'annualPhysical', name: 'Annual physical exam' },
-];
-
 /** Services appear in the schema only when their page is live (and so reviewed by Dr. Panesar). */
 function availableServices(): Node[] {
-  return SCHEMA_SERVICES.filter((service) => isLive(PAGE_META[service.key])).map((service) => ({ '@type': 'MedicalProcedure', name: service.name }));
+  const services: Node[] = [];
+  if (isLive(PAGE_META.annualPhysical)) services.push({ '@type': 'MedicalProcedure', name: 'Annual physical exam' });
+  return services;
 }
 
 function openingHours(): Node[] | null {
@@ -144,9 +139,6 @@ export function physicianNode(): Node {
     name: PROVIDER.fullName,
     honorificPrefix: PROVIDER.honorificPrefix,
     honorificSuffix: PROVIDER.honorificSuffix,
-    // The form patients search for and the site shows ("Dr. Paramjit Panesar, MD").
-    alternateName: PROVIDER.name,
-    jobTitle: 'Family Medicine Physician',
     url: absoluteUrl(PAGE_META.panesar.path),
     // Physician profiles on other sites, each checked to show this physician at this office.
     sameAs: PHYSICIAN_PROFILES,
@@ -154,6 +146,7 @@ export function physicianNode(): Node {
     medicalSpecialty: SPECIALTY_ENUM,
     address: postalAddress(),
     worksFor: { '@id': CLINIC_ID },
+    knowsLanguage: PHYSICIAN_LANGUAGES.map((lang) => ({ '@type': 'Language', name: lang.name, alternateName: lang.code })),
     hasCredential: [
       {
         '@type': 'EducationalOccupationalCredential',
@@ -163,12 +156,14 @@ export function physicianNode(): Node {
       },
     ],
     alumniOf: [
-      { '@type': 'CollegeOrUniversity', name: CREDENTIALS.medicalSchool },
+      {
+        '@type': 'CollegeOrUniversity',
+        name: CREDENTIALS.medicalSchool,
+        address: { '@type': 'PostalAddress', addressLocality: 'Ludhiana', addressRegion: 'Punjab', addressCountry: 'IN' },
+      },
       { '@type': 'CollegeOrUniversity', name: 'University of Arkansas for Medical Sciences' },
     ],
     knowsAbout: ['Family medicine', 'Preventive care'],
-    // OWNER: accepting new patients. Valid here because schema.org types Physician as a MedicalOrganization.
-    isAcceptingNewPatients: true,
   };
 }
 
@@ -185,14 +180,16 @@ interface WebPageInput {
   faq?: boolean;
   /** The entity the page is about. Defaults to the clinic. */
   about?: 'clinic' | 'physician';
-  /** Date of the last content change (YYYY-MM-DD), the same value as the sitemap lastmod. */
+  /** Date of the last content change (YYYY-MM-DD), from PAGE_META.lastModified. */
   dateModified?: string;
+  /** Review date for this page when it differs from CLINICAL_REVIEW (second review batch). */
+  lastReviewed?: string | null;
 }
 
 /** One WebPage (or ProfilePage, or MedicalWebPage) node per page, tying the site, entity, breadcrumb and FAQ together. */
-export function webPageNode({ path, name, description, type = 'WebPage', breadcrumb = false, faq = false, about = 'clinic', dateModified }: WebPageInput): Node {
+export function webPageNode({ path, name, description, type = 'WebPage', breadcrumb = false, faq = false, about = 'clinic', dateModified, lastReviewed = CLINICAL_REVIEW.reviewedOn }: WebPageInput): Node {
   const subject = { '@id': about === 'physician' ? PHYSICIAN_ID : CLINIC_ID };
-  const reviewed = type === 'MedicalWebPage' && CLINICAL_REVIEW.reviewedOn;
+  const reviewed = type === 'MedicalWebPage' && lastReviewed;
   return {
     '@type': type,
     '@id': webPageId(path),
@@ -200,14 +197,14 @@ export function webPageNode({ path, name, description, type = 'WebPage', breadcr
     name,
     description,
     inLanguage: 'en-US',
+    ...(dateModified ? { dateModified } : {}),
     isPartOf: { '@id': WEBSITE_ID },
     ...(type === 'ProfilePage' ? { mainEntity: subject } : { about: subject }),
     ...(breadcrumb ? { breadcrumb: { '@id': breadcrumbId(path) } } : {}),
     ...(faq ? { hasPart: { '@id': faqId(path) } } : {}),
     // Read aloud by voice assistants: the direct-answer paragraph (and nothing else) carries data-speakable.
     speakable: { '@type': 'SpeakableSpecification', cssSelector: ['[data-speakable]'] },
-    ...(dateModified ? { dateModified } : {}),
-    ...(reviewed ? { lastReviewed: CLINICAL_REVIEW.reviewedOn, reviewedBy: { '@id': PHYSICIAN_ID } } : {}),
+    ...(reviewed ? { lastReviewed, reviewedBy: { '@id': PHYSICIAN_ID } } : {}),
   };
 }
 
@@ -256,7 +253,7 @@ interface PageGraphInput {
  * breadcrumb when it shows them. Clinical pages are typed MedicalWebPage; the physician page is a ProfilePage.
  */
 export function pageGraph({ key, faqs, breadcrumb, about }: PageGraphInput): Node {
-  const meta: { path: string; title: string; description: string; lastModified: string; clinical?: boolean } = {
+  const meta: { path: string; title: string; description: string; clinical?: boolean; secondReview?: boolean; lastModified: string } = {
     ...PAGE_META[key],
   };
   const type: WebPageInput['type'] = key === 'panesar' ? 'ProfilePage' : meta.clinical ? 'MedicalWebPage' : 'WebPage';
@@ -269,10 +266,11 @@ export function pageGraph({ key, faqs, breadcrumb, about }: PageGraphInput): Nod
       name: meta.title,
       description: meta.description,
       type,
+      dateModified: meta.lastModified,
+      lastReviewed: reviewDateFor(meta),
       about: about ?? (key === 'panesar' ? 'physician' : 'clinic'),
       breadcrumb: Boolean(breadcrumb),
       faq: Boolean(faqs?.length),
-      dateModified: meta.lastModified,
     }),
     ...(faqs?.length ? [faqNode(meta.path, faqs)] : []),
     ...(breadcrumb ? [breadcrumbNode(meta.path, breadcrumb)] : []),

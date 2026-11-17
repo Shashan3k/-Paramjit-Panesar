@@ -1,6 +1,6 @@
 import type { ContentBlock } from '@/data/content';
-import { CLINICAL_REVIEW, livePages } from '@/data/pages';
-import { PROVIDER, TELEMEDICINE, insuranceSentence } from '@/data/practice';
+import { CLINICAL_REVIEW } from '@/data/pages';
+import { LANGUAGES_SENTENCE, PROVIDER, TELEMEDICINE, insuranceSentence } from '@/data/practice';
 import { BRAND, OFFICE, OFFICE_HOURS, PHONES, type OfficeHoursRow } from '@/data/site';
 import type { FaqItem } from '@/types';
 
@@ -19,58 +19,22 @@ export function visibleBlocks(blocks: readonly ContentBlock[]): readonly Content
   return blocks.filter((block) => !block.clinical || clinicalPublished());
 }
 
-type BlockLink = NonNullable<ContentBlock['links']>[number];
-
-/**
- * A block's links that may be shown: external links, and internal links to pages that are live. A link to a
- * held health page stays in the data (so it appears the day the page publishes) but is never rendered while
- * that page answers 404, so a crawl of the site finds no internal link to a 404.
- */
-export function liveLinks(links: readonly BlockLink[] | undefined): readonly BlockLink[] {
-  const live = new Set(livePages().map((page) => page.path));
-  return (links ?? []).filter((link) => link.external || live.has(link.href));
-}
-
 export interface QuickFact {
   label: string;
   value: string;
   href?: string;
 }
 
-/** "8:30 am" style text for a 24-hour "08:30" value. */
-function formatTime(value: string): string {
-  const [h = '0', m = '00'] = value.split(':');
-  const hour = Number(h);
-  return `${hour % 12 === 0 ? 12 : hour % 12}:${m} ${hour < 12 ? 'am' : 'pm'}`;
-}
-
 /** "Mon to Fri 8:30 am to 5:00 pm" style text for one row of office hours. */
 export function formatHoursRow(row: OfficeHoursRow): string {
   const short = (day: string) => day.slice(0, 3);
   const days = row.days.length > 1 ? `${short(row.days[0] ?? '')} to ${short(row.days[row.days.length - 1] ?? '')}` : short(row.days[0] ?? '');
-  return `${days} ${formatTime(row.opens)} to ${formatTime(row.closes)}`;
-}
-
-const WEEK = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'] as const;
-
-/** Days of the week that no OFFICE_HOURS row covers, so the office is closed. Empty when hours are unconfirmed. */
-export function closedDays(): readonly string[] {
-  if (!OFFICE_HOURS) return [];
-  const open = new Set(OFFICE_HOURS.flatMap((row) => row.days));
-  return WEEK.filter((day) => !open.has(day));
-}
-
-/**
- * Office hours as visible rows, for the hours list: "Monday to Friday" / "8:30 am to 5:30 pm", then one
- * "Closed" row per day with no hours. Empty when the hours are not confirmed (OFFICE_HOURS is null).
- */
-export function hoursRows(): readonly { days: string; time: string }[] {
-  if (!OFFICE_HOURS) return [];
-  const open = OFFICE_HOURS.map((row) => ({
-    days: row.days.length > 1 ? `${row.days[0]} to ${row.days[row.days.length - 1]}` : (row.days[0] ?? ''),
-    time: `${formatTime(row.opens)} to ${formatTime(row.closes)}`,
-  }));
-  return [...open, ...closedDays().map((day) => ({ days: day, time: 'Closed' }))];
+  const time = (value: string) => {
+    const [h = '0', m = '00'] = value.split(':');
+    const hour = Number(h);
+    return `${hour % 12 === 0 ? 12 : hour % 12}:${m} ${hour < 12 ? 'am' : 'pm'}`;
+  };
+  return `${days} ${time(row.opens)} to ${time(row.closes)}`;
 }
 
 /**
@@ -83,12 +47,10 @@ export function quickFacts(): QuickFact[] {
     { label: 'Address', value: OFFICE.line, href: '/contact' },
     { label: 'Phone', value: PHONES.main.display, href: `tel:${PHONES.main.tel}` },
   ];
-  if (OFFICE_HOURS) {
-    const closed = closedDays().map((day) => `${day.slice(0, 3)} closed`);
-    facts.push({ label: 'Hours', value: `${[...OFFICE_HOURS.map(formatHoursRow), ...closed].join('; ')} (Pacific time)` });
-  }
+  if (OFFICE_HOURS) facts.push({ label: 'Hours', value: OFFICE_HOURS.map(formatHoursRow).join('; ') });
   facts.push(
     { label: 'Provider', value: PROVIDER.name, href: '/dr-paramjit-panesar-md' },
+    { label: 'Languages', value: `Dr. Panesar speaks ${LANGUAGES_SENTENCE}`, href: '/punjabi-hindi-speaking-doctor-sacramento' },
     { label: 'Insurance', value: insuranceSentence(), href: '/insurance-accepted' },
     { label: 'Appointments', value: 'Same-day and next-day appointments' },
     { label: 'Telemedicine', value: TELEMEDICINE },

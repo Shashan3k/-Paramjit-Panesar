@@ -458,7 +458,7 @@ Then S2, S1, and the review line. **About 750 words.** Never put "free clinic", 
 ## 4. Structured data
 
 Rules:
-- Reuse the live `@id` nodes: `https://www.apollophysicians.com/#clinic`, `/dr-paramjit-panesar-md#physician` and `#website`. The page template already emits these with every page (`pageGraph` in `src/lib/structured-data.ts`). The new pages add only their own nodes.
+- Reuse the live `@id` nodes: `https://www.apollophysicians.com/#clinic`, `#dr-paramjit-panesar` and `#website`. The page template already emits these with every page (`pageGraph` in `src/lib/structured-data.ts`). The new pages add only their own nodes.
 - Plans go in the visible text, not in invented properties. schema.org has no `acceptsInsurance` property for a clinic. The health extension has `HealthInsurancePlan`, but no search engine uses it on clinic pages, so it is left out.
 - No `aggregateRating` and no review markup.
 - `lastReviewed` and `reviewedBy` are valid on `WebPage`, but appear only after the review date is set, as on the live health pages.
@@ -472,7 +472,7 @@ Rules:
   "@graph": [
     { "@id": "https://www.apollophysicians.com/#website" },
     { "@id": "https://www.apollophysicians.com/#clinic" },
-    { "@id": "https://www.apollophysicians.com/dr-paramjit-panesar-md#physician" },
+    { "@id": "https://www.apollophysicians.com/#dr-paramjit-panesar" },
     {
       "@type": "WebPage",
       "@id": "https://www.apollophysicians.com/medi-cal-doctor-sacramento#webpage",
@@ -487,7 +487,7 @@ Rules:
       "hasPart": { "@id": "https://www.apollophysicians.com/medi-cal-doctor-sacramento#faq" },
       "speakable": { "@type": "SpeakableSpecification", "cssSelector": ["[data-speakable]"] },
       "lastReviewed": "<YYYY-MM-DD, only after review>",
-      "reviewedBy": { "@id": "https://www.apollophysicians.com/dr-paramjit-panesar-md#physician" }
+      "reviewedBy": { "@id": "https://www.apollophysicians.com/#dr-paramjit-panesar" }
     },
     {
       "@type": "Service",

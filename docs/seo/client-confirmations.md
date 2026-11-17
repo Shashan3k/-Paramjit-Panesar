@@ -117,6 +117,28 @@ Google Business Profile, WebMD and Vitals still show Mon-Fri 8:30-5:00 with Satu
 | 24 (part) | What the $65 covers and excludes | Not stated | Insurance page, FAQs |
 | 33 | Real Google review count and rating | 4.4 stars from 101 reviews was read on 5 Nov; the owner asked for the live numbers | Not displayed anywhere, and never marked up in schema |
 | 26 (rest) | Each service the practice offers: annual physicals, school and sports physicals, vaccinations, diabetes and high blood pressure care. Ages seen. | Needs Dr. Panesar's review | The health pages, held until `CLINICAL_REVIEW.reviewedOn` is set |
-| 37 | Dr. Panesar's clinical review of the health content | Not done | Set `CLINICAL_REVIEW.reviewedOn` in `src/data/pages.ts`, using `docs/dr-panesar-review-packet.md` |
+| 37 | Dr. Panesar's clinical review of the health content | Not done | Set `CLINICAL_REVIEW.reviewedOn` in `src/data/pages.ts`, using `docs/clinical-review/review-packet.md` |
 | 40 | Relationship to CHCA Health or another "community health clinic" | Unanswered | Resolve before changing any directory listing |
 | 41 | Google Business Profile website field still shows drparamjitpanesar.com | Needs the owner | Profile edit |
+
+### Update 12 Nov 2026: clinical review (relayed by the site owner in the Claude Code session)
+
+| Item | Fact | Published as |
+|---|---|---|
+| 37 | Dr. Panesar approved all the health content with no edits. The site owner confirmed that the approval date is **12 Nov 2026**. The approval was relayed by the owner; there is no written approval from the doctor in the repo | `CLINICAL_REVIEW.reviewedOn` = `2026-11-12` in `src/data/pages.ts`. Eight pages go live on merge: Medicare, Medi-Cal, Nivano Physicians, no-insurance, same-day, annual physical, immigration, services. Keep the doctor's written approval (email or a signed copy of `docs/clinical-review/review-packet.md`) with the practice's records |
+
+## Open items added 15 Nov 2026 (target-queries work)
+
+| Item | Question for the practice | Blocks |
+|---|---|---|
+| 41 | Does the office see children, and from what age? Are well-child checkups offered? | `/well-child-exam-sacramento` (held), and the "ask whether your child's age can be seen" wording on the sports physical page |
+| 42 | Dr. Panesar's review of the two new health pages (sports physical, well-child exam) in `docs/clinical-review/review-packet.md` | Set `SECOND_CLINICAL_REVIEW.reviewedOn` in `src/data/pages.ts` to publish them |
+
+## Confirmed 15 Nov 2026 (relayed by the site owner)
+
+| Item | Fact | Published as |
+|---|---|---|
+| 16 | Dr. Panesar speaks **English, Punjabi and Hindi** with patients. Staff languages are **not** confirmed | `PHYSICIAN_LANGUAGES` in `src/data/practice.ts`: Physician `knowsLanguage` schema, Quick Facts row, home and physician FAQs, llms.txt, `/punjabi-hindi-speaking-doctor-sacramento`. The site never says the front desk speaks them |
+| 16a | Owner chose **not** to describe the doctor's ethnicity ("Indian doctor"). The site states only the training fact: medical degree from Dayanand Medical College, Ludhiana, Punjab, India (2004) | Same page, physician schema `alumniOf` address |
+
+Still open: staff languages (would allow "our front desk speaks Punjabi/Hindi").

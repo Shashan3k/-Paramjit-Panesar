@@ -4,7 +4,6 @@
  * so the images are plain static files: nothing renders them at build time or on the server.
  *
  * Run after changing a page title, the address or the phone:   npm run generate:og
- * Only some pages (for example after one title change):            npm run generate:og -- panesar home
  * A unit test (src/__tests__/og-images.test.ts) fails when a title in src/data/pages.ts and this list disagree,
  * or when an image is missing or the wrong size.
  *
@@ -26,13 +25,17 @@ const PAGES = [
   ['newPatients', 'Doctor Accepting New Patients Sacramento'],
   ['annualPhysical', 'Annual Physical in Sacramento, CA'],
   ['elkGrove', 'Family Physician for Elk Grove Patients'],
-  ['panesar', 'Dr. Paramjit Panesar, MD, Family Doctor'],
+  ['panesar', 'Dr. Paramjit Panesar, Family Doctor'],
   ['services', 'Family Medicine Services in Sacramento'],
-  ['insurance', 'Doctor Accepting Medicare in Sacramento'],
+  ['insurance', 'Insurance & Payment Options, Sacramento'],
   ['medicare', 'Medicare Family Doctor in Sacramento'],
   ['mediCal', 'Medi-Cal Doctor in South Sacramento'],
   ['nivano', 'Nivano Physicians Doctor, Sacramento'],
   ['selfPay', 'Doctor Without Insurance in Sacramento'],
+  ['languages', 'Punjabi/Hindi-Speaking Doctor Sacramento'],
+  ['sportsPhysical', 'Sports Physical in Sacramento, CA'],
+  ['wellChild', 'Well-Child Exam in Sacramento, CA'],
+  ['chooseDoctor', 'Choosing a Family Doctor in Sacramento'],
   ['contact', 'Contact and Directions in Sacramento'],
   ['faq', 'Family Doctor Questions, Sacramento'],
 ];
@@ -77,14 +80,7 @@ mkdirSync(OUT, { recursive: true });
 const work = mkdtempSync(join(tmpdir(), 'apollo-og-'));
 let failed = 0;
 
-const only = new Set(process.argv.slice(2));
-const unknown = [...only].filter((key) => !PAGES.some(([k]) => k === key));
-if (unknown.length) {
-  console.error(`Unknown page key(s): ${unknown.join(', ')}`);
-  process.exit(1);
-}
-
-for (const [key, headline] of PAGES.filter(([k]) => only.size === 0 || only.has(k))) {
+for (const [key, headline] of PAGES) {
   const page = join(work, `${key}.html`);
   const target = join(OUT, `${key}.png`);
   writeFileSync(page, html(headline), 'utf8');

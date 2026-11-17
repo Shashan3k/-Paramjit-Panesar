@@ -1,6 +1,5 @@
 import { MapPin, Phone } from 'lucide-react';
 import { ContentPage } from '@/components/page/ContentPage';
-import { HoursList } from '@/components/page/HoursList';
 import { ButtonLink } from '@/components/ui/Button';
 import { MapEmbed } from '@/components/ui/MapEmbed';
 import { Section } from '@/components/ui/Section';
@@ -17,7 +16,7 @@ export const metadata = buildMetadata({
   path: PAGE_META.contact.path,
 });
 
-/** Address, phone, office hours (from OFFICE_HOURS), call and directions buttons, and the click-to-load map. */
+/** Address, call and directions buttons, and the click-to-load map. Office hours are added here once confirmed. */
 function ContactDetails() {
   return (
     <Section id="office" headingId="contact-office-heading" title="Our office">
@@ -36,7 +35,6 @@ function ContactDetails() {
               {PHONES.main.display}
             </a>
           </p>
-          <HoursList />
           <div className="flex flex-wrap gap-3">
             <ButtonLink href={telHref(PHONES.main.tel)} variant="primary">
               <Phone className="h-5 w-5" aria-hidden="true" />

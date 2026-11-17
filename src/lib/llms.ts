@@ -2,6 +2,7 @@ import {
   APPOINTMENT_AVAILABILITY,
   CREDENTIALS,
   ELK_GROVE_NOTE,
+  LANGUAGES_SENTENCE,
   LLMS_CONFIRMED,
   OTHER_PROVIDERS,
   PROVIDER,
@@ -19,14 +20,9 @@ import { livePages, PAGE_META, isLive } from '@/data/pages';
  * drift from the site. A convenience file for AI systems, not a ranking signal.
  *
  * Confirmed facts only. Insurance and appointment availability appear when their flag in
- * LLMS_CONFIRMED is true (the owner confirmed them on 6 Nov 2026). Hours and languages are not included until the
- * owner confirms them. The list of pages contains live pages only, so it never points at a page that answers 404.
+ * LLMS_CONFIRMED is true (the owner confirmed them on 6 Nov 2026). Hours and the physician's languages were confirmed
+ * on 11 and 15 Nov 2026. The list of pages contains live pages only, so it never points at a page that answers 404.
  */
-/** The services section of llms.txt. Health information: added only once /services is live (Dr. Panesar's review). */
-export const LLMS_SERVICE_LINES = [
-  'Annual physicals and preventive care, school and sports physicals, vaccinations, care for ongoing conditions such as diabetes and high blood pressure.',
-] as const;
-
 export function buildLlmsTxt(c: { [K in keyof typeof LLMS_CONFIRMED]: boolean } = LLMS_CONFIRMED): string {
   const summary = [
     `${BRAND.name} (${BRAND.legalName ?? BRAND.name}) is a family medicine practice at ${OFFICE.line}.`,
@@ -40,7 +36,8 @@ export function buildLlmsTxt(c: { [K in keyof typeof LLMS_CONFIRMED]: boolean } 
   const physician = [
     `- ${PROVIDER.name}. ${SPECIALTY}.`,
     `- Board certified in family medicine (${CREDENTIALS.boardBody}).`,
-    `- Medical degree: ${CREDENTIALS.medicalSchool}, ${CREDENTIALS.medicalSchoolYear}. Residency: ${CREDENTIALS.residency}, ${CREDENTIALS.residencyYears}.`,
+    `- Speaks ${LANGUAGES_SENTENCE} with patients.`,
+    `- Medical degree: ${CREDENTIALS.medicalSchool} (${CREDENTIALS.medicalSchoolPlace}), ${CREDENTIALS.medicalSchoolYear}. Residency: ${CREDENTIALS.residency}, ${CREDENTIALS.residencyYears}.`,
     `- Profile page: ${absoluteUrl(PAGE_META.panesar.path)}`,
     `- Check the board certification: ${VERIFY_LINKS.certification.href}`,
     `- ${OTHER_PROVIDERS}`,
@@ -54,7 +51,9 @@ export function buildLlmsTxt(c: { [K in keyof typeof LLMS_CONFIRMED]: boolean } 
   ];
 
   if (isLive(PAGE_META.services)) {
-    sections.push(`## Services\n\n${LLMS_SERVICE_LINES.map((line) => `- ${line}`).join('\n')}`);
+    sections.push(
+      '## Services\n\n- Annual physicals and preventive care, school and sports physicals, vaccinations, care for ongoing conditions such as diabetes and high blood pressure.',
+    );
   }
   if (OFFICE_HOURS) sections.push(`## Hours\n\n- ${OFFICE_HOURS.map(formatHoursRow).join('; ')}. Closed Sunday. Pacific time.`);
   if (c.appointmentAvailability) sections.push(`## Appointments\n\n- ${APPOINTMENT_AVAILABILITY}\n- ${TELEMEDICINE}\n- New patients are accepted. Call ${PHONES.main.display} to book.`);

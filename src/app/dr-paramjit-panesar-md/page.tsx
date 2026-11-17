@@ -51,7 +51,7 @@ export default function PanesarPage() {
 
       <QuickFacts />
 
-      <Section id="credentials" headingId="panesar-credentials-heading" title="Credentials and training" description="Board certification can be checked in the public tool linked in the next section.">
+      <Section id="credentials" headingId="panesar-credentials-heading" title="Credentials and training" description="Each item below can be checked in the public tools linked in the next section.">
         <dl className="grid gap-5 sm:grid-cols-2">
           <div className="card">
             <dt className={CARD_LABEL}>Specialty</dt>

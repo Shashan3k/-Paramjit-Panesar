@@ -1,7 +1,8 @@
 import type { PhoneNumber } from '@/types';
 
 /**
- * Site-wide constants for Apollo Physicians. Every value here was supplied by the practice or checked in a public source. See practice.ts
+ * Site-wide constants for Apollo Physicians. Every value here is either from the
+ * NPPES registry or was supplied by the practice. See practice.ts
  * for the source of each claim shown on the pages.
  */
 
@@ -32,22 +33,13 @@ export interface ExternalProfile {
 }
 
 /**
- * Profiles for the physician. Each was opened and shows Dr. Panesar, family medicine, at this office address
- * and phone: Doximity and WebMD on 5 Nov 2026; Vitals on 12 Nov 2026 (its canonical URL, "Apollo Physicians,
- * 8191 Timberlake Way Ste 200", (916) 236-5800).
- *
- * Checked and NOT added (12 Nov 2026):
- * - NPI Registry (NPPES) and U.S. News: both show an old Roseville address (1 Medical Plaza Dr) and its phone, from
- *   an NPPES record last updated in 2014. Linking them would tie this entity to the wrong address. Add them once the practice updates
- *   NPPES (client-confirmations.md, item 5); U.S. News reads from NPPES.
- * - Healthgrades (/physician/dr-paramjit-panesar-gdscx): could not be opened from the checking location (HTTP 403),
- *   so the address could not be seen. Add it after someone in the US confirms it shows this office.
- * - Sharecare: HTTP 403 on 5 Nov 2026.
+ * Profiles for the physician. Each was opened on 5 Nov 2026 and shows Dr. Panesar, family medicine,
+ * at this office address and phone. Sharecare was dropped because it could not be opened (HTTP 403),
+ * so it could not be verified. Add Google Business Profile, Healthgrades or Zocdoc only after checking.
  */
 export const PHYSICIAN_PROFILE_LIST: readonly ExternalProfile[] = [
   { label: 'Doximity', url: 'https://www.doximity.com/pub/paramjit-panesar-md' },
   { label: 'WebMD', url: 'https://doctor.webmd.com/doctor/paramjit-panesar-c3eb9c8a-cf8b-4162-99f1-8af864e0efac-overview' },
-  { label: 'Vitals', url: 'https://www.vitals.com/doctors/paramjit-panesar-xm8sbq' },
 ];
 
 export const PHYSICIAN_PROFILES: readonly string[] = PHYSICIAN_PROFILE_LIST.map((p) => p.url);

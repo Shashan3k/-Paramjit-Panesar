@@ -1,7 +1,4 @@
-import { AppointmentOptionsTable } from '@/components/page/AppointmentOptionsTable';
 import { ContentPage } from '@/components/page/ContentPage';
-import { HoursList } from '@/components/page/HoursList';
-import { InsuranceTable } from '@/components/page/InsuranceTable';
 import { NEW_PATIENTS, NEW_PATIENTS_DIRECT_ANSWER } from '@/data/content';
 import { PAGE_META } from '@/data/pages';
 import { assertLive } from '@/lib/page-guard';
@@ -15,12 +12,5 @@ export const metadata = buildMetadata({
 
 export default function NewPatientsPage() {
   assertLive('newPatients');
-  return (
-    <ContentPage
-      pageKey="newPatients"
-      content={NEW_PATIENTS}
-      directAnswer={NEW_PATIENTS_DIRECT_ANSWER}
-      blockExtras={{ 'become-a-patient': <AppointmentOptionsTable />, paying: <InsuranceTable />, 'find-the-office': <HoursList /> }}
-    />
-  );
+  return <ContentPage pageKey="newPatients" content={NEW_PATIENTS} directAnswer={NEW_PATIENTS_DIRECT_ANSWER} />;
 }

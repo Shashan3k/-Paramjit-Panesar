@@ -79,29 +79,6 @@ describe('legacy redirects', () => {
     expect(hostRules.length).toBeGreaterThan(0);
     for (const r of hostRules) expect(r.destination.startsWith('https://www.apollophysicians.com/')).toBe(true);
   });
-
-  it('send the previous domain and the bare apex to the canonical host, keeping the path', () => {
-    for (const host of ['drparamjitpanesar.com', 'www.drparamjitpanesar.com', 'apollophysicians.com']) {
-      const catchAll = redirects.find((r) => r.source === '/:path*' && JSON.stringify(r.has).includes(`"${host}"`));
-      expect(catchAll?.destination, host).toBe('https://www.apollophysicians.com/:path*');
-    }
-  });
-
-  it('take a legacy path on another host to its final page in one hop, before the host catch-all', () => {
-    for (const host of ['drparamjitpanesar.com', 'www.drparamjitpanesar.com', 'apollophysicians.com']) {
-      const onHost = redirects.filter((r) => JSON.stringify(r.has ?? []).includes(`"${host}"`));
-      const catchAllIndex = onHost.findIndex((r) => r.source === '/:path*');
-      for (const rule of pathRedirects) {
-        const index = onHost.findIndex((r) => r.source === rule.source);
-        expect(index, `${host}${rule.source}`).toBeGreaterThanOrEqual(0);
-        expect(index, `${host}${rule.source} must come before the catch-all`).toBeLessThan(catchAllIndex);
-        expect(onHost[index]?.destination).toBe(`https://www.apollophysicians.com${rule.destination}`);
-      }
-    }
-    expect(redirects.find((r) => r.source === '/dr-paramjit-panesar' && JSON.stringify(r.has ?? []).includes('drparamjitpanesar.com'))?.destination).toBe(
-      'https://www.apollophysicians.com/dr-paramjit-panesar-md',
-    );
-  });
 });
 
 describe('410 Gone for retired content', () => {

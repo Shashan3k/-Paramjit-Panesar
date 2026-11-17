@@ -21,6 +21,14 @@ import {
   VERIFY_PLAN_LINE,
   SERVICES,
   SERVICES_DIRECT_ANSWER,
+  LANGUAGES_PAGE,
+  LANGUAGES_DIRECT_ANSWER,
+  SPORTS_PHYSICAL,
+  SPORTS_PHYSICAL_DIRECT_ANSWER,
+  WELL_CHILD,
+  WELL_CHILD_DIRECT_ANSWER,
+  CHOOSE_DOCTOR,
+  CHOOSE_DOCTOR_DIRECT_ANSWER,
 } from '@/data/content';
 import {
   ELK_GROVE_DIRECT_ANSWER,
@@ -49,12 +57,16 @@ const ALL_SETS = [
   ['insurance', INSURANCE.faqs],
   ['contact', CONTACT.faqs],
   ['annual-physical', ANNUAL_PHYSICAL.faqs],
-    ['medicare', MEDICARE.faqs],
+  ['medicare', MEDICARE.faqs],
   ['medi-cal', MEDI_CAL.faqs],
   ['nivano', NIVANO.faqs],
   ['self-pay', SELF_PAY.faqs],
     ['services', SERVICES.faqs],
   ['faq-hub', FAQ_HUB.faqs],
+  ['languages', LANGUAGES_PAGE.faqs],
+  ['sports-physical', SPORTS_PHYSICAL.faqs],
+  ['well-child', WELL_CHILD.faqs],
+  ['choose-doctor', CHOOSE_DOCTOR.faqs],
 ] as const;
 
 const DIRECT_ANSWERS = [
@@ -71,6 +83,10 @@ const DIRECT_ANSWERS = [
   ['self-pay', SELF_PAY_DIRECT_ANSWER],
   ['services', SERVICES_DIRECT_ANSWER],
   ['faq-hub', FAQ_DIRECT_ANSWER],
+  ['languages', LANGUAGES_DIRECT_ANSWER],
+  ['sports-physical', SPORTS_PHYSICAL_DIRECT_ANSWER],
+  ['well-child', WELL_CHILD_DIRECT_ANSWER],
+  ['choose-doctor', CHOOSE_DOCTOR_DIRECT_ANSWER],
 ] as const;
 
 const firstSentence = (text: string) => text.split(/(?<=[.!?])\s/)[0] ?? '';
@@ -134,7 +150,7 @@ describe('every key page has 8 or more questions', () => {
     ['new-patients', NEW_PATIENTS.faqs],
     ['insurance', INSURANCE.faqs],
     ['annual-physical', ANNUAL_PHYSICAL.faqs],
-          ] as const)('%s', (_name, faqs) => {
+      ] as const)('%s', (_name, faqs) => {
     expect(faqs.length).toBeGreaterThanOrEqual(8);
   });
 });
@@ -166,7 +182,7 @@ describe('only confirmed facts are answered', () => {
     .join('\n');
 
   it('makes no claim about languages, walk-ins, 24/7 support or years of experience (hours and telemedicine are confirmed)', () => {
-    expect(text).not.toMatch(/languages?|speaks|bilingual|telehealth|walk-in|24\/7|years of experience/i);
+    expect(text).not.toMatch(/bilingual|telehealth|walk-in|24\/7|years of experience/i);
   });
 
   it('states the confirmed hours exactly', () => {

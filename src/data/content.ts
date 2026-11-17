@@ -1,12 +1,12 @@
 import type { FaqItem } from '@/types';
-import { CREDENTIALS, INSURANCE_ACCEPTED, PROVIDER, VERIFY_LINKS, insuranceSentence } from './practice';
+import { CREDENTIALS, INSURANCE_ACCEPTED, LANGUAGES_SENTENCE, PROVIDER, VERIFY_LINKS, insuranceSentence } from './practice';
 import { ELK_GROVE_DRIVE, LOCATION, OFFICE, PHONES } from './site';
 
 /**
  * Copy for the pages built from the shared template (src/components/page/ContentPage.tsx).
  * Same rules as practice.ts: only owner-supplied or checked facts, answers of 40 to 60 words, no pronouns
  * for Dr. Panesar. Pages and questions marked clinical contain general health information and are published
- * only after Dr. Panesar's review (CLINICAL_REVIEW in pages.ts). The review packet (docs/dr-panesar-review-packet.md)
+ * only after Dr. Panesar's review (CLINICAL_REVIEW in pages.ts). The review packet in docs/clinical-review/
  * is generated from this file.
  */
 
@@ -53,7 +53,7 @@ const VERIFY_BLOCK: ContentBlock = { id: 'verify-your-plan', heading: 'Verify yo
 export const NEW_PATIENTS_DIRECT_ANSWER = `Apollo Physicians is accepting new patients at ${ADDRESS}. To become a patient, call ${CALL} and book an appointment with ${DOC}. Same-day and next-day appointments are offered. The office accepts Medicare and several major health plans, and welcomes patients who pay for their own visit.`;
 
 export const NEW_PATIENTS: PageContent = {
-  h1: 'Primary Care Doctor Accepting New Patients in Sacramento',
+  h1: 'Doctor Accepting New Patients in Sacramento',
   eyebrow: 'New patients',
   blocks: [
     {
@@ -120,8 +120,8 @@ export const NEW_PATIENTS: PageContent = {
   ],
   faqs: [
     {
-      question: 'Is Dr. Paramjit Panesar accepting new patients in Sacramento and Elk Grove?',
-      answer: `Yes. ${DOC}, is accepting new patients at Apollo Physicians, ${OFFICE.street}, in South Sacramento, and patients from Elk Grove are welcome at the same office. New patients can ask for a same-day or next-day appointment by calling ${CALL}. Please confirm the next available time when you call.`,
+      question: 'Is Apollo Physicians accepting new patients?',
+      answer: `Yes. Apollo Physicians welcomes new patients at its South Sacramento office, ${OFFICE.street}. ${DOC}, is the physician. New patients can ask for a same-day or next-day appointment by calling ${CALL}. Please confirm the next available time when you call.`,
     },
     {
       question: 'How do I become a new patient at Apollo Physicians?',
@@ -161,7 +161,7 @@ export const NEW_PATIENTS: PageContent = {
 export const INSURANCE_DIRECT_ANSWER = `Apollo Physicians accepts Medicare, most Medi-Cal plans and these health plans: Aetna, Anthem Blue Cross, Blue Shield of California, Cigna, Health Net and UnitedHealthcare. It also accepts patients from the Sutter Health, Hill Physicians and Nivano Physicians medical groups. Patients without insurance can pay themselves. Call ${CALL} to confirm your plan.`;
 
 export const INSURANCE: PageContent = {
-  h1: 'Insurance Accepted at Apollo Physicians',
+  h1: 'Insurance and Payment Options',
   eyebrow: 'Insurance',
   blocks: [
     {
@@ -198,8 +198,8 @@ export const INSURANCE: PageContent = {
   ],
   faqs: [
     {
-      question: 'Which insurance plans and IPAs does Apollo Physicians accept?',
-      answer: `Apollo Physicians accepts ${insuranceSentence()}. Sutter Health, Hill Physicians and Nivano Physicians are medical groups rather than insurance companies. Call ${CALL} to confirm your specific plan before your first visit, because plans and networks can change over time.`,
+      question: 'What insurance does Apollo Physicians accept?',
+      answer: `Apollo Physicians accepts ${insuranceSentence()}. Sutter Health and Hill Physicians are medical groups and networks rather than insurance companies. Call ${CALL} to confirm your specific plan before your first visit, because plans and networks can change over time.`,
     },
     {
       question: 'Does Apollo Physicians accept Medicare?',
@@ -472,6 +472,14 @@ export const MEDICARE: PageContent = {
       links: [{ label: `About ${DOC}`, href: '/dr-paramjit-panesar-md' }],
     },
     {
+      id: 'elk-grove-patients',
+      heading: 'For Elk Grove patients with Medicare',
+      paragraphs: [
+        `Medicare patients from Elk Grove ZIP codes 95758 and 95624 are seen at the same South Sacramento office. Google Maps shows ${DRIVE} by car with usual traffic. Bring your Medicare card, any supplement or Medicare Advantage card, and a photo ID, and call ${CALL} before you travel to confirm your appointment.`,
+      ],
+      links: [{ label: 'Family physician for Elk Grove patients', href: '/family-physician-elk-grove' }],
+    },
+    {
       id: 'find-the-office',
       heading: 'Finding the office',
       paragraphs: [
@@ -576,6 +584,14 @@ export const SELF_PAY: PageContent = {
         `${DOC}, is board certified in family medicine by the ${CREDENTIALS.boardBody}.`,
       ],
       links: [{ label: `About ${DOC}`, href: '/dr-paramjit-panesar-md' }],
+    },
+    {
+      id: 'elk-grove-patients',
+      heading: 'For Elk Grove patients without insurance',
+      paragraphs: [
+        `If you do not use insurance, ask about a self-pay visit. The office is ${DRIVE} by car from ZIP codes 95758 and 95624 with usual traffic. Call ${CALL} before you leave home to confirm your appointment and to ask what the visit includes.`,
+      ],
+      links: [{ label: 'Family physician for Elk Grove patients', href: '/family-physician-elk-grove' }],
     },
     {
       id: 'find-the-office',
@@ -714,6 +730,14 @@ export const MEDI_CAL: PageContent = {
       links: [{ label: `About ${DOC}`, href: '/dr-paramjit-panesar-md' }],
     },
     {
+      id: 'elk-grove-patients',
+      heading: 'For Elk Grove patients with Medi-Cal',
+      paragraphs: [
+        `If you live in Elk Grove and have Medi-Cal, call the member services number on your plan card and ask whether Dr. Panesar can be your primary care doctor. Then call ${CALL} to book. The office is ${DRIVE} by car from ZIP codes 95758 and 95624 with usual traffic, so confirm your appointment before you leave home.`,
+      ],
+      links: [{ label: 'Family physician for Elk Grove patients', href: '/family-physician-elk-grove' }],
+    },
+    {
       id: 'find-the-office',
       heading: 'Finding the office',
       paragraphs: [
@@ -784,12 +808,28 @@ export const NIVANO: PageContent = {
     },
     { id: 'documents', heading: 'Documents to bring', bullets: PLAN_DOCUMENTS },
     {
-      // Links only. The doctor, address and hours are in the Quick Facts box; repeating the Medi-Cal page's
-      // paragraphs here made the two pages near-duplicates (verify-apollo-pivot.mjs shingle check, 12 Nov 2026).
-      id: 'more-help',
-      heading: 'More help',
+      id: 'your-doctor',
+      heading: 'Your doctor',
+      paragraphs: [
+        `${DOC}, is board certified in family medicine by the ${CREDENTIALS.boardBody}.`,
+      ],
+      links: [{ label: `About ${DOC}`, href: '/dr-paramjit-panesar-md' }],
+    },
+    {
+      id: 'elk-grove-patients',
+      heading: 'For Elk Grove patients in the Nivano Physicians network',
+      paragraphs: [
+        `If your plan assigns your doctor through Nivano Physicians and you live in Elk Grove, you can ask your plan to choose Dr. Panesar at Apollo Physicians. The office is ${DRIVE} by car from ZIP codes 95758 and 95624 with usual traffic. Call ${CALL} before you travel to confirm your plan and your appointment.`,
+      ],
+      links: [{ label: 'Family physician for Elk Grove patients', href: '/family-physician-elk-grove' }],
+    },
+    {
+      id: 'find-the-office',
+      heading: 'Finding the office',
+      paragraphs: [
+        `The office is at ${ADDRESS}, next to ${LOCATION.highway} and about ${LOCATION.hospitalDistance} from ${LOCATION.nearHospital}. ${HOURS_SENTENCE}`,
+      ],
       links: [
-        { label: `About ${DOC}`, href: '/dr-paramjit-panesar-md' },
         { label: 'All insurance and payment options', href: '/insurance-accepted' },
         { label: 'Family physician for Elk Grove patients', href: '/family-physician-elk-grove' },
         { label: 'Directions and contact details', href: '/contact' },
@@ -797,8 +837,6 @@ export const NIVANO: PageContent = {
     },
     VERIFY_BLOCK,
   ],
-  // Hours, telemedicine and location questions are answered on /faq and /contact and in the Quick Facts box,
-  // so they are not repeated here (they made this page a near-duplicate of the Medi-Cal page).
   faqs: [
     {
       question: 'Does Apollo Physicians accept Nivano Physicians?',
@@ -816,6 +854,9 @@ export const NIVANO: PageContent = {
       question: 'Can Nivano Physicians patients get a same-day appointment?',
       answer: `Yes. Apollo Physicians offers same-day and next-day appointments to every patient, including people whose doctor is assigned through Nivano Physicians. Availability depends on the schedule each day, so call ${CALL} as early as you can and ask for the next opening.`,
     },
+    HOURS_FAQ,
+    TELEMEDICINE_FAQ,
+    LOCATION_FAQ,
   ],
 };
 
@@ -956,3 +997,379 @@ export const FAQ_HUB: PageContent = {
 
 /** The plans table for the insurance page lives in practice.ts (INSURANCE_GROUPS); this keeps one import point. */
 export const ALL_INSURANCE = INSURANCE_ACCEPTED;
+
+/* -------------------------------------------------------------------------------------------------
+ * Sports physical (second review batch: held until SECOND_CLINICAL_REVIEW.reviewedOn is set)
+ * ----------------------------------------------------------------------------------------------- */
+
+export const SPORTS_PHYSICAL_DIRECT_ANSWER = `Apollo Physicians in South Sacramento completes school and sports physical forms with ${DOC}, a board-certified family physician. Bring the form from the school, team or league to the visit. Same-day and next-day appointments are offered. Call ${CALL} to book, and ask whether your child's age can be seen at the office.`;
+
+export const SPORTS_PHYSICAL: PageContent = {
+  h1: 'Sports Physical in Sacramento',
+  eyebrow: 'School and sports physicals',
+  blocks: [
+    {
+      id: 'what-it-is',
+      heading: 'What is a sports physical?',
+      clinical: true,
+      paragraphs: [
+        'A sports physical is a check before a season starts, to look for health problems that could make a sport unsafe. Schools, teams and leagues usually have their own form for the doctor to fill in and sign.',
+        'It takes less time than a full annual physical. If you or your child is also due for a checkup, ask the office whether both can be done at one visit.',
+      ],
+      links: [{ label: 'Annual physical', href: '/annual-physical-sacramento' }],
+    },
+    {
+      id: 'what-to-bring',
+      heading: 'What to bring',
+      bullets: [
+        'The physical form from the school, team or league, with the parent or player sections filled in',
+        'A photo ID, and the insurance card if you use insurance',
+        'A list of current medicines, supplements and allergies',
+        'Glasses or contact lenses, for the vision check',
+        'Any past records the form asks about, such as injuries or heart problems in the family',
+      ],
+    },
+    {
+      id: 'during-the-visit',
+      heading: 'What happens during the visit',
+      clinical: true,
+      paragraphs: [
+        `${DOC}, goes through the health history on the form, then does a physical exam. A sports physical usually includes height, weight, blood pressure and a vision check, and an exam of the heart, lungs, joints and posture. The doctor signs the form if it is safe to play, or explains what has to happen first.`,
+      ],
+    },
+    {
+      id: 'how-to-book',
+      heading: 'How to book',
+      steps: [
+        `Call ${CALL} and say you need a school or sports physical.`,
+        "Ask whether your child's age can be seen at the office.",
+        'Ask for the next opening. Same-day and next-day appointments are offered.',
+        'Bring the form to the visit rather than sending it ahead.',
+      ],
+    },
+    {
+      id: 'paying',
+      heading: 'Insurance and cost',
+      paragraphs: [
+        `Apollo Physicians accepts ${insuranceSentence()}. Plans differ on whether a sports physical is covered, so call ${CALL} with your plan name. If you do not use insurance, ask about a self-pay visit.`,
+      ],
+      links: [{ label: 'Insurance and payment options', href: '/insurance-accepted' }],
+    },
+  ],
+  faqs: [
+    {
+      question: 'Does Apollo Physicians do sports physicals?',
+      answer: `Yes. Apollo Physicians completes school and sports physical forms with ${DOC}, at ${OFFICE.street} in South Sacramento. Bring the form from the school, team or league to the visit. Call ${CALL} to book, and ask whether your child's age can be seen at the office.`,
+    },
+    {
+      question: 'What should I bring to a sports physical?',
+      answer: `Bring the school, team or league form to Apollo Physicians with the parent or player sections filled in. Also bring a photo ID, the insurance card if you use one, a list of medicines and allergies, and glasses or contacts for the vision check. Call ${CALL} with any questions before the visit.`,
+    },
+    {
+      question: 'What happens during a sports physical?',
+      clinical: true,
+      answer: `At Apollo Physicians, ${DOC}, reviews the health history on the form and does a physical exam. That usually includes height, weight, blood pressure, a vision check, and an exam of the heart, lungs and joints. The doctor signs the form if it is safe to play.`,
+    },
+    {
+      question: 'Can I get a same-day sports physical in Sacramento?',
+      answer: `Apollo Physicians offers same-day and next-day appointments, including for school and sports physicals. Times depend on the schedule each day, so call ${CALL} early and ask for the next opening. Bring the completed parts of the form so ${DOC}, can finish it at the visit.`,
+    },
+    {
+      question: 'Does insurance cover a sports physical?',
+      answer: `It depends on the plan. Apollo Physicians accepts ${insuranceSentence()}, and some plans cover a sports physical while others do not. Call ${CALL} with your plan name to check. If you do not use insurance, ask about a self-pay visit.`,
+    },
+    {
+      question: 'Where can I get a sports physical near Elk Grove?',
+      answer: `Elk Grove families can get a school or sports physical at Apollo Physicians, ${OFFICE.street}, in South Sacramento. Google Maps shows ${DRIVE} by car from Elk Grove ZIP codes 95758 and 95624 with usual traffic. Call ${CALL} to book and bring the form.`,
+    },
+  ],
+};
+
+/* -------------------------------------------------------------------------------------------------
+ * Well-child exam (second review batch; also needs the practice to confirm the ages it sees)
+ * ----------------------------------------------------------------------------------------------- */
+
+export const WELL_CHILD_DIRECT_ANSWER = `Apollo Physicians in South Sacramento offers well-child checkups with ${DOC}, a board-certified family physician who can care for the whole family. A well-child visit checks growth, development and vaccines. Same-day and next-day appointments are offered. Call ${CALL} to book and to confirm the ages seen at the office.`;
+
+export const WELL_CHILD: PageContent = {
+  h1: 'Well-Child Exam in Sacramento',
+  eyebrow: 'Well-child visits',
+  blocks: [
+    {
+      id: 'what-it-is',
+      heading: 'What is a well-child exam?',
+      clinical: true,
+      paragraphs: [
+        "A well-child exam is a regular checkup for a healthy child. The doctor checks growth and development, catches up on vaccines and answers the family's questions. It is a planned visit, not a sick visit.",
+        'The American Academy of Pediatrics publishes a recommended schedule of well-child visits by age. Ask the office which visit your child is due for.',
+      ],
+    },
+    {
+      id: 'during-the-visit',
+      heading: 'What happens during the visit',
+      clinical: true,
+      bullets: [
+        'Height, weight and growth compared with earlier visits',
+        'A physical exam',
+        'Questions about eating, sleep, school and behavior',
+        'Vaccines that are due, with time for questions',
+        'Forms for school, child care or sports, if you bring them',
+      ],
+    },
+    {
+      id: 'what-to-bring',
+      heading: 'What to bring',
+      bullets: [
+        "The child's vaccination record",
+        'Your photo ID and the insurance card if you use insurance',
+        'A list of medicines and allergies',
+        'Any school, child care or sports forms',
+        'Your questions, written down',
+      ],
+    },
+    {
+      id: 'family-care',
+      heading: 'One doctor for the whole family',
+      paragraphs: [
+        `${DOC}, is board certified in family medicine, the specialty that cares for adults and children. Families can book visits for parents and children at the same office, ${ADDRESS}. Call ${CALL} to confirm the ages seen.`,
+      ],
+      links: [
+        { label: 'Sports physical', href: '/sports-physical-sacramento' },
+        { label: 'New patients', href: '/new-patients' },
+      ],
+    },
+    {
+      id: 'paying',
+      heading: 'Insurance and cost',
+      paragraphs: [
+        `Apollo Physicians accepts ${insuranceSentence()}. Many plans cover well-child visits as preventive care, but check yours by calling ${CALL}. If you do not use insurance, ask about a self-pay visit.`,
+      ],
+      links: [{ label: 'Insurance and payment options', href: '/insurance-accepted' }],
+    },
+  ],
+  faqs: [
+    {
+      question: 'Does Apollo Physicians do well-child exams?',
+      answer: `Yes. Apollo Physicians offers well-child checkups with ${DOC}, a board-certified family physician, at ${OFFICE.street} in South Sacramento. Bring the child's vaccination record and any school forms. Call ${CALL} to book and to confirm the ages seen at the office.`,
+    },
+    {
+      question: 'What happens at a well-child exam?',
+      clinical: true,
+      answer: `At a well-child exam at Apollo Physicians, ${DOC}, checks growth and development, does a physical exam, reviews vaccines that are due and answers questions about eating, sleep, school and behavior. Bring any forms you need completed. Call ${CALL} to book.`,
+    },
+    {
+      question: 'Can a family doctor see my child?',
+      clinical: true,
+      answer: `Yes. Family medicine is the specialty that cares for both adults and children, and ${DOC}, at Apollo Physicians is board certified in family medicine. Families can book parents and children at the same South Sacramento office. Call ${CALL} to confirm the ages seen before you book.`,
+    },
+    {
+      question: 'Do health plans cover well-child visits?',
+      answer: `Most health plans, including Medi-Cal, cover well-child visits as preventive care, but check your own plan. Apollo Physicians accepts ${insuranceSentence()}. Call ${CALL} with your plan name to confirm coverage, or ask about self-pay visits.`,
+    },
+    {
+      question: 'What should I bring to a well-child visit?',
+      answer: `Bring your child's vaccination record, your photo ID, the insurance card if you use one, a list of medicines and allergies, and any school, child care or sports forms to Apollo Physicians. Writing your questions down beforehand helps. Call ${CALL} if you are unsure what applies.`,
+    },
+  ],
+  sources: [{ label: 'American Academy of Pediatrics: well-child visits (HealthyChildren.org)', href: 'https://www.healthychildren.org/English/family-life/health-management/Pages/Well-Child-Care-A-Check-Up-for-Success.aspx' }],
+};
+
+/* -------------------------------------------------------------------------------------------------
+ * Choosing a family doctor (not health information: a checklist with the practice's own facts)
+ * ----------------------------------------------------------------------------------------------- */
+
+export const CHOOSE_DOCTOR_DIRECT_ANSWER = `To choose a family doctor in Sacramento, check four things: board certification, whether the office takes your insurance, how soon you can be seen, and how easy the office is to reach. Apollo Physicians lists its own answer to each below, with links to check them yourself.`;
+
+export const CHOOSE_DOCTOR: PageContent = {
+  h1: 'Choosing a Family Doctor in Sacramento',
+  eyebrow: 'A checklist',
+  blocks: [
+    {
+      id: 'checklist',
+      heading: 'What to check, and how',
+      table: {
+        caption: 'Checklist for choosing a family doctor, with the facts for Apollo Physicians',
+        head: ['What to check', 'How to check it', 'Apollo Physicians'],
+        rows: [
+          ['Board certification', 'Search the doctor on ABMS Verify Certification', `${DOC}, board certified in family medicine by the ${CREDENTIALS.boardBody}`],
+          ['Insurance', 'Call the office with your plan name, and check your plan directory', `${insuranceSentence()}`],
+          ['New patients', 'Ask the office directly', 'Accepting new patients'],
+          ['How soon you can be seen', 'Ask for the next opening when you call', 'Same-day and next-day appointments'],
+          ['Location', 'Check the drive time from home or work', `${ADDRESS}; ${DRIVE} from Elk Grove`],
+        ],
+      },
+      links: [
+        { label: VERIFY_LINKS.certification.label, href: VERIFY_LINKS.certification.href, external: true },
+      ],
+    },
+    {
+      id: 'family-vs-other',
+      heading: 'Family physician, primary care physician or internist?',
+      paragraphs: [
+        'A primary care physician is the doctor you see first for checkups and everyday health problems. Family physicians, internists and pediatricians are all primary care physicians.',
+        'A family physician is trained to care for patients of all ages, so one doctor can see several people in a household. An internist cares for adults, and a pediatrician for children.',
+      ],
+    },
+    {
+      id: 'reviews',
+      heading: 'Reading patient reviews',
+      paragraphs: [
+        'Reviews on Google and other sites tell you how other patients found the front desk, the wait and the visit. Read several recent ones rather than relying on the star rating alone, and remember that a review cannot tell you about medical training. Check the board certification for that.',
+      ],
+    },
+    {
+      id: 'questions-to-ask',
+      heading: 'Questions to ask when you call',
+      bullets: [
+        'Are you accepting new patients with my plan?',
+        'When is the next opening for a new patient?',
+        'What are your office hours, and do you offer telemedicine?',
+        'What does a first visit cost if I pay for myself?',
+        'Can the doctor complete the forms I need, such as a school, sports or work form?',
+      ],
+    },
+    {
+      id: 'next',
+      heading: 'Book with Apollo Physicians',
+      paragraphs: [
+        `If Apollo Physicians fits your checklist, call ${CALL} to book with ${DOC}. The office is open Monday to Friday from 8:30 a.m. to 5:30 p.m. and Saturday from 9:00 a.m. to 2:00 p.m.`,
+      ],
+      links: [
+        { label: 'New patients', href: '/new-patients' },
+        { label: 'Insurance and payment options', href: '/insurance-accepted' },
+        { label: DOC, href: '/dr-paramjit-panesar-md' },
+      ],
+    },
+  ],
+  faqs: [
+    {
+      question: 'How do I choose a family doctor in Sacramento?',
+      answer: `Check four things before you book: board certification, whether the office takes your insurance, how soon you can be seen, and the drive time. Apollo Physicians in South Sacramento lists each of these for ${DOC}, with links to verify them. Call ${CALL} with questions.`,
+    },
+    {
+      question: 'What makes a good family doctor?',
+      answer: `A good family doctor is board certified, explains your care plan clearly, takes your insurance, and can see you soon. You can check board certification online; fit and communication show up at a first visit. Apollo Physicians in South Sacramento lists the checkable facts for ${DOC}. Call ${CALL}.`,
+    },
+    {
+      question: 'How can I check if a Sacramento doctor is board certified?',
+      answer: `Search the doctor's name on ABMS Verify Certification, a free online tool from the American Board of Medical Specialties. For Apollo Physicians, ${DOC}, is board certified in family medicine by the ${CREDENTIALS.boardBody}. You can check it before you book.`,
+    },
+    {
+      question: 'What is the difference between a family physician and a primary care physician?',
+      answer: `A primary care physician is the doctor you see first. Family physicians are one type of primary care physician, trained to care for patients of all ages. ${DOC}, at Apollo Physicians in South Sacramento is a board-certified family physician who can be your primary care doctor.`,
+    },
+    {
+      question: 'How do I find a doctor accepting new patients in Sacramento?',
+      answer: `Ask the office whether it is accepting new patients with your plan, then ask for the next opening. Apollo Physicians in South Sacramento is accepting new patients with ${DOC}, and offers same-day and next-day appointments. Call ${CALL}.`,
+    },
+    {
+      question: 'Should I trust star ratings when choosing a doctor?',
+      answer: `Star ratings show how patients felt about the visit, the wait and the staff, so read several recent reviews rather than the average alone. They cannot show training, so also check the board certification. Apollo Physicians links to the check for ${DOC}.`,
+    },
+  ],
+  sources: [
+    { label: VERIFY_LINKS.certification.label, href: VERIFY_LINKS.certification.href },
+  ],
+};
+
+/* -------------------------------------------------------------------------------------------------
+ * Punjabi and Hindi speaking doctor (not health information). Languages confirmed by the owner on
+ * 15 Nov 2026 (item 16) for Dr. Panesar only; staff languages are not confirmed, so nothing says the
+ * front desk speaks them. The page never labels the doctor's ethnicity: it states the training facts.
+ * ----------------------------------------------------------------------------------------------- */
+
+export const LANGUAGES_DIRECT_ANSWER = `${DOC}, the family physician at Apollo Physicians in South Sacramento, speaks ${LANGUAGES_SENTENCE} with patients. Dr. Panesar earned a medical degree from ${CREDENTIALS.medicalSchool} in ${CREDENTIALS.medicalSchoolPlace}, and is board certified in family medicine. New patients are welcome. Call ${CALL} to book.`;
+
+export const LANGUAGES_PAGE: PageContent = {
+  h1: 'Punjabi and Hindi Speaking Family Doctor in Sacramento',
+  eyebrow: 'Care in Punjabi, Hindi and English',
+  blocks: [
+    {
+      id: 'your-language',
+      heading: 'See a doctor in Punjabi or Hindi',
+      paragraphs: [
+        `${DOC}, speaks ${LANGUAGES_SENTENCE}. You can describe your symptoms, ask questions and go over your medicines with the doctor in the language you are most comfortable with.`,
+        'Family members are welcome to come with you, but they do not have to interpret for you during the visit with the doctor.',
+      ],
+    },
+    {
+      id: 'training',
+      heading: 'Trained in Punjab, India and in the United States',
+      table: {
+        caption: `Training and credentials of ${DOC}`,
+        head: ['Credential', 'Details'],
+        rows: [
+          ['Medical degree', `${CREDENTIALS.medicalSchool}, ${CREDENTIALS.medicalSchoolPlace} (${CREDENTIALS.medicalSchoolYear})`],
+          ['Residency', `Family medicine, ${CREDENTIALS.residency}, ${CREDENTIALS.residencyYears}`],
+          ['Board certification', `Family medicine, ${CREDENTIALS.boardBody}`],
+          ['Languages', LANGUAGES_SENTENCE],
+        ],
+      },
+      links: [
+        { label: VERIFY_LINKS.certification.label, href: VERIFY_LINKS.certification.href, external: true },
+        { label: `About ${DOC}`, href: '/dr-paramjit-panesar-md' },
+      ],
+    },
+    {
+      id: 'primary-care',
+      heading: 'A primary care doctor for the whole family',
+      paragraphs: [
+        `As a family physician, ${DOC}, can be your primary care doctor for checkups, physicals, vaccinations and ongoing conditions such as diabetes and high blood pressure. Same-day and next-day appointments are offered, and telemedicine visits are available for patients in California.`,
+      ],
+      links: [
+        { label: 'Services', href: '/services' },
+      ],
+    },
+    {
+      id: 'how-to-book',
+      heading: 'How to book a visit in Punjabi or Hindi',
+      steps: [
+        `Call ${CALL}.`,
+        'Say you would like your visit with Dr. Panesar in Punjabi or Hindi.',
+        'Give your insurance plan, or say you will pay for yourself.',
+        'Bring a photo ID, your insurance card and a list of your medicines.',
+      ],
+    },
+    {
+      id: 'paying',
+      heading: 'Insurance and cost',
+      paragraphs: [
+        `Apollo Physicians accepts ${insuranceSentence()}. If you do not use insurance, ask about a self-pay visit. ${VERIFY_PLAN_LINE}`,
+      ],
+      links: [{ label: 'Insurance and payment options', href: '/insurance-accepted' }],
+    },
+    {
+      id: 'find-the-office',
+      heading: 'Where the office is',
+      paragraphs: [
+        `The office is at ${ADDRESS}, in South Sacramento, next to ${LOCATION.highway}. Patients come from Sacramento and from Elk Grove, ${DRIVE} away by car.`,
+      ],
+      links: [{ label: 'Directions and contact details', href: '/contact' }],
+    },
+  ],
+  faqs: [
+    {
+      question: 'Is there a Punjabi speaking doctor in Sacramento?',
+      answer: `Yes. ${DOC}, at Apollo Physicians speaks Punjabi, as well as Hindi and English. The office is at ${OFFICE.street} in South Sacramento. Dr. Panesar is a board-certified family physician who accepts new patients. Call ${CALL} and ask for your visit in Punjabi.`,
+    },
+    {
+      question: 'Is there a Hindi speaking doctor in Sacramento?',
+      answer: `Yes. ${DOC}, at Apollo Physicians speaks Hindi, as well as Punjabi and English. The office is at ${OFFICE.street} in South Sacramento. Dr. Panesar is a board-certified family physician who accepts new patients. Call ${CALL} and ask for your visit in Hindi.`,
+    },
+    {
+      question: 'Where did Dr. Panesar go to medical school?',
+      answer: `${DOC}, of Apollo Physicians earned a medical degree from ${CREDENTIALS.medicalSchool} in ${CREDENTIALS.medicalSchoolPlace}, in ${CREDENTIALS.medicalSchoolYear}, then completed family medicine residency at the University of Arkansas for Medical Sciences from 2007 to 2010. Dr. Panesar is board certified by the ${CREDENTIALS.boardBody}.`,
+    },
+    {
+      question: 'Can I see a Punjabi or Hindi speaking primary care doctor with Medicare or Medi-Cal?',
+      answer: `Yes. Apollo Physicians accepts Original Medicare and most Medi-Cal plans, and ${DOC}, speaks Punjabi and Hindi. If your Medi-Cal plan assigns a primary care doctor, ask the plan to assign Dr. Panesar. Call ${CALL} to verify your exact plan, because networks change.`,
+    },
+    {
+      question: 'Do the front desk staff speak Punjabi or Hindi?',
+      answer: `Apollo Physicians has confirmed that ${DOC}, speaks Punjabi and Hindi. Ask about the front desk staff when you call ${CALL}. Saying which language you prefer when you book lets the office note it for your visit with Dr. Panesar.`,
+    },
+  ],
+  sources: [
+    { label: VERIFY_LINKS.certification.label, href: VERIFY_LINKS.certification.href },
+  ],
+};

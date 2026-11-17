@@ -41,7 +41,7 @@ Updated 6 Nov 2026 after the owner's brief. Sources: the built pages, `sitemap.x
 
 ## C. Held for Dr. Paramjit Panesar's clinical review
 
-These contain general health information. Until `CLINICAL_REVIEW.reviewedOn` is set in `src/data/pages.ts`, they answer 404, are not in the sitemap, navigation or `llms.txt`, and no page claims a medical review. Everything to review is in `docs/dr-panesar-review-packet.md`.
+These contain general health information. Until `CLINICAL_REVIEW.reviewedOn` is set in `src/data/pages.ts`, they answer 404, are not in the sitemap, navigation or `llms.txt`, and no page claims a medical review. Everything to review is in `docs/clinical-review/review-packet.md`.
 
 | Held | Contains |
 |---|---|

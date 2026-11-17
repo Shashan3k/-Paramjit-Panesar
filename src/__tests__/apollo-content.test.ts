@@ -81,7 +81,7 @@ describe('structured data graph', () => {
     expect(ids.has(CLINIC_ID)).toBe(true);
     expect(ids.has(PHYSICIAN_ID)).toBe(true);
     expect(CLINIC_ID).toBe(`${SITE_URL}/#clinic`);
-    expect(PHYSICIAN_ID).toBe(`${SITE_URL}/dr-paramjit-panesar-md#physician`);
+    expect(PHYSICIAN_ID).toBe(`${SITE_URL}/#dr-paramjit-panesar`);
   });
 
   it('gives every node an absolute @id', () => {
@@ -213,7 +213,7 @@ describe('source tree is free of the previous organisation', () => {
 
   it('makes no unverified claims in the copy', () => {
     // Medi-Cal and Nivano were confirmed on 11 Nov 2026 (client-confirmations.md, item 23), so they left this list.
-    const UNVERIFIED = ['Medicaid', 'Vivant', 'Rivercity','River City', 'female', 'Wikidata', 'Brand New Day', 'Western Health Advantage', 'telehealth', 'walk-in', '24/7', 'bilingual', 'Spanish', 'Punjabi', 'Hindi'];
+    const UNVERIFIED = ['Medicaid', 'Vivant', 'Rivercity','River City', 'female', 'Wikidata', 'Brand New Day', 'Western Health Advantage', 'telehealth', 'walk-in', '24/7', 'bilingual', 'Spanish'];
     const hits: string[] = [];
     for (const file of files('src/data').concat(files('src/app'), files('src/components'))) {
       const text = readFileSync(file, 'utf8');
