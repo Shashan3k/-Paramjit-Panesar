@@ -210,7 +210,7 @@ for (const page of PAGES) {
   const speakable = [...html.matchAll(/<p[^>]*data-speakable="direct-answer"[^>]*>([\s\S]*?)<\/p>/g)].map((m) => visibleText(m[1]));
   const words = speakable[0] ? speakable[0].split(/\s+/).filter(Boolean).length : 0;
   check(`${page.path} has one direct-answer paragraph of 40 to 60 words`, speakable.length === 1 && words >= 40 && words <= 60, `${speakable.length} paragraph(s), ${words} words`);
-  check(`${page.path} shows the Quick facts table`, html.includes('Quick facts') && html.includes('Same-day and next-day appointments'));
+  check(`${page.path} shows the Quick facts table`, html.includes('Quick facts') && html.includes('Book online'));
   check(`${page.path} has a visible breadcrumb ${page.path === '/' ? '(none on the home page)' : ''}`, page.path === '/' ? !html.includes('aria-label="Breadcrumb"') : html.includes('aria-label="Breadcrumb"'));
   const ogImage = meta(html, /<meta[^>]+property="og:image"[^>]+content="([^"]*)"/);
   const key = page.path === '/' ? 'home' : null;

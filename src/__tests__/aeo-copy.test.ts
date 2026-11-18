@@ -190,11 +190,15 @@ describe('only confirmed facts are answered', () => {
     expect(text).not.toMatch(/5:00 p\.m\.|Saturday closed/i);
   });
 
-  it('answers the owner-confirmed questions: new patients, board certification, insurance, same-day', () => {
+  it('answers the owner-confirmed questions: new patients, board certification, insurance, online booking', () => {
     const home = HOME_FAQS.map((f) => f.question).join('\n');
-    for (const pattern of [/located/i, /book/i, /insurance/i, /same-day or next-day/i, /Elk Grove/i, /Who is Dr\./i, /accepting new patients/i]) {
+    for (const pattern of [/located/i, /book/i, /insurance/i, /online/i, /Elk Grove/i, /Who is Dr\./i, /accepting new patients/i]) {
       expect(home).toMatch(pattern);
     }
+  });
+
+  it('makes no same-day or next-day claim anywhere (owner, 18 Nov 2026)', () => {
+    expect(HOME_FAQS.map((f) => `${f.question} ${f.answer}`).join(' ')).not.toMatch(/same-day|next-day/i);
   });
 
   it('keeps the phone identical to the shared data and publishes no prices', () => {

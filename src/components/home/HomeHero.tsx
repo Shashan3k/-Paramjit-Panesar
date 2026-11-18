@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import { CheckCircle2, MapPin, Phone, Stethoscope } from 'lucide-react';
 import { ButtonLink } from '@/components/ui/Button';
+import { BookOnlineButton } from '@/components/ui/BookOnlineButton';
 import { InsurancePills } from '@/components/ui/InsurancePills';
 import { APPOINTMENT_AVAILABILITY, CREDENTIALS, HOME_DIRECT_ANSWER, PROVIDER } from '@/data/practice';
 import { OFFICE, PHONES } from '@/data/site';
@@ -29,6 +30,7 @@ export function HomeHero() {
               <Phone className="h-5 w-5" aria-hidden="true" />
               Call {PHONES.main.display}
             </ButtonLink>
+            <BookOnlineButton className="border-white bg-transparent text-white hover:bg-white/10" />
             <ButtonLink href={mapsDirectionsUrl(OFFICE.line)} variant="outline" external className="border-white bg-transparent text-white hover:bg-white/10">
               <MapPin className="h-5 w-5" aria-hidden="true" />
               Get directions

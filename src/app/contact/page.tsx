@@ -1,6 +1,7 @@
 import { MapPin, Phone } from 'lucide-react';
 import { ContentPage } from '@/components/page/ContentPage';
 import { ButtonLink } from '@/components/ui/Button';
+import { BookOnlineButton } from '@/components/ui/BookOnlineButton';
 import { MapEmbed } from '@/components/ui/MapEmbed';
 import { Section } from '@/components/ui/Section';
 import { CONTACT, CONTACT_DIRECT_ANSWER } from '@/data/content';
@@ -40,6 +41,7 @@ function ContactDetails() {
               <Phone className="h-5 w-5" aria-hidden="true" />
               Call {PHONES.main.display}
             </ButtonLink>
+            <BookOnlineButton />
             <ButtonLink href={mapsDirectionsUrl(OFFICE.line)} variant="outline" external>
               <MapPin className="h-5 w-5" aria-hidden="true" />
               Get directions

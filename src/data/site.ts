@@ -116,11 +116,10 @@ export const ELK_GROVE_DRIVE = {
 } as const;
 
 /**
- * Online booking URL. The practice has none (docs/seo/client-confirmations.md, item 28), so this is null
- * and the mobile bar shows a single Call button. Set it to the booking page URL to add "Book online"
- * to the mobile bar and to start counting booking clicks. Use an https URL on a HIPAA-appropriate vendor.
+ * Online booking URL (owner, 18 Nov 2026). Booking buttons and the mobile bar link here, and clicks count as
+ * booking_click. Set it to null to go back to phone-only booking.
  */
-export const BOOKING_URL: string | null = null;
+export const BOOKING_URL: string | null = 'https://www.chcahealth.org/';
 
 /** The only public phone number. Confirmed by the practice. Single source of truth, like OFFICE. */
 export const PHONES = {

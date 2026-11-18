@@ -3,6 +3,7 @@ import { MapPin, Phone } from 'lucide-react';
 import type { ReactNode } from 'react';
 import { Breadcrumbs } from '@/components/ui/Breadcrumbs';
 import { ButtonLink } from '@/components/ui/Button';
+import { BookOnlineButton } from '@/components/ui/BookOnlineButton';
 import { JsonLd } from '@/components/ui/JsonLd';
 import { PageHero } from '@/components/ui/PageHero';
 import { Section } from '@/components/ui/Section';
@@ -58,6 +59,7 @@ export function ContentPage({ pageKey, content, directAnswer, before, after }: C
           <Phone className="h-5 w-5" aria-hidden="true" />
           Call {PHONES.main.display}
         </ButtonLink>
+        <BookOnlineButton className="border-white bg-transparent text-white hover:bg-white/10" />
         <ButtonLink href={mapsDirectionsUrl(OFFICE.line)} variant="outline" external className="border-white bg-transparent text-white hover:bg-white/10">
           <MapPin className="h-5 w-5" aria-hidden="true" />
           Get directions

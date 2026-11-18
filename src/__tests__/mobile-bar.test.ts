@@ -19,7 +19,10 @@ afterEach(() => {
 
 describe('mobile call bar', () => {
   it('is a single Call button while there is no booking URL', async () => {
-    const html = await renderBar();
+    vi.resetModules();
+    vi.doMock('@/data/site', async (original) => ({ ...(await original<typeof import('@/data/site')>()), BOOKING_URL: null }));
+    const { MobileCallBar } = await import('@/components/layout/MobileCallBar');
+    const html = renderToStaticMarkup(createElement(MobileCallBar));
     expect(anchors(html)).toEqual([{ href: `tel:${PHONES.main.tel}`, text: `Call ${PHONES.main.display}` }]);
     expect(html).not.toMatch(/Book online/i);
   });

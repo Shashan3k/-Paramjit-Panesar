@@ -1,6 +1,7 @@
 import { Phone } from 'lucide-react';
 import { ContentPage } from '@/components/page/ContentPage';
 import { ButtonLink } from '@/components/ui/Button';
+import { BookOnlineButton } from '@/components/ui/BookOnlineButton';
 import { Section } from '@/components/ui/Section';
 import { INSURANCE, INSURANCE_DIRECT_ANSWER } from '@/data/content';
 import { PAGE_META } from '@/data/pages';
@@ -67,6 +68,7 @@ function PlansTable() {
           <Phone className="h-5 w-5" aria-hidden="true" />
           Call {PHONES.main.display}
         </ButtonLink>
+        <BookOnlineButton />
       </div>
     </Section>
   );

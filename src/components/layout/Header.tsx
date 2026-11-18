@@ -3,9 +3,9 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useEffect, useRef, useState, type ReactNode } from 'react';
-import { MapPin, Menu, Phone, X } from 'lucide-react';
+import { CalendarCheck, MapPin, Menu, Phone, X } from 'lucide-react';
 import { MAIN_NAV } from '@/data/navigation';
-import { BRAND, OFFICE, PHONES } from '@/data/site';
+import { BOOKING_URL, BRAND, OFFICE, PHONES } from '@/data/site';
 import { cn, telHref } from '@/lib/utils';
 
 /** True when the current path matches a link. */
@@ -82,6 +82,13 @@ export function Header() {
             <Phone className="h-4 w-4" aria-hidden="true" />
             Call {PHONES.main.display}
           </a>
+          {BOOKING_URL ? (
+            <a href={BOOKING_URL} target="_blank" rel="noopener noreferrer" className="btn btn-primary hidden whitespace-nowrap md:inline-flex">
+              <CalendarCheck className="h-4 w-4" aria-hidden="true" />
+              Book online
+              <span className="sr-only"> (opens in a new tab)</span>
+            </a>
+          ) : null}
 
           <button
             ref={mobileToggleRef}
@@ -110,6 +117,13 @@ export function Header() {
             <Phone className="h-4 w-4" aria-hidden="true" />
             Call {PHONES.main.display}
           </a>
+          {BOOKING_URL ? (
+            <a href={BOOKING_URL} target="_blank" rel="noopener noreferrer" className="btn btn-primary mt-3 w-full">
+              <CalendarCheck className="h-4 w-4" aria-hidden="true" />
+              Book online
+              <span className="sr-only"> (opens in a new tab)</span>
+            </a>
+          ) : null}
         </div>
       </div>
     </header>

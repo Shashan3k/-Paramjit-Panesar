@@ -206,7 +206,9 @@ describe('source tree is free of the previous organisation', () => {
     const hits: string[] = [];
     for (const file of files('src').filter((f) => /\.(ts|tsx|css|mjs)$/.test(f) && !f.includes('__tests__'))) {
       const text = readFileSync(file, 'utf8');
-      for (const word of FORBIDDEN) if (text.includes(word)) hits.push(`${file}: ${word}`);
+      // The owner asked (18 Nov 2026) for online booking to go to chcahealth.org. That URL lives only in BOOKING_URL.
+      const checked = file.replace(/\\/g, '/').endsWith('src/data/site.ts') ? text.replace(/BOOKING_URL: string \| null = 'https:\/\/www\.chcahealth\.org\/'/, '') : text;
+      for (const word of FORBIDDEN) if (checked.includes(word)) hits.push(`${file}: ${word}`);
     }
     expect(hits).toEqual([]);
   });

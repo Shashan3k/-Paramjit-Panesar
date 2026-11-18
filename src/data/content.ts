@@ -50,7 +50,7 @@ const VERIFY_BLOCK: ContentBlock = { id: 'verify-your-plan', heading: 'Verify yo
  * New patients
  * ----------------------------------------------------------------------------------------------- */
 
-export const NEW_PATIENTS_DIRECT_ANSWER = `Apollo Physicians is accepting new patients at ${ADDRESS}. To become a patient, call ${CALL} and book an appointment with ${DOC}. Same-day and next-day appointments are offered. The office accepts Medicare and several major health plans, and welcomes patients who pay for their own visit.`;
+export const NEW_PATIENTS_DIRECT_ANSWER = `Apollo Physicians is accepting new patients at ${ADDRESS}. To become a patient, call ${CALL} and book an appointment with ${DOC}. You can also book online. The office accepts Medicare and several major health plans, and welcomes patients who pay for their own visit.`;
 
 export const NEW_PATIENTS: PageContent = {
   h1: 'Doctor Accepting New Patients in Sacramento',
@@ -62,7 +62,7 @@ export const NEW_PATIENTS: PageContent = {
       steps: [
         `Call ${CALL} and say you are a new patient.`,
         'Tell the office your insurance plan, or that you will pay yourself.',
-        'Choose an appointment. Same-day and next-day appointments are offered.',
+        'Choose an appointment, or book online.',
         'Bring a photo ID, your insurance card and a list of your current medicines.',
         `Come to ${ADDRESS}.`,
       ],
@@ -121,11 +121,11 @@ export const NEW_PATIENTS: PageContent = {
   faqs: [
     {
       question: 'Is Apollo Physicians accepting new patients?',
-      answer: `Yes. Apollo Physicians welcomes new patients at its South Sacramento office, ${OFFICE.street}. ${DOC}, is the physician. New patients can ask for a same-day or next-day appointment by calling ${CALL}. Please confirm the next available time when you call.`,
+      answer: `Yes. Apollo Physicians welcomes new patients at its South Sacramento office, ${OFFICE.street}. ${DOC}, is the physician. New patients can book online or by calling ${CALL}. Please confirm the next available time when you call.`,
     },
     {
       question: 'How do I become a new patient at Apollo Physicians?',
-      answer: `You become a new patient at Apollo Physicians by calling ${CALL} and saying you are new. Give the office your insurance plan or tell them you will pay yourself. The office will offer you an appointment with ${DOC}. Same-day and next-day appointments are offered. Bring a photo ID and your insurance card.`,
+      answer: `You become a new patient at Apollo Physicians by calling ${CALL} and saying you are new. Give the office your insurance plan or tell them you will pay yourself. The office will offer you an appointment with ${DOC}. You can also book online. Bring a photo ID and your insurance card.`,
     },
     {
       question: 'What should I bring to my first visit?',
@@ -133,7 +133,7 @@ export const NEW_PATIENTS: PageContent = {
     },
     {
       question: 'Can a new patient get an appointment right away?',
-      answer: `Apollo Physicians offers same-day and next-day appointments, and new patients can ask for them. Availability depends on the schedule that day, so call ${CALL} as early as you can and ask for the next opening. For an emergency, call 911 instead of the office.`,
+      answer: `New patients can book with Apollo Physicians online or by calling ${CALL}. Availability depends on the schedule, so pick the time that suits you and ask the office if you need help. For an emergency, call 911 instead of the office.`,
     },
     {
       question: 'What insurance does Apollo Physicians accept for new patients?',
@@ -149,7 +149,7 @@ export const NEW_PATIENTS: PageContent = {
     },
     {
       question: 'Can I become a new patient without insurance?',
-      answer: `Yes. Apollo Physicians welcomes new patients who pay for their own visit instead of using insurance. Call ${CALL}, say you will pay yourself, and ask what the first visit includes. Same-day and next-day appointments are offered. Bring a photo ID and a list of your current medicines.`,
+      answer: `Yes. Apollo Physicians welcomes new patients who pay for their own visit instead of using insurance. Call ${CALL}, say you will pay yourself, and ask what the first visit includes. You can also book online. Bring a photo ID and a list of your current medicines.`,
     },
   ],
 };
@@ -235,7 +235,7 @@ export const INSURANCE: PageContent = {
     },
     {
       question: 'Can I see a doctor at Apollo Physicians without insurance?',
-      answer: `Yes. Apollo Physicians sees patients who pay for their own visit instead of using insurance. When you call ${CALL} to book with ${DOC}, say you will pay yourself and ask what the visit includes. Same-day and next-day appointments are offered.`,
+      answer: `Yes. Apollo Physicians sees patients who pay for their own visit instead of using insurance. When you call ${CALL} to book with ${DOC}, say you will pay yourself and ask what the visit includes. You can also book online.`,
     },
     {
       question: 'How do I make Dr. Panesar my primary care doctor with Hill Physicians or Sutter Health?',
@@ -249,7 +249,7 @@ export const INSURANCE: PageContent = {
  * Contact
  * ----------------------------------------------------------------------------------------------- */
 
-export const CONTACT_DIRECT_ANSWER = `Apollo Physicians is at ${ADDRESS}, next to ${LOCATION.highway} and about ${LOCATION.hospitalDistance} from ${LOCATION.nearHospital}. Call ${CALL} to book or ask a question. Google Maps shows ${DRIVE} by car from Elk Grove with usual traffic. Same-day and next-day appointments are offered.`;
+export const CONTACT_DIRECT_ANSWER = `Apollo Physicians is at ${ADDRESS}, next to ${LOCATION.highway} and about ${LOCATION.hospitalDistance} from ${LOCATION.nearHospital}. Call ${CALL} to book or ask a question. Google Maps shows ${DRIVE} by car from Elk Grove with usual traffic. You can also book online.`;
 
 export const CONTACT: PageContent = {
   h1: 'Contact Apollo Physicians in Sacramento',
@@ -295,7 +295,7 @@ export const CONTACT: PageContent = {
     },
     {
       question: 'How do I book an appointment at Apollo Physicians?',
-      answer: `Call ${CALL} to book an appointment with ${DOC}. Same-day and next-day appointments are offered, and new patients are welcome. Tell the office your insurance plan, or that you will pay yourself, and bring a photo ID and your insurance card to your visit.`,
+      answer: `Call ${CALL} to book an appointment with ${DOC}. New patients are welcome, and you can also book online. Tell the office your insurance plan, or that you will pay yourself, and bring a photo ID and your insurance card to your visit.`,
     },
   ],
 };
@@ -304,7 +304,7 @@ export const CONTACT: PageContent = {
  * Annual physical (clinical: held until Dr. Panesar's review)
  * ----------------------------------------------------------------------------------------------- */
 
-export const ANNUAL_DIRECT_ANSWER = `An annual physical at Apollo Physicians is a yearly preventive visit with ${DOC}, at ${ADDRESS}. It reviews your health history and medicines, includes a physical exam, and plans any screenings or vaccines you may need. Call ${CALL} to book. Same-day and next-day appointments are offered.`;
+export const ANNUAL_DIRECT_ANSWER = `An annual physical at Apollo Physicians is a yearly preventive visit with ${DOC}, at ${ADDRESS}. It reviews your health history and medicines, includes a physical exam, and plans any screenings or vaccines you may need. Call ${CALL} to book. You can also book online.`;
 
 export const ANNUAL_PHYSICAL: PageContent = {
   h1: 'Annual Physical in Sacramento',
@@ -402,8 +402,8 @@ export const ANNUAL_PHYSICAL: PageContent = {
       answer: `How often depends on your age, health history and what your insurance covers, so ask ${DOC}. Medicare offers an Annual Wellness Visit, and Medicare.gov explains who qualifies. Call Apollo Physicians at ${CALL} to book a checkup, and mention any health concerns you want to talk about.`,
     },
     {
-      question: 'Can I book a same-day annual physical?',
-      answer: `Apollo Physicians offers same-day and next-day appointments, but availability depends on the schedule. Call ${CALL} early and ask whether the next opening works for a physical. If you are sick or have an urgent concern, say so when you call. In an emergency, call 911.`,
+      question: 'Can I book an annual physical online?',
+      answer: `Yes. You can book an annual physical at Apollo Physicians online, or call ${CALL} and ask for the next opening that works for a physical. If you are sick or have an urgent concern, say so when you call. In an emergency, call 911.`,
     },
   ],
   sources: [VERIFY_LINKS.medicare],
@@ -414,7 +414,7 @@ const BECOME_A_PATIENT_STEPS = [
   `Call ${CALL} and say you are a new patient.`,
   'Give your plan name and member ID, or say you will pay for yourself.',
   `If your plan assigns you a primary care doctor, ask your plan to assign ${DOC}, at Apollo Physicians.`,
-  'Choose a same-day, next-day or later appointment.',
+  'Choose an appointment time, or book online.',
   'Bring the documents on the checklist to your first visit.',
 ] as const;
 
@@ -424,7 +424,7 @@ const BECOME_A_PATIENT_STEPS = [
  * which Medicare Advantage plans are accepted, office hours, video visits.
  * ----------------------------------------------------------------------------------------------- */
 
-export const MEDICARE_DIRECT_ANSWER = `Apollo Physicians in Sacramento accepts Original Medicare for family medicine visits with ${DOC}, a board-certified family physician. New patients are welcome, and same-day and next-day appointments are offered. Bring your Medicare card to your visit. Call ${CALL} to verify your coverage before your first visit.`;
+export const MEDICARE_DIRECT_ANSWER = `Apollo Physicians in Sacramento accepts Original Medicare for family medicine visits with ${DOC}, a board-certified family physician. New patients are welcome, and you can book online. Bring your Medicare card to your visit. Call ${CALL} to verify your coverage before your first visit.`;
 
 export const MEDICARE: PageContent = {
   h1: 'Medicare Doctor in Sacramento',
@@ -499,7 +499,7 @@ export const MEDICARE: PageContent = {
     },
     {
       question: 'Is Apollo Physicians accepting new Medicare patients?',
-      answer: `Yes. Apollo Physicians welcomes new patients with Original Medicare at its South Sacramento office, ${OFFICE.street}. Same-day and next-day appointments are offered. Call ${CALL}, say you are a new patient with Medicare, and bring your Medicare card and a photo ID to your first visit.`,
+      answer: `Yes. Apollo Physicians welcomes new patients with Original Medicare at its South Sacramento office, ${OFFICE.street}. You can also book online. Call ${CALL}, say you are a new patient with Medicare, and bring your Medicare card and a photo ID to your first visit.`,
     },
     {
       question: 'What if I have a Medicare Advantage plan?',
@@ -535,7 +535,7 @@ export const MEDICARE: PageContent = {
  * No price is published (owner instruction, Nov 2026). Not stated: payment methods, any discount.
  * ----------------------------------------------------------------------------------------------- */
 
-export const SELF_PAY_DIRECT_ANSWER = `Apollo Physicians in South Sacramento sees patients without insurance, with ${DOC}, a board-certified family physician. Ask what the visit includes and what to bring when you call. Same-day and next-day appointments are offered. Call ${CALL} to book a self-pay visit.`;
+export const SELF_PAY_DIRECT_ANSWER = `Apollo Physicians in South Sacramento sees patients without insurance, with ${DOC}, a board-certified family physician. Ask what the visit includes and what to bring when you call. You can also book online. Call ${CALL} to book a self-pay visit.`;
 
 export const SELF_PAY: PageContent = {
   h1: 'Doctor Without Insurance in Sacramento',
@@ -608,11 +608,11 @@ export const SELF_PAY: PageContent = {
   faqs: [
     {
       question: 'Can I see a doctor without insurance in Sacramento?',
-      answer: `Yes. Apollo Physicians in South Sacramento sees patients who pay for their own visit, with ${DOC}. Say you will pay for yourself when you call ${CALL}, and ask what the visit includes. Same-day and next-day appointments are offered.`,
+      answer: `Yes. Apollo Physicians in South Sacramento sees patients who pay for their own visit, with ${DOC}. Say you will pay for yourself when you call ${CALL}, and ask what the visit includes. You can also book online.`,
     },
     {
-      question: 'Can I get a same-day appointment without insurance?',
-      answer: `Yes. Apollo Physicians offers same-day and next-day appointments to self-pay patients, the same as patients with insurance. Availability depends on the schedule each day, so call ${CALL} as early as you can, say you will pay for yourself, and ask for the next opening.`,
+      question: 'Can I book online without insurance?',
+      answer: `Yes. Self-pay patients book with Apollo Physicians the same way as patients with insurance: online at any time, or by calling ${CALL}. Say you will pay for yourself, ask what the visit includes, and bring a photo ID to your visit.`,
     },
     {
       question: 'What should I bring to a self-pay visit?',
@@ -643,7 +643,7 @@ export const SELF_PAY: PageContent = {
 
 export const HOURS_FAQ: FaqItem = {
   question: 'What are Apollo Physicians\' office hours?',
-  answer: `Apollo Physicians is open Monday to Friday from 8:30 a.m. to 5:30 p.m. and Saturday from 9:00 a.m. to 2:00 p.m. Pacific time, and closed on Sunday. Same-day and next-day appointments are offered, so call ${CALL} early in the day to ask for the next opening.`,
+  answer: `Apollo Physicians is open Monday to Friday from 8:30 a.m. to 5:30 p.m. and Saturday from 9:00 a.m. to 2:00 p.m. Pacific time, and closed on Sunday. Book online at any time, or call ${CALL} during office hours to ask for the next opening.`,
 };
 
 export const TELEMEDICINE_FAQ: FaqItem = {
@@ -851,8 +851,8 @@ export const NIVANO: PageContent = {
       answer: `Ask your health plan to change your primary care doctor. Call the member services number on your card, or use the plan's website, and ask for ${DOC}, at Apollo Physicians, in the Nivano Physicians network. Ask the date the change starts, then call ${CALL} to book.`,
     },
     {
-      question: 'Can Nivano Physicians patients get a same-day appointment?',
-      answer: `Yes. Apollo Physicians offers same-day and next-day appointments to every patient, including people whose doctor is assigned through Nivano Physicians. Availability depends on the schedule each day, so call ${CALL} as early as you can and ask for the next opening.`,
+      question: 'Can Nivano Physicians patients book online?',
+      answer: `Yes. Every Apollo Physicians patient, including people whose doctor is assigned through Nivano Physicians, can book online or by calling ${CALL}. Bring your insurance card and a photo ID, and ask the office if you need help choosing a time.`,
     },
     HOURS_FAQ,
     TELEMEDICINE_FAQ,
@@ -864,7 +864,7 @@ export const NIVANO: PageContent = {
  * Services (clinical: held until Dr. Panesar's review, which also confirms each service is offered)
  * ----------------------------------------------------------------------------------------------- */
 
-export const SERVICES_DIRECT_ANSWER = `Apollo Physicians provides family medicine in Sacramento with ${DOC}, including annual physicals, school and sports physicals, vaccinations, and care for ongoing conditions such as diabetes and high blood pressure. Same-day and next-day appointments are offered. Call ${CALL} to book.`;
+export const SERVICES_DIRECT_ANSWER = `Apollo Physicians provides family medicine in Sacramento with ${DOC}, including annual physicals, school and sports physicals, vaccinations, and care for ongoing conditions such as diabetes and high blood pressure. You can also book online. Call ${CALL} to book.`;
 
 export const SERVICES: PageContent = {
   h1: 'Family Medicine Services in Sacramento',
@@ -887,7 +887,7 @@ export const SERVICES: PageContent = {
         'School and sports physicals',
         'Vaccinations',
         'Care for ongoing conditions such as diabetes and high blood pressure',
-        'Same-day and next-day appointments',
+        'Online booking',
       ],
       links: [
         { label: 'Annual physical', href: '/annual-physical-sacramento' },
@@ -922,8 +922,8 @@ export const SERVICES: PageContent = {
       answer: `Apollo Physicians provides ongoing care for conditions such as diabetes and high blood pressure. Regular visits let ${DOC}, review how you are doing and update your plan. Call ${CALL} to book a visit, and bring your medicines and any recent test results.`,
     },
     {
-      question: 'Can I get a same-day appointment for these services?',
-      answer: `Apollo Physicians offers same-day and next-day appointments, and availability depends on the schedule. Call ${CALL} early, say which service you need, and ask for the next opening. Tell the office if you are a new patient. For an emergency, call 911 instead of the office.`,
+      question: 'Can I book these services online?',
+      answer: `Yes. You can book any of these services at Apollo Physicians online, or call ${CALL}, say which service you need, and ask for the next opening. Tell the office if you are a new patient. For an emergency, call 911 instead of the office.`,
     },
     {
       question: 'Is Apollo Physicians accepting new patients for these services?',
@@ -984,7 +984,7 @@ export const FAQ_HUB: PageContent = {
     {
       question: 'How do I choose a primary care physician?',
       clinical: true,
-      answer: `Choose a doctor your insurance accepts, whose office is easy to reach, who offers appointments when you need them, and who listens to your questions. Apollo Physicians accepts several major health plans and Medicare, offers same-day and next-day appointments, and is next to Highway 99. Call ${CALL} to ask whether the office fits your needs.`,
+      answer: `Choose a doctor your insurance accepts, whose office is easy to reach, who offers appointments when you need them, and who listens to your questions. Apollo Physicians accepts several major health plans and Medicare, takes bookings online, and is next to Highway 99. Call ${CALL} to ask whether the office fits your needs.`,
     },
     {
       question: 'What is the difference between family medicine, internal medicine and pediatrics?',
@@ -1002,7 +1002,7 @@ export const ALL_INSURANCE = INSURANCE_ACCEPTED;
  * Sports physical (second review batch: held until SECOND_CLINICAL_REVIEW.reviewedOn is set)
  * ----------------------------------------------------------------------------------------------- */
 
-export const SPORTS_PHYSICAL_DIRECT_ANSWER = `Apollo Physicians in South Sacramento completes school and sports physical forms with ${DOC}, a board-certified family physician. Bring the form from the school, team or league to the visit. Same-day and next-day appointments are offered. Call ${CALL} to book, and ask whether your child's age can be seen at the office.`;
+export const SPORTS_PHYSICAL_DIRECT_ANSWER = `Apollo Physicians in South Sacramento completes school and sports physical forms with ${DOC}, a board-certified family physician. Bring the form from the school, team or league to the visit. You can also book online. Call ${CALL} to book, and ask whether your child's age can be seen at the office.`;
 
 export const SPORTS_PHYSICAL: PageContent = {
   h1: 'Sports Physical in Sacramento',
@@ -1043,7 +1043,7 @@ export const SPORTS_PHYSICAL: PageContent = {
       steps: [
         `Call ${CALL} and say you need a school or sports physical.`,
         "Ask whether your child's age can be seen at the office.",
-        'Ask for the next opening. Same-day and next-day appointments are offered.',
+        'Ask for the next opening, or book online.',
         'Bring the form to the visit rather than sending it ahead.',
       ],
     },
@@ -1071,8 +1071,8 @@ export const SPORTS_PHYSICAL: PageContent = {
       answer: `At Apollo Physicians, ${DOC}, reviews the health history on the form and does a physical exam. That usually includes height, weight, blood pressure, a vision check, and an exam of the heart, lungs and joints. The doctor signs the form if it is safe to play.`,
     },
     {
-      question: 'Can I get a same-day sports physical in Sacramento?',
-      answer: `Apollo Physicians offers same-day and next-day appointments, including for school and sports physicals. Times depend on the schedule each day, so call ${CALL} early and ask for the next opening. Bring the completed parts of the form so ${DOC}, can finish it at the visit.`,
+      question: 'Can I book a sports physical online?',
+      answer: `Yes. You can book a school or sports physical at Apollo Physicians online, or call ${CALL} and ask for the next opening. Bring the completed parts of the form so ${DOC}, can finish it at the visit.`,
     },
     {
       question: 'Does insurance cover a sports physical?',
@@ -1089,7 +1089,7 @@ export const SPORTS_PHYSICAL: PageContent = {
  * Well-child exam (second review batch; also needs the practice to confirm the ages it sees)
  * ----------------------------------------------------------------------------------------------- */
 
-export const WELL_CHILD_DIRECT_ANSWER = `Apollo Physicians in South Sacramento offers well-child checkups with ${DOC}, a board-certified family physician who can care for the whole family. A well-child visit checks growth, development and vaccines. Same-day and next-day appointments are offered. Call ${CALL} to book and to confirm the ages seen at the office.`;
+export const WELL_CHILD_DIRECT_ANSWER = `Apollo Physicians in South Sacramento offers well-child checkups with ${DOC}, a board-certified family physician who can care for the whole family. A well-child visit checks growth, development and vaccines. You can also book online. Call ${CALL} to book and to confirm the ages seen at the office.`;
 
 export const WELL_CHILD: PageContent = {
   h1: 'Well-Child Exam in Sacramento',
@@ -1194,7 +1194,7 @@ export const CHOOSE_DOCTOR: PageContent = {
           ['Board certification', 'Search the doctor on ABMS Verify Certification', `${DOC}, board certified in family medicine by the ${CREDENTIALS.boardBody}`],
           ['Insurance', 'Call the office with your plan name, and check your plan directory', `${insuranceSentence()}`],
           ['New patients', 'Ask the office directly', 'Accepting new patients'],
-          ['How soon you can be seen', 'Ask for the next opening when you call', 'Same-day and next-day appointments'],
+          ['How soon you can be seen', 'Ask for the next opening when you call', 'Book online or call'],
           ['Location', 'Check the drive time from home or work', `${ADDRESS}; ${DRIVE} from Elk Grove`],
         ],
       },
@@ -1260,7 +1260,7 @@ export const CHOOSE_DOCTOR: PageContent = {
     },
     {
       question: 'How do I find a doctor accepting new patients in Sacramento?',
-      answer: `Ask the office whether it is accepting new patients with your plan, then ask for the next opening. Apollo Physicians in South Sacramento is accepting new patients with ${DOC}, and offers same-day and next-day appointments. Call ${CALL}.`,
+      answer: `Ask the office whether it is accepting new patients with your plan, then ask for the next opening. Apollo Physicians in South Sacramento is accepting new patients with ${DOC}, and takes bookings online at any time. Call ${CALL} with your plan name.`,
     },
     {
       question: 'Should I trust star ratings when choosing a doctor?',
@@ -1314,7 +1314,7 @@ export const LANGUAGES_PAGE: PageContent = {
       id: 'primary-care',
       heading: 'A primary care doctor for the whole family',
       paragraphs: [
-        `As a family physician, ${DOC}, can be your primary care doctor for checkups, physicals, vaccinations and ongoing conditions such as diabetes and high blood pressure. Same-day and next-day appointments are offered, and telemedicine visits are available for patients in California.`,
+        `As a family physician, ${DOC}, can be your primary care doctor for checkups, physicals, vaccinations and ongoing conditions such as diabetes and high blood pressure. Appointments can be booked online, and telemedicine visits are available for patients in California.`,
       ],
       links: [
         { label: 'Services', href: '/services' },

@@ -1,7 +1,7 @@
 import type { ContentBlock } from '@/data/content';
 import { CLINICAL_REVIEW } from '@/data/pages';
 import { LANGUAGES_SENTENCE, PROVIDER, TELEMEDICINE, insuranceSentence } from '@/data/practice';
-import { BRAND, OFFICE, OFFICE_HOURS, PHONES, type OfficeHoursRow } from '@/data/site';
+import { BOOKING_URL, BRAND, OFFICE, OFFICE_HOURS, PHONES, type OfficeHoursRow } from '@/data/site';
 import type { FaqItem } from '@/types';
 
 /** True once Dr. Panesar has reviewed the health content, so clinical items may be shown. */
@@ -52,7 +52,7 @@ export function quickFacts(): QuickFact[] {
     { label: 'Provider', value: PROVIDER.name, href: '/dr-paramjit-panesar-md' },
     { label: 'Languages', value: `Dr. Panesar speaks ${LANGUAGES_SENTENCE}`, href: '/punjabi-hindi-speaking-doctor-sacramento' },
     { label: 'Insurance', value: insuranceSentence(), href: '/insurance-accepted' },
-    { label: 'Appointments', value: 'Same-day and next-day appointments' },
+    { label: 'Appointments', value: BOOKING_URL ? 'Book online or by phone' : 'By phone', href: BOOKING_URL ?? undefined },
     { label: 'Telemedicine', value: TELEMEDICINE },
     { label: 'New patients', value: 'Accepted', href: '/new-patients' },
   );

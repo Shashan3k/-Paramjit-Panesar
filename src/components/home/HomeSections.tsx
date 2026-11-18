@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { CheckCircle2, MapPin, Phone, Star, Stethoscope } from 'lucide-react';
 import { FaqList } from '@/components/page/FaqList';
 import { ButtonLink } from '@/components/ui/Button';
+import { BookOnlineButton } from '@/components/ui/BookOnlineButton';
 import { MapEmbed } from '@/components/ui/MapEmbed';
 import { Section } from '@/components/ui/Section';
 import { livePages, PAGE_META, type PageKey } from '@/data/pages';
@@ -32,7 +33,7 @@ export function HomeSections() {
           <div className="space-y-4">
             <p className="text-lg leading-relaxed text-navy-800">
               Looking for a family doctor near you in South Sacramento? Family medicine is a primary care specialty, and {PROVIDER.name}, practices it here at
-              a single office on {OFFICE.streetName}. Same-day and next-day appointments are offered, and new patients are welcome.
+              a single office on {OFFICE.streetName}. New patients are welcome, and you can also book online.
             </p>
             <p className="text-lg leading-relaxed text-navy-800">
               A family physician cares for people of all ages and is often the first doctor you call. If you are searching for a primary care physician in
@@ -127,6 +128,7 @@ export function HomeSections() {
                 <Phone className="h-5 w-5" aria-hidden="true" />
                 Call {PHONES.main.display}
               </ButtonLink>
+              <BookOnlineButton />
             </div>
           </div>
           <MapEmbed query={OFFICE.line} title={`Map of the Apollo Physicians office at ${OFFICE.line}`} />

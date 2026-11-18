@@ -48,8 +48,8 @@ export const INSURANCE_LIST_DATE = '11 November 2026';
 /** CONFIRMED 11 Nov 2026 (item 27): telemedicine for patients in California. Visit types were not supplied. */
 export const TELEMEDICINE = 'Telemedicine visits for patients in California.';
 
-/** OWNER: same-day and next-day appointments; new patients accepted. No prices are published anywhere on the site. */
-export const APPOINTMENT_AVAILABILITY = 'Same-day and next-day appointments.';
+/** Booking: online or by phone (owner, 18 Nov 2026: same-day and next-day claims removed). New patients accepted. No prices are published anywhere on the site. */
+export const APPOINTMENT_AVAILABILITY = 'Book online or by phone.';
 
 /** OWNER and NPPES: family medicine. */
 export const SPECIALTY = 'Family Medicine';
@@ -126,10 +126,10 @@ const ELK_DRIVE = `about ${ELK_GROVE_DRIVE.minutes} minutes`;
  */
 
 /** 40 to 60 words, directly under the home page H1. Quotable on its own. */
-export const HOME_DIRECT_ANSWER = `Apollo Physicians is a family medicine practice at ${OFFICE.line}, led by ${PROVIDER.name}, who is board certified in family medicine. The office offers same-day and next-day appointments, welcomes new patients, and accepts Medicare and several major health plans. Patients without insurance are welcome too. Call ${CALL}.`;
+export const HOME_DIRECT_ANSWER = `Apollo Physicians is a family medicine practice at ${OFFICE.line}, led by ${PROVIDER.name}, who is board certified in family medicine. You can book online. The office welcomes new patients, and accepts Medicare and several major health plans. Patients without insurance are welcome too. Call ${CALL}.`;
 
 /** 40 to 60 words, directly under the Elk Grove page H1. */
-export const ELK_GROVE_DIRECT_ANSWER = `Apollo Physicians is in South Sacramento at ${OFFICE.street}, and serves Elk Grove families with same-day and next-day appointments. Google Maps shows about ${ELK_GROVE_DRIVE.minutes} minutes by car from Elk Grove ZIP codes 95758 and 95624 with usual traffic. New patients are welcome, and the office accepts Medicare and several major health plans. Call ${CALL}.`;
+export const ELK_GROVE_DIRECT_ANSWER = `Apollo Physicians is in South Sacramento at ${OFFICE.street}, and serves Elk Grove families, who can book online. Google Maps shows about ${ELK_GROVE_DRIVE.minutes} minutes by car from Elk Grove ZIP codes 95758 and 95624 with usual traffic. New patients are welcome, and the office accepts Medicare and several major health plans. Call ${CALL}.`;
 
 /** One quotable sentence, used inside answers. */
 export const HOME_LEAD = `Apollo Physicians is a family medicine practice at ${OFFICE.line}.`;
@@ -147,15 +147,15 @@ export const HOME_FAQS: readonly FaqItem[] = [
   },
   {
     question: 'How do I book an appointment?',
-    answer: `Call Apollo Physicians at ${CALL} to book an appointment with ${PROVIDER.name}. Same-day and next-day appointments are offered, so ask for the next available time. New patients are welcome. Tell the office whether you have insurance or will pay yourself, and bring a photo ID to your visit.`,
+    answer: `Call Apollo Physicians at ${CALL} to book an appointment with ${PROVIDER.name}. You can also book online. New patients are welcome. Tell the office whether you have insurance or will pay yourself, and bring a photo ID to your visit.`,
   },
   {
     question: 'What insurance does Apollo Physicians accept?',
     answer: `Apollo Physicians accepts ${insuranceSentence()}. Plans and networks can change, so call ${CALL} to confirm your specific plan before your visit. The full list, with the date the practice provided it, is on the insurance page.`,
   },
   {
-    question: 'Can I get a same-day or next-day appointment?',
-    answer: `Yes. Apollo Physicians offers same-day and next-day appointments. Availability on a given day depends on the schedule, so call ${CALL} as early as you can and ask for the next opening. If you have an emergency, call 911 instead of the office.`,
+    question: 'Can I book an appointment online?',
+    answer: `Yes. Apollo Physicians takes appointment requests online, and you can also call ${CALL}. Choose the time that suits you, and confirm it with the office if you are unsure. If you have an emergency, call 911 instead of the office.`,
   },
   {
     question: 'Does Apollo Physicians serve patients from Elk Grove?',
@@ -175,7 +175,7 @@ export const HOME_FAQS: readonly FaqItem[] = [
   },
   {
     question: 'Does Apollo Physicians have other providers?',
-    answer: `Yes. Apollo Physicians has two other providers besides ${PROVIDER.name}. Their names and details are not listed on this website yet. Call ${CALL} to ask about your visit, and ask for a same-day or next-day appointment at ${OFFICE.street}, ${OFFICE.city}.`,
+    answer: `Yes. Apollo Physicians has two other providers besides ${PROVIDER.name}. Their names and details are not listed on this website yet. Call ${CALL} to ask about your visit, or book online for a visit at ${OFFICE.street}, ${OFFICE.city}.`,
   },
   {
     question: 'Is Apollo Physicians accepting new patients?',
@@ -202,18 +202,18 @@ export const PANESAR_FAQS: readonly FaqItem[] = [
   },
   {
     question: 'Where does Dr. Panesar see patients?',
-    answer: `${PROVIDER.name}, sees patients at Apollo Physicians, ${OFFICE.line}, in South Sacramento near ${LOCATION.highway} and about ${LOCATION.hospitalDistance} from ${LOCATION.nearHospital}. Patients also come from Elk Grove. Call ${CALL} to book a visit. Same-day and next-day appointments are offered.`,
+    answer: `${PROVIDER.name}, sees patients at Apollo Physicians, ${OFFICE.line}, in South Sacramento near ${LOCATION.highway} and about ${LOCATION.hospitalDistance} from ${LOCATION.nearHospital}. Patients also come from Elk Grove. Call ${CALL} to book a visit. You can also book online.`,
   },
   {
     question: 'How do I book an appointment with Dr. Panesar?',
-    answer: `Call Apollo Physicians at ${CALL} to book an appointment with ${PROVIDER.name}. Same-day and next-day appointments are offered, and new patients are welcome. Tell the office your insurance plan, or that you will pay yourself, and bring a photo ID and your insurance card to the visit.`,
+    answer: `Call Apollo Physicians at ${CALL} to book an appointment with ${PROVIDER.name}. New patients are welcome, and you can also book online. Tell the office your insurance plan, or that you will pay yourself, and bring a photo ID and your insurance card to the visit.`,
   },
 ];
 
 export const ELK_GROVE_FAQS: readonly FaqItem[] = [
   {
     question: 'Does Apollo Physicians serve patients from Elk Grove?',
-    answer: `Yes. Elk Grove patients are seen at the one Apollo Physicians office, ${OFFICE.street}, in South Sacramento. Same-day and next-day appointments are offered, new patients are welcome, and the office accepts Medicare and several major health plans. Call ${CALL} to book your first visit.`,
+    answer: `Yes. Elk Grove patients are seen at the one Apollo Physicians office, ${OFFICE.street}, in South Sacramento. You can book online, new patients are welcome, and the office accepts Medicare and several major health plans. Call ${CALL} to book your first visit.`,
   },
   {
     question: 'How long is the drive from Elk Grove?',
@@ -232,12 +232,12 @@ export const ELK_GROVE_FAQS: readonly FaqItem[] = [
     answer: `Elk Grove patients use the same plans as every Apollo Physicians patient: ${insuranceSentence()}. Confirm your plan with the office at ${CALL} before you travel, because plans and networks can change.`,
   },
   {
-    question: 'Can Elk Grove patients get a same-day or next-day appointment?',
-    answer: `Yes. Apollo Physicians offers same-day and next-day appointments, and Elk Grove patients book the same way as every other patient. Call ${CALL} early in the day and ask for the next opening. Because the drive takes ${ELK_DRIVE}, confirm your time with the office before you leave home.`,
+    question: 'Can Elk Grove patients book online?',
+    answer: `Yes. Elk Grove patients book the same way as every other Apollo Physicians patient: online at any time, or by calling ${CALL} during office hours. Because the drive takes ${ELK_DRIVE}, confirm your time with the office before you leave home.`,
   },
   {
     question: 'Can Elk Grove patients without insurance be seen?',
-    answer: `Yes. Apollo Physicians sees patients without insurance at its South Sacramento office, including patients from Elk Grove. Say you will pay for yourself when you call ${CALL}, ask what the visit includes, and ask for a same-day or next-day appointment. The office is ${ELK_DRIVE} by car from Elk Grove.`,
+    answer: `Yes. Apollo Physicians sees patients without insurance at its South Sacramento office, including patients from Elk Grove. Say you will pay for yourself when you call ${CALL}, ask what the visit includes, or book online. The office is ${ELK_DRIVE} by car from Elk Grove.`,
   },
   {
     question: 'Is the office near a hospital?',
