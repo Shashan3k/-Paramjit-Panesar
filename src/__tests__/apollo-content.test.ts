@@ -5,7 +5,7 @@ import { ELK_GROVE_FAQS, HOME_FAQS, INSURANCE_ACCEPTED, INSURANCE_GROUPS } from 
 import { PAGE_META } from '@/data/pages';
 import { BRAND, GEO, OFFICE, OFFICE_HOURS, PHONES, PHYSICIAN_PROFILES, SITE_URL } from '@/data/site';
 import { DESCRIPTION_MAX, DESCRIPTION_MIN, TITLE_MAX, TITLE_MIN } from '@/lib/seo-fit';
-import { CLINIC_ID, PHYSICIAN_ID, WEBSITE_ID, clinicNode, faqNode, graph, physicianNode, webPageNode, websiteNode } from '@/lib/structured-data';
+import { CLINIC_ID, PHYSICIAN_ID, WEBSITE_ID, clinicNode, faqNode, graph, pageGraph, physicianNode, webPageNode, websiteNode } from '@/lib/structured-data';
 
 const PAGES = Object.values(PAGE_META);
 
@@ -174,6 +174,20 @@ describe('structured data graph', () => {
     const profile = webPageNode({ path: '/dr-paramjit-panesar', name: 'n', description: 'd', type: 'ProfilePage', about: 'physician' }) as Record<string, unknown>;
     expect(profile['@type']).toBe('ProfilePage');
     expect(profile.mainEntity).toEqual({ '@id': PHYSICIAN_ID });
+  });
+
+  it('marks the Elk Grove page as written for Elk Grove, the contact page as a ContactPage, and the cities as Californian', () => {
+    const nodes = (key: 'elkGrove' | 'contact' | 'home') => (pageGraph({ key }) as { '@graph': Record<string, unknown>[] })['@graph'];
+    const pageOf = (key: 'elkGrove' | 'contact' | 'home') => nodes(key).find((n) => String(n['@id']).endsWith('#webpage'))!;
+    expect(pageOf('elkGrove').spatialCoverage).toEqual({ '@type': 'City', name: 'Elk Grove', containedInPlace: { '@type': 'State', name: 'California' } });
+    expect(pageOf('home').spatialCoverage).toBeUndefined();
+    expect(pageOf('contact')['@type']).toBe('ContactPage');
+    // The office address stays in Sacramento on every page, including the Elk Grove page.
+    const clinic = nodes('elkGrove').find((n) => n['@id'] === CLINIC_ID)!;
+    expect((clinic.address as Record<string, unknown>).addressLocality).toBe('Sacramento');
+    const cities = (clinic.areaServed as Record<string, unknown>[]).filter((n) => n['@type'] === 'City');
+    expect(cities.map((c) => c.name)).toEqual(['Sacramento', 'Elk Grove']);
+    for (const c of cities) expect(c.containedInPlace).toEqual({ '@type': 'State', name: 'California' });
   });
 });
 

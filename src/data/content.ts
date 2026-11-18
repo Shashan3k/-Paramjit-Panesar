@@ -1,5 +1,5 @@
 import type { FaqItem } from '@/types';
-import { CREDENTIALS, INSURANCE_ACCEPTED, LANGUAGES_SENTENCE, PROVIDER, VERIFY_LINKS, insuranceSentence } from './practice';
+import { CREDENTIALS, INSURANCE_ACCEPTED, LANGUAGES_SENTENCE, PROVIDER, TELEMEDICINE, VERIFY_LINKS, insuranceSentence } from './practice';
 import { ELK_GROVE_DRIVE, LOCATION, OFFICE, PHONES } from './site';
 
 /**
@@ -1196,6 +1196,8 @@ export const CHOOSE_DOCTOR: PageContent = {
           ['New patients', 'Ask the office directly', 'Accepting new patients'],
           ['How soon you can be seen', 'Ask for the next opening when you call', 'Book online or call'],
           ['Location', 'Check the drive time from home or work', `${ADDRESS}; ${DRIVE} from Elk Grove`],
+          ['Language', 'Ask which languages the doctor speaks with patients', `${DOC}, speaks ${LANGUAGES_SENTENCE}`],
+          ['Telemedicine', 'Ask whether some visits can be done without a trip to the office', TELEMEDICINE],
         ],
       },
       links: [
@@ -1238,6 +1240,7 @@ export const CHOOSE_DOCTOR: PageContent = {
         { label: 'New patients', href: '/new-patients' },
         { label: 'Insurance and payment options', href: '/insurance-accepted' },
         { label: DOC, href: '/dr-paramjit-panesar-md' },
+        { label: 'Family physician for Elk Grove patients', href: '/family-physician-elk-grove' },
       ],
     },
   ],

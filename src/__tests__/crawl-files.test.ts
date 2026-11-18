@@ -118,7 +118,9 @@ describe('llms.txt', () => {
     expect(text).toContain('## Hours');
     expect(text).toContain('Telemedicine visits for patients in California.');
     expect(text).toContain('Medi-Cal: most plans.');
-    expect(text).toContain('not a community health center or free clinic');
+    // Item 40 is open: Community Health Centers of America lists this office on chcahealth.org (checked 18 Nov 2026), so
+    // llms.txt says nothing either way about being, or not being, a community health center.
+    expect(text).not.toMatch(/community health center|free clinic|FQHC/i);
     expect(text).toContain('Speaks English, Punjabi and Hindi with patients.');
     for (const flags of [none, all]) {
       expect(buildLlmsTxt(flags)).not.toMatch(/bilingual|spanish|staff speak|telehealth|24\/7|sliding|Vivant|River City/i);

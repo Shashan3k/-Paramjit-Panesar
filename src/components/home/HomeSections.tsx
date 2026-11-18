@@ -16,7 +16,7 @@ const HELP_CARDS: readonly { key: PageKey; title: string; text: string }[] = [
   { key: 'annualPhysical', title: 'Annual physical', text: 'A yearly preventive visit with a physical exam. See what to expect and bring.' },
   { key: 'services', title: 'Services', text: 'Family medicine services, from physicals and vaccinations to ongoing care.' },
   { key: 'insurance', title: 'Insurance accepted', text: 'Medicare and several major health plans, and self-pay patients are welcome.' },
-  { key: 'elkGrove', title: 'Elk Grove patients', text: 'About 12 minutes from Elk Grove by car, with drive times and routes.' },
+  { key: 'elkGrove', title: 'Family doctor for Elk Grove patients', text: 'About 12 minutes from Elk Grove by car, with drive times and routes.' },
   { key: 'contact', title: 'Contact and directions', text: 'Address, phone, a map and directions to the South Sacramento office.' },
 ];
 
@@ -28,7 +28,7 @@ export function HomeSections() {
 
   return (
     <>
-      <Section id="how-we-help" headingId="home-help-heading" title="How we can help" eyebrow="Family medicine in Sacramento">
+      <Section id="how-we-help" headingId="home-help-heading" title="Family doctor and primary care in South Sacramento" eyebrow="Family medicine in Sacramento">
         <div className="grid gap-6 lg:grid-cols-2">
           <div className="space-y-4">
             <p className="text-lg leading-relaxed text-navy-800">
@@ -36,8 +36,12 @@ export function HomeSections() {
               a single office on {OFFICE.streetName}. New patients are welcome, and you can also book online.
             </p>
             <p className="text-lg leading-relaxed text-navy-800">
-              A family physician cares for people of all ages and is often the first doctor you call. If you are searching for a primary care physician in
-              Sacramento, start by checking that the office accepts your insurance, then call {PHONES.main.display} to book.
+              A family physician cares for people of all ages and is often the first doctor you call. If you are comparing primary care physicians in
+              Sacramento, read{' '}
+              <Link href={PAGE_META.chooseDoctor.path} className="font-semibold text-teal-800 hover:underline">
+                how to choose a family doctor in Sacramento
+              </Link>
+              , check that the office accepts your insurance, then call {PHONES.main.display} to book.
             </p>
           </div>
           <ul className="grid gap-3 sm:grid-cols-2">

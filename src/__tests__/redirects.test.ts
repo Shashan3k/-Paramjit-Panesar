@@ -22,12 +22,9 @@ const ON_HOLD = [
   '/provider/ramandeep-dhaliwal-md',
   '/provider/ethelyne-j-acebedo-fnp-bc',
   '/pay-now',
-  '/service/telemedicine',
   '/service/chronic-disease-management',
-  '/service/immunizations',
   '/service/pediatrics',
   '/service/mental-health',
-  '/service/immigration-exams',
   "/service/women's-health",
 ];
 
@@ -72,6 +69,18 @@ describe('legacy redirects', () => {
   it('leave unconfirmed providers, the portal and unconfirmed services alone', () => {
     const touched = new Set([...pathRedirects.map((r) => r.source), ...rewrites.map((r) => r.source)]);
     for (const path of ON_HOLD) expect(touched.has(path), path).toBe(false);
+  });
+
+  it('carry the URLs that still had Search Console impressions on 17 Nov 2026 to their closest live page', () => {
+    const map = new Map(pathRedirects.map((r) => [r.source, r.destination]));
+    expect(map.get('/service/telemedicine')).toBe('/services');
+    expect(map.get('/service/immunizations')).toBe('/services');
+    expect(map.get('/same-day-appointments-sacramento')).toBe('/new-patients');
+  });
+
+  it('serve the removed immigration exam pages as 410 Gone', () => {
+    const sources = rewrites.map((r) => r.source);
+    for (const path of ['/immigration-medical-exam-sacramento', '/service/immigration-exams']) expect(sources, path).toContain(path);
   });
 
   it('keep the host redirects to the single canonical host', () => {

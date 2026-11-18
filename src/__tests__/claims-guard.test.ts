@@ -3,7 +3,7 @@ import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import * as content from '@/data/content';
 import { PAGE_META } from '@/data/pages';
-import { ELK_GROVE_DIRECT_ANSWER, ELK_GROVE_FAQS, ELK_GROVE_NOTE, HOME_DIRECT_ANSWER, HOME_FAQS, HOME_LEAD, PANESAR_DIRECT_ANSWER, PANESAR_FAQS, PANESAR_LEAD } from '@/data/practice';
+import { ELK_GROVE_CHOOSING_ANSWER, ELK_GROVE_DIRECT_ANSWER, ELK_GROVE_FAQS, ELK_GROVE_NOTE, HOME_DIRECT_ANSWER, HOME_FAQS, HOME_LEAD, PANESAR_DIRECT_ANSWER, PANESAR_FAQS, PANESAR_LEAD } from '@/data/practice';
 import { buildLlmsTxt } from '@/lib/llms';
 
 /**
@@ -60,6 +60,7 @@ const dataStrings = [
   PANESAR_LEAD,
   PANESAR_DIRECT_ANSWER,
   ELK_GROVE_DIRECT_ANSWER,
+  ELK_GROVE_CHOOSING_ANSWER,
   ELK_GROVE_NOTE,
   ...[...HOME_FAQS, ...ELK_GROVE_FAQS, ...PANESAR_FAQS].flatMap((f) => [f.question, f.answer]),
   ...contentStrings,

@@ -63,7 +63,7 @@ function PlansTable() {
       <p className="mt-4 max-w-3xl text-navy-800">
         Plans and networks change, so confirm yours before your visit. Call {PHONES.main.display} with your plan name.
       </p>
-      <div className="mt-6">
+      <div className="mt-6 flex flex-wrap gap-3">
         <ButtonLink href={telHref(PHONES.main.tel)} variant="primary">
           <Phone className="h-5 w-5" aria-hidden="true" />
           Call {PHONES.main.display}
