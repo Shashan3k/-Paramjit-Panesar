@@ -20,10 +20,13 @@ const SITE_HOST = 'www.apollophysicians.com';
  *
  * Deliberately NOT redirected, so they stay 404 until the practice answers (client-confirmations.md):
  *   /provider/jaspreet-tiwana-md, /provider/ramandeep-dhaliwal-md, /provider/ethelyne-j-acebedo-fnp-bc (item 17),
- *   /pay-now (item 29), /service/telemedicine (item 27), and the services that are not confirmed:
- *   chronic-disease-management, immunizations, pediatrics, mental-health, immigration-exams, women's-health (item 26).
- * After Dr. Panesar's review, re-point /service/primary-care to /services. Immigration exams are no longer on the
- * site (owner instruction, Nov 2026), so /service/immigration-exams stays unredirected.
+ *   /pay-now (item 29), and the services that are not confirmed: chronic-disease-management, pediatrics,
+ *   mental-health, women's-health (item 26). Re-point /service/pediatrics to /well-child-exam-sacramento once that
+ *   page passes the second review.
+ * Added 18 Nov 2026 from the Search Console export of 17 Nov (docs/APOLLO_GSC_DEEP_AUDIT.md):
+ *   /service/telemedicine (telemedicine confirmed, item 27) and /service/immunizations (vaccinations are on
+ *   /services) go to /services; /same-day-appointments-sacramento (page removed 17 Nov) goes to /new-patients,
+ *   which explains how to book.
  */
 const LEGACY_REDIRECTS = [
   // Generic pages of the old site: the home page is the closest equivalent.
@@ -41,13 +44,17 @@ const LEGACY_REDIRECTS = [
   ...['/content/new-patients', '/schedule', '/registration'].map((source) => ({ source, destination: '/new-patients' })),
   // Family medicine as a service: the services page waits for Dr. Panesar's review, so these go to the home page.
   ...['/service/primary-care', '/service/same-day-visits'].map((source) => ({ source, destination: '/' })),
+  // Services confirmed after the 2023 site, and the appointments page removed on 17 Nov 2026.
+  ...['/service/telemedicine', '/service/immunizations'].map((source) => ({ source, destination: '/services' })),
+  { source: '/same-day-appointments-sacramento', destination: '/new-patients' },
   // No privacy, terms or accessibility pages exist yet. Re-point when they do.
   ...['/accessibility-statement', '/your-privacy', '/our-terms'].map((source) => ({ source, destination: '/' })),
 ].map((rule) => ({ ...rule, permanent: true, statusCode: 301 }));
 
 /**
- * Retired content with nothing to carry over: cosmetic services, testimonials and the blog. Served as
- * 410 Gone (through the /gone route) so search engines drop them faster than a 404.
+ * Retired content with nothing to carry over: cosmetic services, testimonials, the blog, and immigration medical
+ * exams (no longer offered, owner instruction Nov 2026). Served as 410 Gone (through the /gone route) so search
+ * engines drop them faster than a 404.
  */
 const GONE_PATHS = [
   '/aesthetics',
@@ -63,6 +70,8 @@ const GONE_PATHS = [
   '/blog',
   '/blog-archive',
   '/post',
+  '/immigration-medical-exam-sacramento',
+  '/service/immigration-exams',
 ];
 
 /**

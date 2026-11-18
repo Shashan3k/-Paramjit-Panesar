@@ -136,7 +136,8 @@ for (const page of PAGES) {
   if (!html) continue;
 
   // ---- 1. Legacy contamination ----
-  const lower = html.toLowerCase();
+  // The owner asked (18 Nov 2026) for online booking to go to chcahealth.org: allowed only as that exact booking URL.
+  const lower = html.toLowerCase().replaceAll('https://www.chcahealth.org/', '');
   const hits = LEGACY_TOKENS.filter((t) => lower.includes(t.toLowerCase()));
   check(`${page.path} has no legacy tokens`, hits.length === 0, hits.join(', '));
 

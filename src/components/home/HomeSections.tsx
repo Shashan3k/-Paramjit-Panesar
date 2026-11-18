@@ -28,7 +28,7 @@ export function HomeSections() {
 
   return (
     <>
-      <Section id="how-we-help" headingId="home-help-heading" title="How we can help" eyebrow="Family medicine in Sacramento">
+      <Section id="how-we-help" headingId="home-help-heading" title="Primary care for the whole family" eyebrow="Family medicine in Sacramento">
         <div className="grid gap-6 lg:grid-cols-2">
           <div className="space-y-4">
             <p className="text-lg leading-relaxed text-navy-800">
