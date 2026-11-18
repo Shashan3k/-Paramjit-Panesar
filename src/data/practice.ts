@@ -126,13 +126,16 @@ const ELK_DRIVE = `about ${ELK_GROVE_DRIVE.minutes} minutes`;
  */
 
 /** 40 to 60 words, directly under the home page H1. Quotable on its own. */
-export const HOME_DIRECT_ANSWER = `Apollo Physicians is a family medicine practice at ${OFFICE.line}, led by ${PROVIDER.name}, who is board certified in family medicine. You can book online. The office welcomes new patients, and accepts Medicare and several major health plans. Patients without insurance are welcome too. Call ${CALL}.`;
+export const HOME_DIRECT_ANSWER = `Apollo Physicians is a family medicine and primary care practice at ${OFFICE.line}, led by ${PROVIDER.name}, who is board certified in family medicine. New patients are welcome, and the office accepts Medicare and several major health plans. Patients without insurance are welcome too. Book online or call ${CALL}.`;
 
 /** 40 to 60 words, directly under the Elk Grove page H1. */
-export const ELK_GROVE_DIRECT_ANSWER = `Apollo Physicians is in South Sacramento at ${OFFICE.street}, and serves Elk Grove families, who can book online. Google Maps shows about ${ELK_GROVE_DRIVE.minutes} minutes by car from Elk Grove ZIP codes 95758 and 95624 with usual traffic. New patients are welcome, and the office accepts Medicare and several major health plans. Call ${CALL}.`;
+export const ELK_GROVE_DIRECT_ANSWER = `Apollo Physicians is a family medicine and primary care practice that serves Elk Grove patients from one office in South Sacramento, ${OFFICE.street}. Google Maps shows about ${ELK_GROVE_DRIVE.minutes} minutes by car from Elk Grove ZIP codes 95758 and 95624. New patients are welcome, and Medicare and several major health plans are accepted. Call ${CALL}.`;
+
+/** 40 to 60 words, under the Elk Grove page's "How do I choose a family doctor in Elk Grove?" heading. Verified facts only. */
+export const ELK_GROVE_CHOOSING_ANSWER = `To choose a family doctor from Elk Grove, check board certification, your insurance plan, the drive, and the languages the doctor speaks. At Apollo Physicians, ${PROVIDER.name}, is board certified in family medicine and speaks ${LANGUAGES_SENTENCE}. The one office, in South Sacramento, is ${ELK_DRIVE} by car from Elk Grove.`;
 
 /** One quotable sentence, used inside answers. */
-export const HOME_LEAD = `Apollo Physicians is a family medicine practice at ${OFFICE.line}.`;
+export const HOME_LEAD = `Apollo Physicians is a family medicine and primary care practice at ${OFFICE.line}.`;
 
 /** 40 to 60 words, directly under the physician page H1. */
 export const PANESAR_DIRECT_ANSWER = `${PROVIDER.name}, is a family physician at Apollo Physicians, ${OFFICE.line}. Dr. Panesar is board certified in family medicine by the ${CREDENTIALS.boardBody}, earned a medical degree from ${CREDENTIALS.medicalSchool}, and completed residency at UAMS. Apollo Physicians has two other providers. Call ${CALL} to book a visit.`;
@@ -228,8 +231,8 @@ export const ELK_GROVE_FAQS: readonly FaqItem[] = [
     answer: `Apollo Physicians serves patients from Elk Grove ZIP codes 95624, 95757 and 95758, from Sacramento ZIP codes 95823 and 95828, and from neighborhoods including Valley Hi, Laguna, Florin, Meadowview and Parkway. Patients from other areas can call ${CALL} to ask about booking at the South Sacramento office.`,
   },
   {
-    question: 'Which insurance plans are accepted for Elk Grove patients?',
-    answer: `Elk Grove patients use the same plans as every Apollo Physicians patient: ${insuranceSentence()}. Confirm your plan with the office at ${CALL} before you travel, because plans and networks can change.`,
+    question: 'Can Elk Grove patients have a telemedicine visit?',
+    answer: `Yes. Apollo Physicians offers telemedicine visits for patients in California, which includes Elk Grove. When you call ${CALL}, ask whether your visit can be done by telemedicine. If it needs an exam in person, the drive to the South Sacramento office is ${ELK_DRIVE} by car from Elk Grove.`,
   },
   {
     question: 'Can Elk Grove patients book online?',

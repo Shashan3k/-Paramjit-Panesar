@@ -181,7 +181,7 @@ for (const page of PAGES) {
   check(`${page.path} JSON-LD lists payment as insurance and self-pay, not insurer names`, serialised.includes('"paymentAccepted":"Health insurance, self-pay"'));
   check(`${page.path} JSON-LD uses no invalid FamilyPractice specialty`, !serialised.includes('FamilyPractice') && serialised.includes('https://schema.org/PrimaryCare'));
   check(`${page.path} JSON-LD @ids are all absolute`, [...ids].every((id) => String(id).startsWith('https://www.apollophysicians.com/')), [...ids].join(', '));
-  const pageNode = nodes.find((n) => ['WebPage', 'ProfilePage', 'MedicalWebPage'].includes(n['@type']) && n.url === expectedCanonical);
+  const pageNode = nodes.find((n) => ['WebPage', 'ProfilePage', 'ContactPage', 'MedicalWebPage'].includes(n['@type']) && n.url === expectedCanonical);
   check(`${page.path} JSON-LD has a WebPage-type node for this page`, Boolean(pageNode));
   check(`${page.path} JSON-LD marks the direct answer as speakable`, JSON.stringify(pageNode?.speakable ?? '').includes('[data-speakable]'));
   check(`${page.path} JSON-LD has no reviewed-by claim until Dr. Panesar reviews`, !serialised.includes('lastReviewed') || html.includes('Medical review'));

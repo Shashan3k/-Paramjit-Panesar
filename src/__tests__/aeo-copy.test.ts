@@ -31,6 +31,7 @@ import {
   CHOOSE_DOCTOR_DIRECT_ANSWER,
 } from '@/data/content';
 import {
+  ELK_GROVE_CHOOSING_ANSWER,
   ELK_GROVE_DIRECT_ANSWER,
   ELK_GROVE_FAQS,
   HOME_DIRECT_ANSWER,
@@ -72,6 +73,7 @@ const ALL_SETS = [
 const DIRECT_ANSWERS = [
   ['home', HOME_DIRECT_ANSWER],
   ['elk-grove', ELK_GROVE_DIRECT_ANSWER],
+  ['elk-grove-choosing', ELK_GROVE_CHOOSING_ANSWER],
   ['panesar', PANESAR_DIRECT_ANSWER],
   ['new-patients', NEW_PATIENTS_DIRECT_ANSWER],
   ['insurance', INSURANCE_DIRECT_ANSWER],
@@ -103,7 +105,7 @@ describe('direct answers under each H1', () => {
   });
 
   it('opens the home and physician answers with the practice and the address', () => {
-    expect(HOME_LEAD).toBe(`Apollo Physicians is a family medicine practice at ${OFFICE.line}.`);
+    expect(HOME_LEAD).toBe(`Apollo Physicians is a family medicine and primary care practice at ${OFFICE.line}.`);
     expect(HOME_DIRECT_ANSWER.startsWith(HOME_LEAD.replace(/\.$/, ''))).toBe(true);
     expect(PANESAR_LEAD.startsWith('Dr. Paramjit Panesar, MD, practices family medicine')).toBe(true);
     expect(PANESAR_DIRECT_ANSWER).toContain(OFFICE.line);

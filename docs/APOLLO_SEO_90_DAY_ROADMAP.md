@@ -10,7 +10,7 @@ No ranking, timeline or traffic outcome is promised. Every review compares two *
 
 | Task | Owner | Done when |
 |---|---|---|
-| Decide on the chcahealth.org booking link | Owner | Confirmed, or `BOOKING_URL` set to `null` |
+| Confirm the booking page (CHCA's Sacramento location page or patient portal) and the office hours, which differ on chcahealth.org | Owner | Both confirmed and identical on every site |
 | Merge and deploy this work; confirm what Vercel deploys | Developer + owner | Live site matches `main` |
 | Request indexing for `/`, `/family-physician-elk-grove`, `/dr-paramjit-panesar-md`, `/new-patients` | GSC owner | Requested |
 | Resubmit the sitemap (15 URLs, lastmod 2026-11-18) | GSC owner | "Success" in GSC |

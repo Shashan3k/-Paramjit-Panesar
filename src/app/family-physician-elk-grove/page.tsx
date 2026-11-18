@@ -12,7 +12,7 @@ import { PageHero } from '@/components/ui/PageHero';
 import { Section } from '@/components/ui/Section';
 import { BREADCRUMBS } from '@/data/navigation';
 import { PAGE_META, livePages } from '@/data/pages';
-import { ELK_GROVE_DIRECT_ANSWER, ELK_GROVE_FAQS, ELK_GROVE_NOTE } from '@/data/practice';
+import { CREDENTIALS, ELK_GROVE_CHOOSING_ANSWER, ELK_GROVE_DIRECT_ANSWER, ELK_GROVE_FAQS, ELK_GROVE_NOTE, LANGUAGES_SENTENCE, PROVIDER, TELEMEDICINE, VERIFY_LINKS } from '@/data/practice';
 import { AREAS_SERVED, ELK_GROVE_DRIVE, LOCATION, OFFICE, PHONES } from '@/data/site';
 import { buildMetadata } from '@/lib/seo';
 import { pageGraph } from '@/lib/structured-data';
@@ -28,6 +28,19 @@ const ROUTES = [
   { start: 'Elk Grove, ZIP 95758', time: `About ${ELK_GROVE_DRIVE.minutes} minutes`, distance: `${ELK_GROVE_DRIVE.milesFrom95758} miles`, route: ELK_GROVE_DRIVE.routeFrom95758 },
   { start: 'Elk Grove, ZIP 95758 (alternate)', time: `About ${ELK_GROVE_DRIVE.minutes} minutes`, distance: '6.2 miles', route: ELK_GROVE_DRIVE.altRouteFrom95758 },
   { start: 'Elk Grove, ZIP 95624', time: `About ${ELK_GROVE_DRIVE.minutes} minutes`, distance: '6.8 miles', route: ELK_GROVE_DRIVE.routeFrom95624 },
+] as const;
+
+/**
+ * What an Elk Grove patient can check before choosing a family doctor, answered with verified facts only (src/data).
+ * It answers "best family doctor in Elk Grove" searches with checkable facts, never a superlative.
+ */
+const CHECKLIST = [
+  ['Board certification', `${PROVIDER.name}, board certified in family medicine by the ${CREDENTIALS.boardBody}`],
+  ['Your insurance plan', 'Medicare, most Medi-Cal plans and several major health plans. Self-pay patients are welcome. Confirm your plan by phone.'],
+  ['The drive', `One office, in South Sacramento: about ${ELK_GROVE_DRIVE.minutes} minutes by car from ZIP codes 95758 and 95624 (Google Maps, usual traffic)`],
+  ['Visits without the drive', `${TELEMEDICINE} Ask whether your visit can be done this way.`],
+  ['Language', `Dr. Panesar speaks ${LANGUAGES_SENTENCE}`],
+  ['New patients', `Accepted. Book online or call ${PHONES.main.display}.`],
 ] as const;
 
 /** Segment pages shown to Elk Grove patients; a link appears only once its page is live (after clinical review). */
@@ -119,7 +132,58 @@ export default function ElkGrovePage() {
         </p>
       </Section>
 
-      <Section id="booking" headingId="elk-booking-heading" title="Booking from Elk Grove">
+      <Section id="choosing" headingId="elk-choosing-heading" title="How do I choose a family doctor in Elk Grove?">
+        <p className="max-w-3xl text-lg leading-relaxed text-navy-800">{ELK_GROVE_CHOOSING_ANSWER}</p>
+        <div className="mt-6 overflow-x-auto" tabIndex={0} role="region" aria-label="Checklist for Elk Grove patients table, scrollable">
+          {/* Two columns fit a phone screen, so no minimum width (the four-column drive table above needs one). */}
+          <table className="w-full border-collapse text-left">
+            <caption className="mb-2 text-left text-sm font-semibold text-navy-700">What Elk Grove patients can check, with the facts for Apollo Physicians</caption>
+            <thead>
+              <tr>
+                {['What to check', 'Apollo Physicians'].map((heading) => (
+                  <th key={heading} scope="col" className="border-b-2 border-navy-700 px-2 py-2 text-sm font-bold text-navy-900">
+                    {heading}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {CHECKLIST.map(([item, fact]) => (
+                <tr key={item}>
+                  <th scope="row" className="border-b border-warm-300 px-2 py-2 font-semibold text-navy-900">
+                    {item}
+                  </th>
+                  <td className="border-b border-warm-300 px-2 py-2">{fact}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        <p className="mt-4 max-w-3xl text-navy-800">
+          Check the board certification yourself on{' '}
+          <a href={VERIFY_LINKS.certification.href} target="_blank" rel="noopener noreferrer" className="font-semibold text-teal-800 hover:underline">
+            {VERIFY_LINKS.certification.label}
+            <span className="sr-only"> (opens in a new tab)</span>
+          </a>
+          . For the questions to ask any office when you call, read{' '}
+          <Link href={PAGE_META.chooseDoctor.path} className="font-semibold text-teal-800 hover:underline">
+            how to choose a family doctor
+          </Link>
+          {livePaths.has(PAGE_META.services.path) ? (
+            <>
+              , or see the{' '}
+              <Link href={PAGE_META.services.path} className="font-semibold text-teal-800 hover:underline">
+                family medicine services
+              </Link>{' '}
+              offered at the office.
+            </>
+          ) : (
+            '.'
+          )}
+        </p>
+      </Section>
+
+      <Section id="booking" headingId="elk-booking-heading" title="Booking from Elk Grove" tone="muted">
         <p className="max-w-3xl text-navy-800">
           Call{' '}
           <a href={telHref(PHONES.main.tel)} className="font-semibold text-teal-800 hover:underline">
@@ -135,7 +199,7 @@ export default function ElkGrovePage() {
           </Link>
           .
         </p>
-        <div className="mt-6">
+        <div className="mt-6 flex flex-wrap gap-3">
           <ButtonLink href={telHref(PHONES.main.tel)} variant="primary">
             <Phone className="h-5 w-5" aria-hidden="true" />
             Call {PHONES.main.display}
@@ -144,7 +208,7 @@ export default function ElkGrovePage() {
         </div>
       </Section>
 
-      <Section id="insurance" headingId="elk-insurance-heading" title="Insurance and payment for Elk Grove patients" tone="muted">
+      <Section id="insurance" headingId="elk-insurance-heading" title="Insurance and payment for Elk Grove patients">
         <p className="max-w-3xl text-navy-800">
           Elk Grove patients use the same plans as every patient, shown above. Call {PHONES.main.display} to confirm your plan before you travel, or see the{' '}
           <Link href="/insurance-accepted" className="font-semibold text-teal-800 hover:underline">

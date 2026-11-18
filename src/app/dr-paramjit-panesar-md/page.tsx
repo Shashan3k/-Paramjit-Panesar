@@ -66,7 +66,7 @@ export default function PanesarPage() {
           <div className="card">
             <dt className={CARD_LABEL}>Medical school</dt>
             <dd className="mt-2 text-navy-900">
-              {CREDENTIALS.medicalSchool}, {CREDENTIALS.medicalSchoolYear}
+              {CREDENTIALS.medicalSchool}, {CREDENTIALS.medicalSchoolPlace}, {CREDENTIALS.medicalSchoolYear}
             </dd>
           </div>
           <div className="card">
@@ -77,7 +77,7 @@ export default function PanesarPage() {
           </div>
           <div className="card">
             <dt className={CARD_LABEL}>Areas of focus</dt>
-            <dd className="mt-2 text-navy-900">Family medicine, preventive care</dd>
+            <dd className="mt-2 text-navy-900">Family medicine, primary care, preventive care</dd>
           </div>
           <div className="card">
             <dt className={CARD_LABEL}>Our team</dt>

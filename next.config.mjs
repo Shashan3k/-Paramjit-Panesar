@@ -134,6 +134,12 @@ const nextConfig = {
           { key: 'Permissions-Policy', value: 'geolocation=(self), camera=(), microphone=()' },
         ],
       },
+      // Share images, the logo and the photo change only when regenerated, so browsers and crawlers may keep them a
+      // week (they were served with max-age=0). Not "immutable": the file names stay the same when an image changes.
+      ...['/og/:file*', '/brand/:file*', '/images/:file*'].map((source) => ({
+        source,
+        headers: [{ key: 'Cache-Control', value: 'public, max-age=604800, stale-while-revalidate=86400' }],
+      })),
     ];
   },
 };

@@ -22,8 +22,8 @@ import { mapsPlaceUrl } from '@/lib/utils';
  *
  * Rules this file follows:
  * - Only facts that are visible on the page and present in src/data are emitted.
- * - Not emitted, because they are not confirmed (docs/seo/client-confirmations.md): openingHours (until
- *   OFFICE_HOURS is set), knowsLanguage, hospitalAffiliation, other providers, and any plan beyond the owner's list.
+ * - Not emitted, because they are not confirmed (docs/seo/client-confirmations.md): hospitalAffiliation, other
+ *   providers, and any plan beyond the owner's list. openingHours and knowsLanguage come from owner-confirmed data.
  * - lastReviewed and reviewedBy appear only after Dr. Panesar has reviewed the health content
  *   (CLINICAL_REVIEW.reviewedOn is set), so a review can never be claimed before it happened.
  * - No AggregateRating or Review: Google ignores self-serving review markup, and the real counts are unconfirmed.
@@ -70,6 +70,14 @@ export function websiteNode(): Node {
   };
 }
 
+/** The state, so "Sacramento" and "Elk Grove" cannot be read as places elsewhere. */
+const CALIFORNIA: Node = { '@type': 'State', name: 'California' };
+
+/** A city node, placed in California. */
+function city(name: string): Node {
+  return { '@type': 'City', name, containedInPlace: CALIFORNIA };
+}
+
 function areaServed(): Node[] {
   const place = (name: string): Node => ({ '@type': 'Place', name });
   const zip = (postalCode: string): Node => ({
@@ -78,7 +86,7 @@ function areaServed(): Node[] {
     address: { '@type': 'PostalAddress', postalCode, addressCountry: 'US' },
   });
   return [
-    ...AREAS_SERVED.cities.map((name) => ({ '@type': 'City', name })),
+    ...AREAS_SERVED.cities.map(city),
     ...AREAS_SERVED.neighborhoods.map(place),
     ...[...AREAS_SERVED.zipSacramento, ...AREAS_SERVED.zipElkGrove].map(zip),
   ];
@@ -87,7 +95,9 @@ function areaServed(): Node[] {
 /** Services appear in the schema only when their page is live (and so reviewed by Dr. Panesar). */
 function availableServices(): Node[] {
   const services: Node[] = [];
-  if (isLive(PAGE_META.annualPhysical)) services.push({ '@type': 'MedicalProcedure', name: 'Annual physical exam' });
+  if (isLive(PAGE_META.annualPhysical)) {
+    services.push({ '@type': 'MedicalProcedure', name: 'Annual physical exam', url: absoluteUrl(PAGE_META.annualPhysical.path) });
+  }
   return services;
 }
 
@@ -163,7 +173,7 @@ export function physicianNode(): Node {
       },
       { '@type': 'CollegeOrUniversity', name: 'University of Arkansas for Medical Sciences' },
     ],
-    knowsAbout: ['Family medicine', 'Preventive care'],
+    knowsAbout: ['Family medicine', 'Primary care', 'Preventive care'],
   };
 }
 
@@ -172,8 +182,10 @@ interface WebPageInput {
   /** The page title, identical to the <title> tag. */
   name: string;
   description: string;
-  /** "ProfilePage" for the physician page, "MedicalWebPage" for health information, "WebPage" otherwise. */
-  type?: 'WebPage' | 'ProfilePage' | 'MedicalWebPage';
+  /** "ProfilePage" for the physician page, "ContactPage" for the contact page, "MedicalWebPage" for health information, "WebPage" otherwise. */
+  type?: 'WebPage' | 'ProfilePage' | 'ContactPage' | 'MedicalWebPage';
+  /** The place the page is written for, when it is not the office's own city (the Elk Grove page). */
+  spatialCoverage?: Node;
   /** True when the page shows a breadcrumb trail (the home page does not). */
   breadcrumb?: boolean;
   /** True when the page shows an FAQ. */
@@ -187,7 +199,7 @@ interface WebPageInput {
 }
 
 /** One WebPage (or ProfilePage, or MedicalWebPage) node per page, tying the site, entity, breadcrumb and FAQ together. */
-export function webPageNode({ path, name, description, type = 'WebPage', breadcrumb = false, faq = false, about = 'clinic', dateModified, lastReviewed = CLINICAL_REVIEW.reviewedOn }: WebPageInput): Node {
+export function webPageNode({ path, name, description, type = 'WebPage', breadcrumb = false, faq = false, about = 'clinic', dateModified, lastReviewed = CLINICAL_REVIEW.reviewedOn, spatialCoverage }: WebPageInput): Node {
   const subject = { '@id': about === 'physician' ? PHYSICIAN_ID : CLINIC_ID };
   const reviewed = type === 'MedicalWebPage' && lastReviewed;
   return {
@@ -200,6 +212,7 @@ export function webPageNode({ path, name, description, type = 'WebPage', breadcr
     ...(dateModified ? { dateModified } : {}),
     isPartOf: { '@id': WEBSITE_ID },
     ...(type === 'ProfilePage' ? { mainEntity: subject } : { about: subject }),
+    ...(spatialCoverage ? { spatialCoverage } : {}),
     ...(breadcrumb ? { breadcrumb: { '@id': breadcrumbId(path) } } : {}),
     ...(faq ? { hasPart: { '@id': faqId(path) } } : {}),
     // Read aloud by voice assistants: the direct-answer paragraph (and nothing else) carries data-speakable.
@@ -256,7 +269,8 @@ export function pageGraph({ key, faqs, breadcrumb, about }: PageGraphInput): Nod
   const meta: { path: string; title: string; description: string; clinical?: boolean; secondReview?: boolean; lastModified: string } = {
     ...PAGE_META[key],
   };
-  const type: WebPageInput['type'] = key === 'panesar' ? 'ProfilePage' : meta.clinical ? 'MedicalWebPage' : 'WebPage';
+  const type: WebPageInput['type'] =
+    key === 'panesar' ? 'ProfilePage' : key === 'contact' ? 'ContactPage' : meta.clinical ? 'MedicalWebPage' : 'WebPage';
   return graph(
     websiteNode(),
     clinicNode(),
@@ -269,6 +283,8 @@ export function pageGraph({ key, faqs, breadcrumb, about }: PageGraphInput): Nod
       dateModified: meta.lastModified,
       lastReviewed: reviewDateFor(meta),
       about: about ?? (key === 'panesar' ? 'physician' : 'clinic'),
+      // The Elk Grove page is written for Elk Grove patients; the office itself stays in Sacramento (address above).
+      ...(key === 'elkGrove' ? { spatialCoverage: city('Elk Grove') } : {}),
       breadcrumb: Boolean(breadcrumb),
       faq: Boolean(faqs?.length),
     }),

@@ -4,7 +4,8 @@ Tick each item. Items marked **(login)** need the practice's own account; nobody
 
 ## Before deploying this change
 
-- [ ] Owner confirms that https://www.chcahealth.org/ is the right place for patients to book (or `BOOKING_URL` is set to `null`).
+- [ ] Owner confirms the booking page. CHCA's own page for this office, https://www.chcahealth.org/locations/sacramento-new-family-practice/, or the patient portal may serve patients better than the CHCA home page, which has no booking function.
+- [ ] Owner confirms the office hours: the site shows Mon-Fri 8:30-5:30 and Sat 9-2; CHCA's page shows Mon, Tue, Thu, Fri 8-5, Wed 9-6, no Saturday.
 - [ ] Owner confirms which branch Vercel deploys to Production.
 - [ ] `npm test`, `npm run typecheck`, `npm run lint`, `npm run build` pass.
 - [ ] After deploy, on the live site: `/` 200, `/family-physician-elk-grove` 200, `/same-day-appointments-sacramento` 301 → `/new-patients`, `/service/telemedicine` 301 → `/services`, `/immigration-medical-exam-sacramento` 410, `/sitemap.xml` lists 15 URLs.

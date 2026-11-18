@@ -33,7 +33,7 @@ Scope: the master prompt of 18 Nov (Sacramento and Elk Grove family medicine), r
 | Home page never says "primary care" in a heading or description | Medium | Fixed (description and one H2) |
 | Elk Grove description did not say where the visit happens up front | Low | Fixed |
 | `verify-apollo-pivot.mjs` failed on every page after the 18 Nov booking change (chcahealth.org) | Low | Fixed: the exact booking URL is allowed, the domain anywhere else still fails |
-| **The booking link points to chcahealth.org, a domain the test suite lists as the previous organisation's** | **High, owner decision** | Not changed (the owner asked for it). See section 7 |
+| The booking link points to the chcahealth.org home page, which has no booking function | **High, owner decision** | Not changed (the owner asked for it). See section 7 |
 
 ## 4. Files changed
 
@@ -70,7 +70,7 @@ Scope: the master prompt of 18 Nov (Sacramento and Elk Grove family medicine), r
 
 ## 7. Needs the owner
 
-1. **chcahealth.org as the booking destination.** The project's own tests list `chcahealth` among the previous organisation's names that must never appear. If chcahealth.org is not Apollo Physicians' current booking system, patients clicking Book online land on another organisation's site, and Google sees Apollo linking to it from every page. Confirm, or set `BOOKING_URL` to `null` in `src/data/site.ts`. The link was deliberately **not** added to structured data.
+1. **chcahealth.org as the booking destination (updated 18 Nov, after checking the site).** chcahealth.org belongs to Community Health Centers of America (CHCA), a federally qualified health center. Its page https://www.chcahealth.org/locations/sacramento-new-family-practice/ lists "Sacramento – New Family Practice" at 8191 Timberlake Way, Suite 200, 916-236-5800, with Paramjit Panesar, MD, so the link is consistent with who runs the office (client-confirmations item 40). But the CHCA home page has no booking function and shows Central Valley phone numbers; that location page (address, phone, contact form) or the patient portal https://health.healow.com/COMMUNITYHCA would serve patients better. CHCA's page also shows **different hours** (Mon, Tue, Thu, Fri 8:00-5:00; Wed 9:00-6:00; no Saturday) and the fax 916-266-7473 as a phone. The owner should confirm the hours and the booking page. The link is deliberately **not** in structured data. The `llms.txt` line "not a community health center or free clinic" was removed on 18 Nov because CHCA's listing contradicts it.
 2. **The repository is public.** It now also holds these GSC summaries. Make it private, or keep GSC numbers out of it.
 3. Items still open from `docs/seo/client-confirmations.md`: other providers' names, staff languages, Medi-Cal plan names, holiday hours, real photos, `sameAs` profile URLs.
 4. What Vercel deploys from (see `docs/seo/baseline-2026-11-17.md`, Phase 0).

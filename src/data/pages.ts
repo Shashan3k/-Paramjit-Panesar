@@ -68,7 +68,7 @@ export const PAGE_META = {
     path: '/family-physician-elk-grove',
     lastModified: '2026-11-18',
     title: 'Family Physician for Elk Grove Patients | Apollo Physicians',
-    description: `Elk Grove patients see a family doctor at ${OFFICE.street}, ${OFFICE.city}, about 12 minutes away. New patients welcome. Call ${PHONES.main.display} to book.`,
+    description: `Family doctor and primary care for Elk Grove patients at ${OFFICE.street}, ${OFFICE.city}, about 12 minutes away. Call ${PHONES.main.display} to book.`,
     navLabel: 'Elk Grove patients',
   },
   panesar: {

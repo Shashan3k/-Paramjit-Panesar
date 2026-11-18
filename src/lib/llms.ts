@@ -59,7 +59,7 @@ export function buildLlmsTxt(c: { [K in keyof typeof LLMS_CONFIRMED]: boolean } 
   if (c.appointmentAvailability) sections.push(`## Appointments\n\n- ${APPOINTMENT_AVAILABILITY}\n- ${TELEMEDICINE}\n- New patients are accepted. Call ${PHONES.main.display} to book.`);
   if (c.insurance) {
     sections.push(
-      `## Insurance\n\nAccepted: ${insuranceSentence()}. Medi-Cal: most plans. Sutter Health, Hill Physicians and Nivano Physicians are medical groups. Call ${PHONES.main.display} to verify your exact plan, because networks change.\n\nApollo Physicians is a private family medicine practice, not a community health center or free clinic.`,
+      `## Insurance\n\nAccepted: ${insuranceSentence()}. Medi-Cal: most plans. Sutter Health, Hill Physicians and Nivano Physicians are medical groups. Call ${PHONES.main.display} to verify your exact plan, because networks change.`,
     );
   }
 
