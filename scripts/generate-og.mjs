@@ -35,7 +35,7 @@ const PAGES = [
   ['languages', 'Punjabi/Hindi-Speaking Doctor Sacramento'],
   ['sportsPhysical', 'Sports Physical in Sacramento, CA'],
   ['wellChild', 'Well-Child Exam in Sacramento, CA'],
-  ['chooseDoctor', 'Choosing a Family Doctor in Sacramento'],
+  ['chooseDoctor', 'Compare Family Physicians in Sacramento'],
   ['contact', 'Contact and Directions in Sacramento'],
   ['faq', 'Family Doctor Questions, Sacramento'],
 ];

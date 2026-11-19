@@ -1,6 +1,7 @@
 import type { FaqItem } from '@/types';
 import { CREDENTIALS, INSURANCE_ACCEPTED, LANGUAGES_SENTENCE, PROVIDER, TELEMEDICINE, VERIFY_LINKS, insuranceSentence } from './practice';
 import { ELK_GROVE_DRIVE, LOCATION, OFFICE, PHONES } from './site';
+import { mapsPlaceUrl } from '@/lib/utils';
 
 /**
  * Copy for the pages built from the shared template (src/components/page/ContentPage.tsx).
@@ -1178,15 +1179,15 @@ export const WELL_CHILD: PageContent = {
  * Choosing a family doctor (not health information: a checklist with the practice's own facts)
  * ----------------------------------------------------------------------------------------------- */
 
-export const CHOOSE_DOCTOR_DIRECT_ANSWER = `To choose a family doctor in Sacramento, check four things: board certification, whether the office takes your insurance, how soon you can be seen, and how easy the office is to reach. Apollo Physicians lists its own answer to each below, with links to check them yourself.`;
+export const CHOOSE_DOCTOR_DIRECT_ANSWER = `To compare family physicians in Sacramento, check five things: board certification, whether the office takes your insurance, how soon you can be seen, how easy the office is to reach, and what recent patient reviews say. Apollo Physicians lists its own answer to each below, with links to check them yourself.`;
 
 export const CHOOSE_DOCTOR: PageContent = {
-  h1: 'Choosing a Family Doctor in Sacramento',
-  eyebrow: 'A checklist',
+  h1: 'How to Compare Family Physicians in Sacramento',
+  eyebrow: 'A checklist for choosing a family doctor',
   blocks: [
     {
       id: 'checklist',
-      heading: 'What to check, and how',
+      heading: 'What to compare, and how to check it',
       table: {
         caption: 'Checklist for choosing a family doctor, with the facts for Apollo Physicians',
         head: ['What to check', 'How to check it', 'Apollo Physicians'],
@@ -1198,6 +1199,8 @@ export const CHOOSE_DOCTOR: PageContent = {
           ['Location', 'Check the drive time from home or work', `${ADDRESS}; ${DRIVE} from Elk Grove`],
           ['Language', 'Ask which languages the doctor speaks with patients', `${DOC}, speaks ${LANGUAGES_SENTENCE}`],
           ['Telemedicine', 'Ask whether some visits can be done without a trip to the office', TELEMEDICINE],
+          ['Office hours', 'Check whether the hours fit your work or school day', 'Monday to Friday from 8:30 a.m. to 5:30 p.m. and Saturday from 9:00 a.m. to 2:00 p.m.'],
+          ['Patient reviews', 'Read several recent reviews on Google and other sites', 'Reviews are on Google, written by patients; the office does not choose or edit them'],
         ],
       },
       links: [
@@ -1218,6 +1221,7 @@ export const CHOOSE_DOCTOR: PageContent = {
       paragraphs: [
         'Reviews on Google and other sites tell you how other patients found the front desk, the wait and the visit. Read several recent ones rather than relying on the star rating alone, and remember that a review cannot tell you about medical training. Check the board certification for that.',
       ],
+      links: [{ label: 'Apollo Physicians reviews on Google', href: mapsPlaceUrl(`Apollo Physicians, ${ADDRESS}`), external: true }],
     },
     {
       id: 'questions-to-ask',
@@ -1264,6 +1268,10 @@ export const CHOOSE_DOCTOR: PageContent = {
     {
       question: 'How do I find a doctor accepting new patients in Sacramento?',
       answer: `Ask the office whether it is accepting new patients with your plan, then ask for the next opening. Apollo Physicians in South Sacramento is accepting new patients with ${DOC}, and takes bookings online at any time. Call ${CALL} with your plan name.`,
+    },
+    {
+      question: 'Where can I see ratings for family physicians in Sacramento?',
+      answer: `Patient ratings for Sacramento family physicians appear on Google and on doctor directory sites such as Healthgrades and Zocdoc. Read several recent reviews, not just the average, and check board certification separately. Apollo Physicians links to its Google reviews and to the board certification check for ${DOC}.`,
     },
     {
       question: 'Should I trust star ratings when choosing a doctor?',

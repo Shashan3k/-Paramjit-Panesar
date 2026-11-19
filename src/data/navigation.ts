@@ -35,7 +35,7 @@ const FOOTER_LABELS: Record<PageKey, string> = {
   languages: 'Punjabi and Hindi speaking doctor',
   sportsPhysical: 'Sports physical',
   wellChild: 'Well-child exam',
-  chooseDoctor: 'Choosing a family doctor',
+  chooseDoctor: 'Compare family physicians',
   contact: 'Contact and directions',
   faq: 'Questions and answers',
 };
@@ -76,7 +76,7 @@ const CRUMB_NAMES: Record<Exclude<PageKey, 'home'>, string> = {
   languages: 'Punjabi and Hindi speaking doctor',
   sportsPhysical: 'Sports physical',
   wellChild: 'Well-child exam',
-  chooseDoctor: 'Choosing a family doctor',
+  chooseDoctor: 'Compare family physicians',
   contact: 'Contact',
   faq: 'Questions and answers',
 };

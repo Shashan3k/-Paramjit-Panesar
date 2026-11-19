@@ -147,9 +147,12 @@ export const PAGE_META = {
   },
   chooseDoctor: {
     path: '/choosing-a-family-doctor-sacramento',
-    lastModified: '2026-11-18',
-    title: 'Choosing a Family Doctor in Sacramento | Apollo Physicians',
-    description: `How to choose a family doctor in Sacramento: check board certification, insurance and appointments. Apollo Physicians' answers inside. Call ${PHONES.main.display}.`,
+    lastModified: '2026-11-19',
+    // The page for "best family physicians Sacramento" searches (docs/APOLLO_KEYWORD_URL_MAPPING.md). Plural and
+    // "compare" match that comparison intent without saying "best" (banned by claims-guard.test.ts), and keep the
+    // singular "Family Physician in Sacramento" for the home page alone.
+    title: 'Compare Family Physicians in Sacramento | Apollo Physicians',
+    description: `Compare family physicians in Sacramento: board certification, insurance, languages, hours and reviews, with Apollo Physicians' facts. Call ${PHONES.main.display}.`,
   },
   contact: {
     path: '/contact',
