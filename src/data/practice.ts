@@ -54,6 +54,25 @@ export const APPOINTMENT_AVAILABILITY = 'Book online or by phone.';
 /** OWNER and NPPES: family medicine. */
 export const SPECIALTY = 'Family Medicine';
 
+/**
+ * The family medicine services the practice offers, as approved in Dr. Panesar's review of 12 Nov 2026 (the
+ * /services page). One list for the services page, the home and Elk Grove pages, their FAQs and the schema, so
+ * no page can name a service the others do not. Show it only where the services page is live (isLive).
+ */
+export const FAMILY_MEDICINE_SERVICES = [
+  'Annual physicals and preventive care',
+  'School and sports physicals',
+  'Vaccinations',
+  'Care for ongoing conditions such as diabetes and high blood pressure',
+] as const;
+
+/** "annual physicals and preventive care, school and sports physicals, vaccinations, and care for ..." */
+export function servicesSentence(): string {
+  const items = FAMILY_MEDICINE_SERVICES.map((s) => s.charAt(0).toLowerCase() + s.slice(1));
+  const last = items.pop() ?? '';
+  return `${items.join(', ')}, and ${last}`;
+}
+
 /** OWNER (Nov 2026): the practice has two other providers. Their names and details were not supplied, so none are shown. */
 export const OTHER_PROVIDERS = 'Apollo Physicians has two other providers besides Dr. Panesar.';
 
@@ -128,8 +147,11 @@ const ELK_DRIVE = `about ${ELK_GROVE_DRIVE.minutes} minutes`;
 /** 40 to 60 words, directly under the home page H1. Quotable on its own. */
 export const HOME_DIRECT_ANSWER = `Apollo Physicians is a family medicine and primary care practice at ${OFFICE.line}, led by ${PROVIDER.name}, who is board certified in family medicine. New patients are welcome, and the office accepts Medicare and several major health plans. Patients without insurance are welcome too. Book online or call ${CALL}.`;
 
-/** 40 to 60 words, directly under the Elk Grove page H1. */
-export const ELK_GROVE_DIRECT_ANSWER = `Apollo Physicians is a family medicine and primary care practice that serves Elk Grove patients from one office in South Sacramento, ${OFFICE.street}. Google Maps shows about ${ELK_GROVE_DRIVE.minutes} minutes by car from Elk Grove ZIP codes 95758 and 95624. New patients are welcome, and Medicare and several major health plans are accepted. Call ${CALL}.`;
+/**
+ * 40 to 60 words, directly under the Elk Grove page H1. It answers "who, where, how far, how qualified" in that
+ * order: the one office is in South Sacramento, and the drive is the Google Maps reading, attributed.
+ */
+export const ELK_GROVE_DIRECT_ANSWER = `Apollo Physicians is a family medicine and primary care practice at ${OFFICE.street}, in South Sacramento, about ${ELK_GROVE_DRIVE.minutes} minutes by car from Elk Grove ZIP codes 95758 and 95624 (Google Maps). ${PROVIDER.name}, is board certified in family medicine. New patients are welcome, and telemedicine is available for California patients. Call ${CALL}.`;
 
 /** 40 to 60 words, under the Elk Grove page's "How do I choose a family doctor in Elk Grove?" heading. Verified facts only. */
 export const ELK_GROVE_CHOOSING_ANSWER = `To choose a family doctor from Elk Grove, check board certification, your insurance plan, the drive, and the languages the doctor speaks. At Apollo Physicians, ${PROVIDER.name}, is board certified in family medicine and speaks ${LANGUAGES_SENTENCE}. The one office, in South Sacramento, is ${ELK_DRIVE} by car from Elk Grove.`;
@@ -184,6 +206,15 @@ export const HOME_FAQS: readonly FaqItem[] = [
     question: 'Is Apollo Physicians accepting new patients?',
     answer: `Yes. Apollo Physicians is accepting new patients at ${OFFICE.street}, ${OFFICE.city}. To become a patient, call ${CALL}, tell the office your insurance plan or that you will pay yourself, and ask for the next available appointment. Bring a photo ID and your insurance card to the first visit.`,
   },
+  {
+    question: 'What primary care services does Apollo Physicians offer in Sacramento?',
+    clinical: true,
+    answer: `Apollo Physicians offers family medicine and primary care in South Sacramento with ${PROVIDER.name}: ${servicesSentence()}. Telemedicine visits are available for patients in California. Call ${CALL} to ask whether a service fits your needs.`,
+  },
+  {
+    question: 'What are the office hours at Apollo Physicians?',
+    answer: `Apollo Physicians is open Monday to Friday from 8:30 a.m. to 5:30 p.m. and Saturday from 9:00 a.m. to 2:00 p.m. Pacific time. The South Sacramento office is closed on Sunday. You can book online at any time, or call ${CALL} while the office is open.`,
+  },
 ];
 
 export const PANESAR_FAQS: readonly FaqItem[] = [
@@ -217,6 +248,19 @@ export const ELK_GROVE_FAQS: readonly FaqItem[] = [
   {
     question: 'Does Apollo Physicians serve patients from Elk Grove?',
     answer: `Yes. Elk Grove patients are seen at the one Apollo Physicians office, ${OFFICE.street}, in South Sacramento. You can book online, new patients are welcome, and the office accepts Medicare and several major health plans. Call ${CALL} to book your first visit.`,
+  },
+  {
+    question: 'Who is the family doctor at Apollo Physicians for Elk Grove patients?',
+    answer: `${PROVIDER.name}, is a family physician at Apollo Physicians, the South Sacramento practice that serves Elk Grove patients. Dr. Panesar is board certified in family medicine by the ${CREDENTIALS.boardBody}, trained at ${CREDENTIALS.medicalSchool} and UAMS, and speaks ${LANGUAGES_SENTENCE}. Check the certification on ABMS before you book.`,
+  },
+  {
+    question: 'What care can Elk Grove patients get at Apollo Physicians?',
+    clinical: true,
+    answer: `Elk Grove patients get the same family medicine care as every Apollo Physicians patient: ${servicesSentence()}. Some visits can be done by telemedicine. Call ${CALL} to ask which kind of visit fits your needs.`,
+  },
+  {
+    question: 'Is the office open on Saturday for Elk Grove patients?',
+    answer: `Yes. Apollo Physicians is open Monday to Friday from 8:30 a.m. to 5:30 p.m. and Saturday from 9:00 a.m. to 2:00 p.m. Pacific time, and closed on Sunday, so Elk Grove patients who work weekdays can ask for a Saturday visit. Book online at any time or call ${CALL}.`,
   },
   {
     question: 'How long is the drive from Elk Grove?',

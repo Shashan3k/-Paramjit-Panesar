@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { MapPin, Phone } from 'lucide-react';
+import { CheckCircle2, MapPin, Phone, Video } from 'lucide-react';
 import { FaqList } from '@/components/page/FaqList';
 import { QuickFacts } from '@/components/page/QuickFacts';
 import { Breadcrumbs } from '@/components/ui/Breadcrumbs';
@@ -12,8 +12,21 @@ import { PageHero } from '@/components/ui/PageHero';
 import { Section } from '@/components/ui/Section';
 import { BREADCRUMBS } from '@/data/navigation';
 import { PAGE_META, livePages } from '@/data/pages';
-import { CREDENTIALS, ELK_GROVE_CHOOSING_ANSWER, ELK_GROVE_DIRECT_ANSWER, ELK_GROVE_FAQS, ELK_GROVE_NOTE, LANGUAGES_SENTENCE, PROVIDER, TELEMEDICINE, VERIFY_LINKS } from '@/data/practice';
-import { AREAS_SERVED, ELK_GROVE_DRIVE, LOCATION, OFFICE, PHONES } from '@/data/site';
+import {
+  CREDENTIALS,
+  ELK_GROVE_CHOOSING_ANSWER,
+  ELK_GROVE_DIRECT_ANSWER,
+  ELK_GROVE_FAQS,
+  ELK_GROVE_NOTE,
+  FAMILY_MEDICINE_SERVICES,
+  LANGUAGES_SENTENCE,
+  OTHER_PROVIDERS,
+  PROVIDER,
+  TELEMEDICINE,
+  VERIFY_LINKS,
+} from '@/data/practice';
+import { AREAS_SERVED, ELK_GROVE_DRIVE, LOCATION, OFFICE, OFFICE_HOURS, PHONES } from '@/data/site';
+import { formatHoursRow, visibleFaqs } from '@/lib/content-utils';
 import { buildMetadata } from '@/lib/seo';
 import { pageGraph } from '@/lib/structured-data';
 import { mapsDirectionsFromUrl, mapsDirectionsUrl, telHref } from '@/lib/utils';
@@ -51,16 +64,29 @@ const SEGMENT_LINKS = [
   { path: PAGE_META.selfPay.path, label: 'Doctor without insurance, with self-pay visits' },
 ] as const;
 
+/** The physician facts an Elk Grove patient can verify before booking. Each value comes from src/data. */
+const PHYSICIAN_FACTS = [
+  ['Board certification', `Family medicine, ${CREDENTIALS.boardBody}`],
+  ['Medical degree', `${CREDENTIALS.medicalSchool}, ${CREDENTIALS.medicalSchoolPlace}, ${CREDENTIALS.medicalSchoolYear}`],
+  ['Residency', `${CREDENTIALS.residency}, ${CREDENTIALS.residencyYears}`],
+  ['Languages with patients', LANGUAGES_SENTENCE],
+] as const;
+
+const LINK = 'font-semibold text-teal-800 hover:underline';
+
 export default function ElkGrovePage() {
   const livePaths = new Set(livePages().map((page) => page.path));
   const segmentLinks = SEGMENT_LINKS.filter((link) => livePaths.has(link.path)).map((link) => ({ href: link.path, label: link.label }));
+  const servicesLive = livePaths.has(PAGE_META.services.path);
+  const annualLive = livePaths.has(PAGE_META.annualPhysical.path);
+  const faqs = visibleFaqs(ELK_GROVE_FAQS);
   return (
     <>
-      <JsonLd data={pageGraph({ key: 'elkGrove', faqs: ELK_GROVE_FAQS, breadcrumb: BREADCRUMBS.elkGrove })} />
+      <JsonLd data={pageGraph({ key: 'elkGrove', faqs, breadcrumb: BREADCRUMBS.elkGrove })} />
 
       <Breadcrumbs items={BREADCRUMBS.elkGrove} />
 
-      <PageHero title="Family Physician for Elk Grove Patients" eyebrow="Elk Grove patients" subtitle={ELK_GROVE_DIRECT_ANSWER}>
+      <PageHero title="Family Physician Near Elk Grove, CA" eyebrow="For Elk Grove patients" subtitle={ELK_GROVE_DIRECT_ANSWER}>
         <ButtonLink href={telHref(PHONES.main.tel)} variant="light">
           <Phone className="h-5 w-5" aria-hidden="true" />
           Call {PHONES.main.display}
@@ -79,6 +105,86 @@ export default function ElkGrovePage() {
       </PageHero>
 
       <QuickFacts />
+
+      <Section id="physician" headingId="elk-physician-heading" title="A board-certified family physician for Elk Grove patients">
+        <div className="grid gap-8 lg:grid-cols-2">
+          <div className="space-y-4">
+            <p className="text-lg leading-relaxed text-navy-800">
+              At Apollo Physicians, Elk Grove patients can see{' '}
+              <Link href={PAGE_META.panesar.path} className={LINK}>
+                {PROVIDER.name}
+              </Link>
+              , a family physician who can be your primary care doctor: the doctor you see first for checkups, everyday health problems and ongoing care.
+            </p>
+            <p className="text-navy-800">
+              {OTHER_PROVIDERS} Check Dr. Panesar&apos;s board certification yourself on{' '}
+              <a href={VERIFY_LINKS.certification.href} target="_blank" rel="noopener noreferrer" className={LINK}>
+                {VERIFY_LINKS.certification.label}
+                <span className="sr-only"> (opens in a new tab)</span>
+              </a>{' '}
+              before you book.
+            </p>
+            <p>
+              <Link href={PAGE_META.panesar.path} className={`inline-flex min-h-[44px] items-center ${LINK}`}>
+                Read Dr. Panesar&apos;s profile
+              </Link>
+            </p>
+          </div>
+          <dl className="card grid gap-4">
+            {PHYSICIAN_FACTS.map(([label, value]) => (
+              <div key={label}>
+                <dt className="text-sm font-semibold uppercase tracking-wide text-teal-800">{label}</dt>
+                <dd className="mt-1 text-navy-900">{value}</dd>
+              </div>
+            ))}
+          </dl>
+        </div>
+      </Section>
+
+      {servicesLive && (
+        <Section id="care" headingId="elk-care-heading" title="Family medicine and primary care for Elk Grove patients" tone="muted">
+          <div className="grid gap-8 lg:grid-cols-2">
+            <div className="space-y-4">
+              <p className="text-lg leading-relaxed text-navy-800">Visits with Dr. Panesar at the South Sacramento office include:</p>
+              <ul className="space-y-3">
+                {FAMILY_MEDICINE_SERVICES.map((service) => (
+                  <li key={service} className="flex items-start gap-2 text-navy-900">
+                    <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-teal-700" aria-hidden="true" />
+                    <span>{service}</span>
+                  </li>
+                ))}
+              </ul>
+              <p className="text-navy-800">
+                See the{' '}
+                <Link href={PAGE_META.services.path} className={LINK}>
+                  family medicine services
+                </Link>
+                {annualLive ? (
+                  <>
+                    {' '}page, or what happens at an{' '}
+                    <Link href={PAGE_META.annualPhysical.path} className={LINK}>
+                      annual physical
+                    </Link>
+                    .
+                  </>
+                ) : (
+                  ' page.'
+                )}
+              </p>
+            </div>
+            <div className="card space-y-3">
+              <h3 className="flex items-center gap-2 text-lg font-bold text-navy-900">
+                <Video className="h-5 w-5 text-teal-700" aria-hidden="true" />
+                Telemedicine from home in Elk Grove
+              </h3>
+              <p className="text-navy-800">
+                {TELEMEDICINE} When you book, ask whether your visit can be done by telemedicine, so you can skip the drive. Visits that need an exam, such as a
+                physical, take place at the office on {OFFICE.streetName}.
+              </p>
+            </div>
+          </div>
+        </Section>
+      )}
 
       <Section id="getting-here" headingId="elk-office-heading" title="Getting here from Elk Grove">
         <div className="grid gap-8 lg:grid-cols-2">
@@ -185,17 +291,14 @@ export default function ElkGrovePage() {
 
       <Section id="booking" headingId="elk-booking-heading" title="Booking from Elk Grove" tone="muted">
         <p className="max-w-3xl text-navy-800">
-          Call{' '}
-          <a href={telHref(PHONES.main.tel)} className="font-semibold text-teal-800 hover:underline">
+          Book online at any time, or call{' '}
+          <a href={telHref(PHONES.main.tel)} className={LINK}>
             {PHONES.main.display}
-          </a>{' '}
-          before you travel to confirm your appointment. New patients are welcome; see how to{' '}
-          <Link href="/new-patients" className="font-semibold text-teal-800 hover:underline">
+          </a>
+          {OFFICE_HOURS ? ` while the office is open (${OFFICE_HOURS.map(formatHoursRow).join('; ')}, Pacific time)` : ''}. Confirm your appointment before you
+          travel from Elk Grove, and bring a photo ID and your insurance card. New patients are welcome; see how to{' '}
+          <Link href={PAGE_META.newPatients.path} className={LINK}>
             become a new patient
-          </Link>{' '}
-          or read about{' '}
-          <Link href="/dr-paramjit-panesar-md" className="font-semibold text-teal-800 hover:underline">
-            Dr. Paramjit Panesar
           </Link>
           .
         </p>
@@ -211,7 +314,7 @@ export default function ElkGrovePage() {
       <Section id="insurance" headingId="elk-insurance-heading" title="Insurance and payment for Elk Grove patients">
         <p className="max-w-3xl text-navy-800">
           Elk Grove patients use the same plans as every patient, shown above. Call {PHONES.main.display} to confirm your plan before you travel, or see the{' '}
-          <Link href="/insurance-accepted" className="font-semibold text-teal-800 hover:underline">
+          <Link href={PAGE_META.insurance.path} className={LINK}>
             insurance page
           </Link>
           .

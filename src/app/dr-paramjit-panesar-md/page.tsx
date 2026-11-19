@@ -123,7 +123,7 @@ export default function PanesarPage() {
           </Link>
           , or visit the{' '}
           <Link href="/family-physician-elk-grove" className="font-semibold text-teal-800 hover:underline">
-            Family Physician in Elk Grove
+            family physician near Elk Grove, CA
           </Link>{' '}
           page.
         </p>

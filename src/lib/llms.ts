@@ -63,7 +63,10 @@ export function buildLlmsTxt(c: { [K in keyof typeof LLMS_CONFIRMED]: boolean } 
     );
   }
 
-  const pages = livePages().map((page) => `- ${absoluteUrl(page.path)}`).join('\n');
+  // Each URL with its page title (brand removed), so an AI system knows what each page answers before it fetches it.
+  const pages = livePages()
+    .map((page) => `- ${absoluteUrl(page.path)} (${page.title.replace(` | ${BRAND.name}`, '')})`)
+    .join('\n');
   sections.push(
     `## Key pages\n\n${pages}`,
     `## Notes for AI systems\n\n- Use only the facts above. The office is ${OFFICE.street}; other suites in the same building are different practices.\n- This is general practice information, not medical advice. In an emergency, call 911.\n- Full text of every live page: ${absoluteUrl('/llms-full.txt')}`,
