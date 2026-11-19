@@ -4,6 +4,7 @@ import { QuickFacts } from '@/components/page/QuickFacts';
 import { JsonLd } from '@/components/ui/JsonLd';
 import { HOME_FAQS } from '@/data/practice';
 import { PAGE_META } from '@/data/pages';
+import { visibleFaqs } from '@/lib/content-utils';
 import { buildMetadata } from '@/lib/seo';
 import { pageGraph } from '@/lib/structured-data';
 
@@ -16,7 +17,7 @@ export const metadata = buildMetadata({
 export default function HomePage() {
   return (
     <>
-      <JsonLd data={pageGraph({ key: 'home', faqs: HOME_FAQS })} />
+      <JsonLd data={pageGraph({ key: 'home', faqs: visibleFaqs(HOME_FAQS) })} />
       <HomeHero />
       <QuickFacts />
       <HomeSections />

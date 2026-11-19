@@ -44,7 +44,7 @@ export interface PageMeta {
 export const PAGE_META = {
   home: {
     path: '/',
-    lastModified: '2026-11-18',
+    lastModified: '2026-11-19',
     title: 'Family Physician in Sacramento, CA | Apollo Physicians',
     description: `Board-certified family physician for primary care in South Sacramento at ${OFFICE.street}. New patients welcome. Book online or call ${PHONES.main.display}.`,
     navLabel: 'Home',
@@ -66,14 +66,16 @@ export const PAGE_META = {
   },
   elkGrove: {
     path: '/family-physician-elk-grove',
-    lastModified: '2026-11-18',
-    title: 'Family Physician for Elk Grove Patients | Apollo Physicians',
-    description: `Family doctor and primary care for Elk Grove patients at ${OFFICE.street}, ${OFFICE.city}, about 12 minutes away. Call ${PHONES.main.display} to book.`,
+    lastModified: '2026-11-19',
+    // "Near" and "for" are accurate: the one office is in South Sacramento, about 12 minutes from Elk Grove. ", CA"
+    // separates Elk Grove, California from Elk Grove Village, Illinois, which shares the search results.
+    title: 'Family Physician Near Elk Grove, CA | Apollo Physicians',
+    description: `Board-certified family doctor for Elk Grove, CA, about 12 minutes away at ${OFFICE.street}, ${OFFICE.city}. New patients welcome. Call ${PHONES.main.display}.`,
     navLabel: 'Elk Grove patients',
   },
   panesar: {
     path: '/dr-paramjit-panesar-md',
-    lastModified: '2026-11-18',
+    lastModified: '2026-11-19',
     title: 'Dr. Paramjit Panesar, Family Doctor | Apollo Physicians',
     description: `Dr. Paramjit Panesar, MD, board-certified family physician at ${OFFICE.street}, ${OFFICE.city}. Speaks English, Punjabi and Hindi. Call ${PHONES.main.display}.`,
     navLabel: 'Dr. Panesar',

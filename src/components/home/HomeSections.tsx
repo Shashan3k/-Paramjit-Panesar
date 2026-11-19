@@ -6,7 +6,18 @@ import { BookOnlineButton } from '@/components/ui/BookOnlineButton';
 import { MapEmbed } from '@/components/ui/MapEmbed';
 import { Section } from '@/components/ui/Section';
 import { livePages, PAGE_META, type PageKey } from '@/data/pages';
-import { CREDENTIALS, HOME_FAQS, INSURANCE_ACCEPTED, OTHER_PROVIDERS, PROVIDER, SPECIALTY } from '@/data/practice';
+import {
+  CREDENTIALS,
+  FAMILY_MEDICINE_SERVICES,
+  HOME_FAQS,
+  INSURANCE_ACCEPTED,
+  LANGUAGES_SENTENCE,
+  OTHER_PROVIDERS,
+  PROVIDER,
+  SPECIALTY,
+  TELEMEDICINE,
+  VERIFY_LINKS,
+} from '@/data/practice';
 import { AREAS_SERVED, LOCATION, OFFICE, PHONES } from '@/data/site';
 import { mapsDirectionsUrl, mapsPlaceUrl, telHref } from '@/lib/utils';
 
@@ -14,11 +25,12 @@ import { mapsDirectionsUrl, mapsPlaceUrl, telHref } from '@/lib/utils';
 const HELP_CARDS: readonly { key: PageKey; title: string; text: string }[] = [
   { key: 'newPatients', title: 'New patients', text: 'Apollo Physicians is accepting new patients. See how to book and what to bring.' },
   { key: 'annualPhysical', title: 'Annual physical', text: 'A yearly preventive visit with a physical exam. See what to expect and bring.' },
-  { key: 'services', title: 'Services', text: 'Family medicine services, from physicals and vaccinations to ongoing care.' },
   { key: 'insurance', title: 'Insurance accepted', text: 'Medicare and several major health plans, and self-pay patients are welcome.' },
-  { key: 'elkGrove', title: 'Family doctor for Elk Grove patients', text: 'About 12 minutes from Elk Grove by car, with drive times and routes.' },
+  { key: 'elkGrove', title: 'Family physician near Elk Grove, CA', text: 'About 12 minutes from Elk Grove by car, with drive times and routes.' },
   { key: 'contact', title: 'Contact and directions', text: 'Address, phone, a map and directions to the South Sacramento office.' },
 ];
+
+const LINK = 'font-semibold text-teal-800 hover:underline';
 
 /** Everything below the hero and Quick Facts on the home page. Each block uses only facts from the data files. */
 export function HomeSections() {
@@ -59,7 +71,50 @@ export function HomeSections() {
         </div>
       </Section>
 
-      <Section headingId="home-provider-heading" title="Our physician" tone="muted">
+      {live.has(PAGE_META.services.path) && (
+        <Section
+          id="services"
+          headingId="home-services-heading"
+          title="Family medicine and primary care services"
+          description={`Care with ${PROVIDER.name}, at the South Sacramento office on ${OFFICE.streetName}.`}
+          tone="muted"
+        >
+          <div className="grid gap-6 lg:grid-cols-2">
+            <ul className="grid gap-3">
+              {FAMILY_MEDICINE_SERVICES.map((service) => (
+                <li key={service} className="card flex items-start gap-2 !p-4 font-semibold text-navy-900">
+                  <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-teal-700" aria-hidden="true" />
+                  {service}
+                </li>
+              ))}
+            </ul>
+            <div className="space-y-4 text-navy-800">
+              <p className="text-lg leading-relaxed">
+                {TELEMEDICINE} Ask when you book whether your visit can be done by telemedicine.
+              </p>
+              <p>
+                Read about all{' '}
+                <Link href={PAGE_META.services.path} className={LINK}>
+                  family medicine services in Sacramento
+                </Link>
+                {live.has(PAGE_META.annualPhysical.path) ? (
+                  <>
+                    , or what happens at an{' '}
+                    <Link href={PAGE_META.annualPhysical.path} className={LINK}>
+                      annual physical
+                    </Link>
+                    .
+                  </>
+                ) : (
+                  '.'
+                )}
+              </p>
+            </div>
+          </div>
+        </Section>
+      )}
+
+      <Section headingId="home-provider-heading" title="Your family physician in Sacramento">
         <article className="card flex max-w-3xl flex-col gap-4 sm:flex-row sm:items-start">
           <div className="flex h-20 w-20 shrink-0 items-center justify-center rounded-full bg-teal-50 text-teal-800" aria-hidden="true">
             <Stethoscope className="h-9 w-9" />
@@ -72,7 +127,15 @@ export function HomeSections() {
             </h3>
             <p className="text-navy-800">
               {SPECIALTY} at Apollo Physicians. Board certified by the {CREDENTIALS.boardBody}. Medical degree from {CREDENTIALS.medicalSchool}, {CREDENTIALS.medicalSchoolYear};
-              residency at UAMS, {CREDENTIALS.residencyYears}.
+              residency at UAMS, {CREDENTIALS.residencyYears}. Speaks {LANGUAGES_SENTENCE} with patients.
+            </p>
+            <p className="text-navy-800">
+              Check the board certification on{' '}
+              <a href={VERIFY_LINKS.certification.href} target="_blank" rel="noopener noreferrer" className={LINK}>
+                {VERIFY_LINKS.certification.label}
+                <span className="sr-only"> (opens in a new tab)</span>
+              </a>
+              .
             </p>
             <p className="text-sm text-navy-700">{OTHER_PROVIDERS}</p>
           </div>
@@ -84,6 +147,7 @@ export function HomeSections() {
         headingId="home-insurance-heading"
         title="Insurance we accept"
         description={`Medicare and several major health plans. Call ${PHONES.main.display} to confirm your plan before your visit.`}
+        tone="muted"
       >
         <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {INSURANCE_ACCEPTED.map((plan) => (
@@ -95,12 +159,12 @@ export function HomeSections() {
         </ul>
         <p className="mt-6">
           <Link href={PAGE_META.insurance.path} className="inline-flex min-h-[44px] items-center font-semibold text-teal-800 hover:underline">
-            See insurance and pricing details
+            See insurance and payment options
           </Link>
         </p>
       </Section>
 
-      <Section id="areas" headingId="home-areas-heading" title="Areas we serve" tone="muted">
+      <Section id="areas" headingId="home-areas-heading" title="Areas we serve">
         <div className="card max-w-3xl space-y-3">
           <p className="text-navy-800">
             Apollo Physicians has one office, in South Sacramento. Patients come from {neighborhoods.slice(0, -1).join(', ')} and {neighborhoods[neighborhoods.length - 1]}, and from Elk Grove.
@@ -111,12 +175,12 @@ export function HomeSections() {
           </p>
           <Link href={PAGE_META.elkGrove.path} className="inline-flex min-h-[44px] items-center gap-2 font-semibold text-teal-800 hover:underline">
             <MapPin className="h-5 w-5" aria-hidden="true" />
-            Family Physician in Elk Grove
+            Family physician near Elk Grove, CA
           </Link>
         </div>
       </Section>
 
-      <Section id="location" headingId="home-location-heading" title="Find the office">
+      <Section id="location" headingId="home-location-heading" title="Find the office" tone="muted">
         <div className="grid gap-8 lg:grid-cols-2">
           <div className="space-y-4">
             <address className="text-lg not-italic leading-relaxed text-navy-800">{OFFICE.line}</address>
@@ -139,7 +203,7 @@ export function HomeSections() {
         </div>
       </Section>
 
-      <Section id="reviews" headingId="home-reviews-heading" title="Patient reviews" tone="muted">
+      <Section id="reviews" headingId="home-reviews-heading" title="Patient reviews">
         <div className="card flex max-w-3xl flex-col gap-3">
           <p className="flex items-center gap-2 font-semibold text-navy-900">
             <Star className="h-5 w-5 text-teal-700" aria-hidden="true" />
@@ -163,7 +227,7 @@ export function HomeSections() {
         </div>
       </Section>
 
-      <FaqList idPrefix="home" faqs={HOME_FAQS} />
+      <FaqList idPrefix="home" faqs={HOME_FAQS} tone="muted" />
     </>
   );
 }

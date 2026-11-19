@@ -92,11 +92,22 @@ function areaServed(): Node[] {
   ];
 }
 
-/** Services appear in the schema only when their page is live (and so reviewed by Dr. Panesar). */
+/**
+ * Services appear in the schema only when their page is live (and so reviewed by Dr. Panesar). The names match the
+ * services list shown on the home, Elk Grove and services pages (FAMILY_MEDICINE_SERVICES).
+ */
 function availableServices(): Node[] {
   const services: Node[] = [];
   if (isLive(PAGE_META.annualPhysical)) {
     services.push({ '@type': 'MedicalProcedure', name: 'Annual physical exam', url: absoluteUrl(PAGE_META.annualPhysical.path) });
+  }
+  if (isLive(PAGE_META.services)) {
+    const servicesUrl = absoluteUrl(PAGE_META.services.path);
+    services.push(
+      { '@type': 'MedicalProcedure', name: 'School and sports physicals', url: servicesUrl },
+      { '@type': 'MedicalTherapy', name: 'Vaccinations', url: servicesUrl },
+      { '@type': 'MedicalTherapy', name: 'Care for ongoing conditions such as diabetes and high blood pressure', url: servicesUrl },
+    );
   }
   return services;
 }

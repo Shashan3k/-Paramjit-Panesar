@@ -24,7 +24,7 @@ const PAGES = [
   ['home', 'Family Physician in Sacramento, CA'],
   ['newPatients', 'Doctor Accepting New Patients Sacramento'],
   ['annualPhysical', 'Annual Physical in Sacramento, CA'],
-  ['elkGrove', 'Family Physician for Elk Grove Patients'],
+  ['elkGrove', 'Family Physician Near Elk Grove, CA'],
   ['panesar', 'Dr. Paramjit Panesar, Family Doctor'],
   ['services', 'Family Medicine Services in Sacramento'],
   ['insurance', 'Insurance & Payment Options, Sacramento'],
